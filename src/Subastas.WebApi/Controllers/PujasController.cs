@@ -147,7 +147,7 @@ public class PujasController : ControllerBase
             return BadRequest("Subasta o usuario no válido.");
 
         // Validar que el usuario NO sea administrador
-        if (usuario.Rol != null && usuario.Rol.ToLower() == "admin")
+        if (usuario.Rol?.Trim().ToLower() == "admin")
             return BadRequest(new 
             { 
                 mensaje = "Los administradores no pueden realizar pujas. Los vehículos son propiedad del sistema.",

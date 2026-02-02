@@ -231,7 +231,7 @@ public class UsuariosController : ControllerBase
             }
 
             // Solo los usuarios normales necesitan estar validados, los admins no
-            if (usuario.Rol != "Admin" && usuario.Validado != 1)
+            if (usuario.Rol?.Trim().ToLower() != "admin" && usuario.Validado != 1)
             {
                 return Unauthorized(ApiResponse<LoginResponse>.ErrorResult(
                     "Usuario pendiente de validación por el administrador"));
