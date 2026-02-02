@@ -6,6 +6,13 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Azure.Core.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Azure.Identity.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\BCrypt.Net-Next.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.ApplicationInsights.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.ApplicationInsights.AspNetCore.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.AI.DependencyCollector.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.AI.EventCounterCollector.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.AI.PerfCounterCollector.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.AI.WindowsServer.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.AI.ServerTelemetryChannel.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Data.SqlClient.dll
@@ -18,6 +25,7 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Extensions.Logging.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Extensions.Logging.ApplicationInsights.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Extensions.Options.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Identity.Client.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Microsoft.Identity.Client.Extensions.Msal.dll
@@ -36,6 +44,7 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.ClientModel.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.Configuration.ConfigurationManager.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.Diagnostics.EventLog.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.Diagnostics.PerformanceCounter.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.Memory.Data.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\System.Security.Cryptography.Pkcs.dll
@@ -59,6 +68,7 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Subastas.Application.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Subastas.Domain.dll

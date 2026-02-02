@@ -89,7 +89,6 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Debu
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Debug\net8.0\Subastas.WebApi.genruntimeconfig.cache
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Debug\net8.0\ref\Subastas.WebApi.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Debug\net8.0\Subastas.WebApi.sourcelink.json
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.ApplicationInsights.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.ApplicationInsights.AspNetCore.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.AI.DependencyCollector.dll
@@ -100,3 +99,11 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debu
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.Logging.ApplicationInsights.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\System.Diagnostics.PerformanceCounter.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\System.Diagnostics.EventLog.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Debug\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
