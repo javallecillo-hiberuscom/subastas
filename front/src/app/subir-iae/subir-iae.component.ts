@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { ToastService } from '../services/toast.service';
 import { AuthService } from '../services/auth.service';
+import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-subir-iae',
@@ -33,7 +34,7 @@ export class SubirIaeComponent implements OnInit {
     const user = this.currentUser();
     if (!user?.idUsuario) return;
 
-    this.http.get<any>(`/api/Documentos/verificar-iae/${user.idUsuario}`)
+    this.http.get<any>(getApiUrl(`/api/Documentos/verificar-iae/${user.idUsuario}`))
       .subscribe({
         next: (estado) => {
           this.estadoValidacion.set(estado);
@@ -92,7 +93,7 @@ export class SubirIaeComponent implements OnInit {
         nombreArchivo: archivo.name
       };
 
-      this.http.post(`/api/Documentos/subir-iae/${user.idUsuario}`, request)
+      this.http.post(getApiUrl(`/api/Documentos/subir-iae/${user.idUsuario}`), request)
         .subscribe({
           next: (response: any) => {
             this.toast.success('Documento subido correctamente. Pendiente de validación por el administrador.');

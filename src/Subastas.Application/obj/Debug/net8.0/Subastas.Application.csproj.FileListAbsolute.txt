@@ -16,3 +16,4 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Application\obj
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Application\obj\Debug\net8.0\Subastas.Application.xml
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Application\obj\Debug\net8.0\Subastas.Application.pdb
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Application\obj\Debug\net8.0\ref\Subastas.Application.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Application\obj\Debug\net8.0\Subastas.Application.sourcelink.json

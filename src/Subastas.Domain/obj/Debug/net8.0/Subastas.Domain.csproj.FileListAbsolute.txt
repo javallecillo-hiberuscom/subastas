@@ -12,3 +12,4 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Domain\obj\Debu
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Domain\obj\Debug\net8.0\Subastas.Domain.xml
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Domain\obj\Debug\net8.0\Subastas.Domain.pdb
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Domain\obj\Debug\net8.0\ref\Subastas.Domain.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Domain\obj\Debug\net8.0\Subastas.Domain.sourcelink.json

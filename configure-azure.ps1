@@ -1,0 +1,105 @@
+# Script para configurar variables de entorno en Azure App Service
+# Configuración automática para SubastasWebApi20260202162157
+
+$appName = "SubastasWebApi20260202162157"
+$resourceGroup = "Curso"
+
+Write-Host "===============================================" -ForegroundColor Cyan
+Write-Host "Configurando App Service: $appName" -ForegroundColor Green
+Write-Host "Resource Group: $resourceGroup" -ForegroundColor Green
+Write-Host "===============================================" -ForegroundColor Cyan
+Write-Host ""
+
+# 1. Configurar Connection String
+Write-Host "??  Configurando Connection String..." -ForegroundColor Yellow
+az webapp config connection-string set `
+    --name $appName `
+    --resource-group $resourceGroup `
+    --settings SubastaConnection="Server=tcp:fpcursos.database.windows.net,1433;Initial Catalog=subasta;Persist Security Info=False;User ID=adminoc;Password=A0a0f0f011;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" `
+    --connection-string-type SQLAzure
+
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "? Connection String configurada correctamente" -ForegroundColor Green
+} else {
+    Write-Host "? Error configurando Connection String" -ForegroundColor Red
+}
+Write-Host ""
+
+# 2. Configurar JWT Settings
+Write-Host "?? Configurando JWT Settings..." -ForegroundColor Yellow
+az webapp config appsettings set `
+    --name $appName `
+    --resource-group $resourceGroup `
+    --settings `
+        JwtSettings__SecretKey="TU_CLAVE_SECRETA_SUPER_SEGURA_DE_AL_MENOS_32_CARACTERES" `
+        JwtSettings__Issuer="SubastasAPI" `
+        JwtSettings__Audience="SubastasClient" `
+        JwtSettings__ExpirationMinutes="60" `
+      ASPNETCORE_ENVIRONMENT="Production"
+
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "? JWT Settings configurados correctamente" -ForegroundColor Green
+} else {
+    Write-Host "? Error configurando JWT Settings" -ForegroundColor Red
+}
+Write-Host ""
+
+# 3. Configurar CORS Origins permitidos
+Write-Host "?? Configurando CORS Origins..." -ForegroundColor Yellow
+az webapp config appsettings set `
+    --name $appName `
+    --resource-group $resourceGroup `
+    --settings `
+        AllowedOrigins__0="http://localhost:4200" `
+        AllowedOrigins__1="http://localhost:4201"
+
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "? CORS configurado correctamente" -ForegroundColor Green
+} else {
+    Write-Host "? Error configurando CORS" -ForegroundColor Red
+}
+Write-Host ""
+
+# 4. Habilitar logging detallado
+Write-Host "?? Habilitando logging detallado..." -ForegroundColor Yellow
+az webapp log config `
+    --name $appName `
+    --resource-group $resourceGroup `
+    --application-logging filesystem `
+    --level information `
+    --detailed-error-messages true `
+    --failed-request-tracing true `
+    --web-server-logging filesystem
+
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "? Logging configurado correctamente" -ForegroundColor Green
+} else {
+    Write-Host "? Error configurando logging" -ForegroundColor Red
+}
+Write-Host ""
+
+# 5. Verificar configuración de .NET Runtime
+Write-Host "?? Verificando configuración de .NET Runtime..." -ForegroundColor Yellow
+$config = az webapp config show --name $appName --resource-group $resourceGroup --query "{stack:linuxFxVersion, netFrameworkVersion:netFrameworkVersion}" -o json | ConvertFrom-Json
+
+Write-Host "Stack actual: $($config.stack)" -ForegroundColor Cyan
+Write-Host "Framework: $($config.netFrameworkVersion)" -ForegroundColor Cyan
+Write-Host ""
+
+# Resumen final
+Write-Host "===============================================" -ForegroundColor Cyan
+Write-Host "? ¡Configuración completada!" -ForegroundColor Green
+Write-Host "===============================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "?? El App Service se está reiniciando automáticamente..." -ForegroundColor Yellow
+Write-Host "??  Espera 30-60 segundos antes de probar." -ForegroundColor Yellow
+Write-Host ""
+Write-Host "?? Para verificar que funciona, abre:" -ForegroundColor Cyan
+Write-Host "   https://$appName-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net/health" -ForegroundColor White
+Write-Host ""
+Write-Host "?? Para ver los logs en tiempo real, ejecuta:" -ForegroundColor Cyan
+Write-Host "   az webapp log tail --name $appName --resource-group $resourceGroup" -ForegroundColor White
+Write-Host ""
+Write-Host "?? Para ver Swagger UI, abre:" -ForegroundColor Cyan
+Write-Host "   https://$appName-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net/" -ForegroundColor White
+Write-Host ""

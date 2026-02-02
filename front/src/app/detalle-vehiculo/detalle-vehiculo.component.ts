@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
+import { getApiUrl } from '../utils/api-url.helper';
 
 interface Subasta {
   idSubasta: number;
@@ -125,7 +126,7 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
       this.isLoading.set(true);
     }
     // Buscar la subasta activa
-    this.http.get<Subasta[]>('/api/Subastas?activas=true').subscribe({
+    this.http.get<Subasta[]>(getApiUrl('/api/Subastas?activas=true')).subscribe({
       next: (subastas) => {
         const precioAnterior = this.subasta()?.precioActual;
         const subasta = subastas.find(s => s.idSubasta === idSubasta);
@@ -272,7 +273,7 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
 
     const cantidadPujada = this.cantidadPuja();
 
-    this.http.post('/api/Pujas', nuevaPuja).subscribe({
+    this.http.post(getApiUrl('/api/Pujas'), nuevaPuja).subscribe({
       next: () => {
         this.toast.success(`¡Puja realizada! Has pujado ${cantidadPujada.toLocaleString()}€`);
         this.isPujando.set(false);
@@ -328,7 +329,10 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
       }
       // Si no, construir URL apuntando al backend
       const rutaLimpia = imagen.ruta.startsWith('/img/') ? imagen.ruta.substring(5) : imagen.ruta;
-      return `http://localhost:56801/img/${rutaLimpia}`;
+      const baseUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:56801' 
+        : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+      return `${baseUrl}/img/${rutaLimpia}`;
     }
     
     return '/assets/images/no-image.svg';
@@ -352,7 +356,7 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
     }));
 
     // Enviar imágenes como JSON
-    this.http.post(`/api/Vehiculos/${sub.idVehiculo}/imagenes`, { imagenes: nuevasImagenes }).subscribe({
+    this.http.post(getApiUrl(`/api/Vehiculos/${sub.idVehiculo}/imagenes`), { imagenes: nuevasImagenes }).subscribe({
       next: () => {
         this.successMessage.set('Imágenes añadidas correctamente');
         setTimeout(() => this.successMessage.set(null), 3000);
@@ -386,7 +390,7 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
     const imagen = sub.vehiculo.imagenes[index];
     if (!confirm('¿Estás seguro de eliminar esta imagen?')) return;
 
-    this.http.delete(`/api/Vehiculos/${sub.idVehiculo}/imagenes/${imagen.idImagen}`).subscribe({
+    this.http.delete(getApiUrl(`/api/Vehiculos/${sub.idVehiculo}/imagenes/${imagen.idImagen}`)).subscribe({
       next: () => {
         this.successMessage.set('Imagen eliminada correctamente');
         setTimeout(() => this.successMessage.set(null), 3000);
@@ -414,7 +418,7 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
     console.log('Procesando subasta finalizada:', sub.idSubasta);
 
     // Llamar al endpoint para procesar la subasta finalizada
-    this.http.post('/api/Notificaciones/procesar-finalizadas', {}).subscribe({
+    this.http.post(getApiUrl('/api/Notificaciones/procesar-finalizadas'), {}).subscribe({
       next: () => {
         console.log('Subasta finalizada procesada correctamente');
         // Actualizar estado local para evitar procesar múltiples veces

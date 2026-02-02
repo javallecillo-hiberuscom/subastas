@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { getApiUrl } from '../utils/api-url.helper';
 
 interface Subasta {
   idSubasta: number;
@@ -72,8 +73,8 @@ export class ListaPujasComponent implements OnInit, OnDestroy {
     this.isLoading.set(true);
     const filtroActual = this.filtro();
     const url = filtroActual === 'activas' 
-      ? '/api/Subastas?activas=true' 
-      : '/api/Subastas?activas=false';
+      ? getApiUrl('/api/Subastas?activas=true')
+      : getApiUrl('/api/Subastas?activas=false');
     
     this.http.get<Subasta[]>(url).subscribe({
       next: (subastas) => {
@@ -89,7 +90,7 @@ export class ListaPujasComponent implements OnInit, OnDestroy {
   }
   
   cargarPujasUsuario(idUsuario: number): void {
-    this.http.get<any[]>(`/api/Pujas/usuario/${idUsuario}`).subscribe({
+    this.http.get<any[]>(getApiUrl(`/api/Pujas/usuario/${idUsuario}`)).subscribe({
       next: (pujas) => {
         const idsSubastas = pujas.map(p => p.idSubasta);
         this.pujasUsuario.set(idsSubastas);
@@ -157,7 +158,10 @@ export class ListaPujasComponent implements OnInit, OnDestroy {
       }
       // Si no, construir URL apuntando al backend
       const rutaLimpia = imagen.ruta.startsWith('/img/') ? imagen.ruta.substring(5) : imagen.ruta;
-      return `http://localhost:56801/img/${rutaLimpia}`;
+      const baseUrl = window.location.hostname === 'localhost' 
+        ? 'http://localhost:56801' 
+        : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+      return `${baseUrl}/img/${rutaLimpia}`;
     }
     
     return '/assets/images/no-image.svg';

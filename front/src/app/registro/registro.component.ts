@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-registro',
@@ -68,7 +69,7 @@ export class RegistroComponent {
         IdEmpresa: null
       };
 
-      this.http.post('/api/Usuarios/registro', registroData).subscribe({
+      this.http.post(getApiUrl('/api/Usuarios/registro'), registroData).subscribe({
         next: () => {
           this.successMessage.set('Registro exitoso. Tu cuenta está pendiente de validación por un administrador.');
           this.loading.set(false);

@@ -1,0 +1,1908 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Subastas API",
+    "description": "API para gestión de subastas de vehículos - Arquitectura Limpia",
+    "contact": {
+      "name": "Equipo de Desarrollo",
+      "email": "dev@subastas.com"
+    },
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Admin/dashboard": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Obtiene estadísticas generales del sistema para el dashboard del administrador.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Admin/usuarios-pendientes": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Obtiene lista de usuarios pendientes de validación con sus documentos IAE.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Documentos/subir-iae/{idUsuario}": {
+      "post": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Sube el documento IAE de un usuario.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUsuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.WebApi.Controllers.SubirDocumentoRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Documentos/descargar-iae/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Descarga el documento IAE de un usuario.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUsuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Documentos/verificar-iae/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Documentos"
+        ],
+        "summary": "Verifica si un usuario tiene documento IAE subido.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUsuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Empresas": {
+      "get": {
+        "tags": [
+          "Empresas"
+        ],
+        "summary": "Obtiene la lista de todas las empresas.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Subastas.Domain.Entities.Empresa"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Empresas"
+        ],
+        "summary": "Crea una nueva empresa.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Domain.Entities.Empresa"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Empresas/{id}": {
+      "get": {
+        "tags": [
+          "Empresas"
+        ],
+        "summary": "Obtiene una empresa por su identificador.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Domain.Entities.Empresa"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Empresas"
+        ],
+        "summary": "Actualiza una empresa existente.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Domain.Entities.Empresa"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Empresas"
+        ],
+        "summary": "Elimina una empresa por su identificador.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ImagenesVehiculo": {
+      "post": {
+        "tags": [
+          "ImagenesVehiculo"
+        ],
+        "summary": "Sube una imagen codificada en Base64 para un vehículo.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Datos de la imagen en Base64.",
+            "schema": {
+              "$ref": "#/definitions/Subastas.WebApi.Controllers.ImagenBase64Request"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ImagenesVehiculo/vehiculo/{idVehiculo}": {
+      "get": {
+        "tags": [
+          "ImagenesVehiculo"
+        ],
+        "summary": "Obtiene todas las imágenes activas de un vehículo en Base64.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idVehiculo",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/ImagenesVehiculo/{id}": {
+      "delete": {
+        "tags": [
+          "ImagenesVehiculo"
+        ],
+        "summary": "Elimina una imagen físicamente y de la base de datos.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notificaciones/enviar-email": {
+      "post": {
+        "tags": [
+          "Notificaciones"
+        ],
+        "summary": "Envía un email genérico.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.WebApi.Controllers.EmailRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notificaciones/procesar-finalizadas": {
+      "post": {
+        "tags": [
+          "Notificaciones"
+        ],
+        "summary": "Procesa subastas finalizadas, crea notificaciones para ganadores y perdedores.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notificaciones/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Notificaciones"
+        ],
+        "summary": "Obtiene todas las notificaciones del usuario con información del vehículo.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUsuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/Notificaciones/{id}/leida": {
+      "put": {
+        "tags": [
+          "Notificaciones"
+        ],
+        "summary": "Marca una notificación como leída.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Notificaciones/usuario/{idUsuario}/leidas": {
+      "put": {
+        "tags": [
+          "Notificaciones"
+        ],
+        "summary": "Marca todas las notificaciones de un usuario como leídas.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUsuario",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotificacionesAdmin": {
+      "get": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Obtiene las notificaciones administrativas con opción de filtrar solo las no leídas.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "soloNoLeidas",
+            "description": "Si es true, devuelve solo notificaciones no leídas.",
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "limite",
+            "description": "Número máximo de notificaciones a retornar.",
+            "type": "integer",
+            "format": "int32",
+            "default": 50
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Subastas.Domain.Entities.NotificacionAdmin"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Crea una nueva notificación administrativa.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Domain.Entities.NotificacionAdmin"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Domain.Entities.NotificacionAdmin"
+            }
+          }
+        }
+      }
+    },
+    "/api/NotificacionesAdmin/contador-no-leidas": {
+      "get": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Obtiene el contador de notificaciones no leídas.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "/api/NotificacionesAdmin/{id}/marcar-leida": {
+      "put": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Marca una notificación como leída.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID de la notificación.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotificacionesAdmin/marcar-todas-leidas": {
+      "put": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Marca todas las notificaciones como leídas.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotificacionesAdmin/{id}": {
+      "delete": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Elimina una notificación específica.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID de la notificación a eliminar.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/NotificacionesAdmin/limpiar-leidas": {
+      "delete": {
+        "tags": [
+          "NotificacionesAdmin"
+        ],
+        "summary": "Elimina todas las notificaciones ya leídas.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Pujas/activas": {
+      "get": {
+        "tags": [
+          "Pujas"
+        ],
+        "summary": "Obtiene todas las pujas activas incluyendo los datos completos del vehículo y sus imágenes.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/Pujas/usuario/{idUsuario}": {
+      "get": {
+        "tags": [
+          "Pujas"
+        ],
+        "summary": "Obtiene las pujas realizadas por un usuario específico.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "idUsuario",
+            "description": "ID del usuario cuyas pujas se desean obtener.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/Pujas": {
+      "post": {
+        "tags": [
+          "Pujas"
+        ],
+        "summary": "Realiza una nueva puja.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Datos de la puja.",
+            "schema": {
+              "$ref": "#/definitions/Subastas.WebApi.Controllers.PujaRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Subastas": {
+      "get": {
+        "tags": [
+          "Subastas"
+        ],
+        "summary": "Obtiene todas las subastas con opción de filtrar solo activas o vencidas.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "activas",
+            "description": "Si es true, devuelve solo subastas activas. Si es false, devuelve solo vencidas.",
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { }
+            }
+          }
+        }
+      }
+    },
+    "/api/Subastas/{id}": {
+      "get": {
+        "tags": [
+          "Subastas"
+        ],
+        "summary": "Obtiene una subasta por ID con detalles del vehículo.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Usuarios": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Obtiene todos los usuarios del sistema.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Responses.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+            }
+          }
+        }
+      }
+    },
+    "/api/Usuarios/{id}": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Obtiene un usuario por su ID.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Actualiza el perfil de un usuario.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Requests.ActualizarPerfilRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+            }
+          }
+        }
+      }
+    },
+    "/api/Usuarios/registro": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Registra un nuevo usuario en el sistema.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Requests.RegistroUsuarioRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+            }
+          }
+        }
+      }
+    },
+    "/api/Usuarios/login": {
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Inicia sesión y devuelve un token JWT.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Requests.LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.LoginResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+            }
+          }
+        }
+      }
+    },
+    "/api/Usuarios/{id}/validar": {
+      "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "summary": "Valida un usuario (solo administradores).",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+            }
+          }
+        }
+      }
+    },
+    "/api/Vehiculos": {
+      "get": {
+        "tags": [
+          "Vehiculos"
+        ],
+        "summary": "Obtiene todos los vehículos con sus imágenes.",
+        "produces": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": { }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Vehiculos"
+        ],
+        "summary": "Crea un nuevo vehículo con sus imágenes.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.WebApi.Controllers.VehiculoConImagenesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Vehiculos/{id}": {
+      "get": {
+        "tags": [
+          "Vehiculos"
+        ],
+        "summary": "Obtiene un vehículo por su ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Vehiculos"
+        ],
+        "summary": "Actualiza un vehículo existente.",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/*+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Subastas.WebApi.Controllers.VehiculoConImagenesRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Vehiculos"
+        ],
+        "summary": "Elimina un vehículo y sus imágenes.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Subastas.Application.DTOs.Requests.ActualizarPerfilRequest": {
+      "required": [
+        "email",
+        "idUsuario",
+        "nombre",
+        "rol"
+      ],
+      "type": "object",
+      "properties": {
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "email": {
+          "format": "email",
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "nombre": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "apellidos": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "rol": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "activo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "telefono": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "direccion": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "idEmpresa": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "password": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Requests.LoginRequest": {
+      "required": [
+        "email",
+        "password"
+      ],
+      "type": "object",
+      "properties": {
+        "email": {
+          "format": "email",
+          "minLength": 1,
+          "type": "string"
+        },
+        "password": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Requests.RegistroUsuarioRequest": {
+      "required": [
+        "email",
+        "nombre",
+        "password"
+      ],
+      "type": "object",
+      "properties": {
+        "nombre": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "apellidos": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "email": {
+          "format": "email",
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "password": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "telefono": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "direccion": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "idEmpresa": {
+          "format": "int32",
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.LoginResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/Subastas.Application.DTOs.Responses.LoginResponse"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Responses.ApiResponse`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/Subastas.Application.DTOs.Responses.UsuarioResponse"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Responses.ApiResponse`1[[System.Collections.Generic.IEnumerable`1[[Subastas.Application.DTOs.Responses.UsuarioResponse, Subastas.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Application.DTOs.Responses.UsuarioResponse"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Responses.LoginResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        },
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "email": {
+          "type": "string"
+        },
+        "nombreCompleto": {
+          "type": "string"
+        },
+        "rol": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Application.DTOs.Responses.UsuarioResponse": {
+      "type": "object",
+      "properties": {
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre": {
+          "type": "string"
+        },
+        "apellidos": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "rol": {
+          "type": "string"
+        },
+        "activo": {
+          "type": "boolean"
+        },
+        "validado": {
+          "type": "boolean"
+        },
+        "telefono": {
+          "type": "string"
+        },
+        "direccion": {
+          "type": "string"
+        },
+        "idEmpresa": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "fotoPerfilBase64": {
+          "type": "string"
+        },
+        "documentoIAE": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Empresa": {
+      "type": "object",
+      "properties": {
+        "idEmpresa": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "cif": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "direccion": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "telefono": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "usuarios": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Usuario"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.ImagenVehiculo": {
+      "type": "object",
+      "properties": {
+        "idImagen": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idVehiculo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "ruta": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "activo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "vehiculo": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Vehiculo"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Notificacion": {
+      "type": "object",
+      "properties": {
+        "idNotificacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idSubasta": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "mensaje": {
+          "type": "string"
+        },
+        "fechaEnvio": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "leida": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "subasta": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Subasta"
+        },
+        "usuario": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Usuario"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.NotificacionAdmin": {
+      "required": [
+        "mensaje",
+        "tipo",
+        "titulo"
+      ],
+      "type": "object",
+      "properties": {
+        "idNotificacion": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "titulo": {
+          "maxLength": 200,
+          "minLength": 0,
+          "type": "string"
+        },
+        "mensaje": {
+          "maxLength": 500,
+          "minLength": 0,
+          "type": "string"
+        },
+        "tipo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "leida": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "fechaCreacion": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "datosAdicionales": {
+          "maxLength": 500,
+          "minLength": 0,
+          "type": "string"
+        },
+        "usuario": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Usuario"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Pago": {
+      "type": "object",
+      "properties": {
+        "idPago": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idPuja": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "fechaPago": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "cantidad": {
+          "format": "double",
+          "type": "number"
+        },
+        "metodoPago": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "puja": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Puja"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Puja": {
+      "type": "object",
+      "properties": {
+        "idPuja": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idSubasta": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "cantidad": {
+          "format": "double",
+          "type": "number"
+        },
+        "fechaPuja": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "subasta": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Subasta"
+        },
+        "usuario": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Usuario"
+        },
+        "pagos": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Pago"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Subasta": {
+      "type": "object",
+      "properties": {
+        "idSubasta": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idVehiculo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "fechaInicio": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "fechaFin": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "precioInicial": {
+          "format": "double",
+          "type": "number"
+        },
+        "incrementoMinimo": {
+          "format": "double",
+          "type": "number"
+        },
+        "precioActual": {
+          "format": "double",
+          "type": "number"
+        },
+        "estado": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "vehiculo": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Vehiculo"
+        },
+        "notificaciones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Notificacion"
+          }
+        },
+        "pujas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Puja"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Usuario": {
+      "type": "object",
+      "properties": {
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "nombre": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "apellidos": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "email": {
+          "maxLength": 100,
+          "minLength": 0,
+          "type": "string"
+        },
+        "password": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "rol": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "activo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "validado": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idEmpresa": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "telefono": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "direccion": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "fotoPerfilBase64": {
+          "type": "string"
+        },
+        "documentoIAE": {
+          "maxLength": 500,
+          "minLength": 0,
+          "type": "string"
+        },
+        "empresa": {
+          "$ref": "#/definitions/Subastas.Domain.Entities.Empresa"
+        },
+        "notificaciones": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Notificacion"
+          }
+        },
+        "pujas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Puja"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.Domain.Entities.Vehiculo": {
+      "type": "object",
+      "properties": {
+        "idVehiculo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "marca": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "modelo": {
+          "maxLength": 50,
+          "minLength": 0,
+          "type": "string"
+        },
+        "matricula": {
+          "maxLength": 20,
+          "minLength": 0,
+          "type": "string"
+        },
+        "color": {
+          "maxLength": 30,
+          "minLength": 0,
+          "type": "string"
+        },
+        "anio": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "numeroPuertas": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "kilometraje": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "potencia": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "tipoMotor": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "tipoCarroceria": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "descripcion": {
+          "type": "string"
+        },
+        "fechaMatriculacion": {
+          "format": "date",
+          "type": "string"
+        },
+        "fechaCreacion": {
+          "format": "date",
+          "type": "string"
+        },
+        "estado": {
+          "maxLength": 255,
+          "minLength": 0,
+          "type": "string"
+        },
+        "imagenesVehiculo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.ImagenVehiculo"
+          }
+        },
+        "subastas": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.Domain.Entities.Subasta"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.WebApi.Controllers.EmailRequest": {
+      "description": "Modelo para envío de emails.",
+      "type": "object",
+      "properties": {
+        "destinatario": {
+          "type": "string"
+        },
+        "asunto": {
+          "type": "string"
+        },
+        "cuerpo": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.WebApi.Controllers.ImagenBase64Request": {
+      "description": "Modelo para subir imagen en Base64.",
+      "type": "object",
+      "properties": {
+        "idVehiculo": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "imagenBase64": {
+          "type": "string"
+        },
+        "nombre": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.WebApi.Controllers.ImagenVehiculoBase64": {
+      "description": "Representa una imagen en Base64 para un vehículo.",
+      "type": "object",
+      "properties": {
+        "idImagen": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "imagenBase64": {
+          "type": "string"
+        },
+        "nombre": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.WebApi.Controllers.PujaRequest": {
+      "description": "Modelo de datos para crear una puja.",
+      "type": "object",
+      "properties": {
+        "idSubasta": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "idUsuario": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "cantidad": {
+          "format": "double",
+          "type": "number"
+        },
+        "fechaPuja": {
+          "format": "date-time",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.WebApi.Controllers.SubirDocumentoRequest": {
+      "description": "Request para subir documentos.",
+      "type": "object",
+      "properties": {
+        "documentoBase64": {
+          "type": "string"
+        },
+        "nombreArchivo": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Subastas.WebApi.Controllers.VehiculoConImagenesRequest": {
+      "description": "Request para crear/actualizar vehículos con imágenes.",
+      "type": "object",
+      "properties": {
+        "marca": {
+          "type": "string"
+        },
+        "modelo": {
+          "type": "string"
+        },
+        "anio": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "kilometraje": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "potencia": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "matricula": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "numeroPuertas": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "descripcion": {
+          "type": "string"
+        },
+        "tipoCarroceria": {
+          "type": "string"
+        },
+        "tipoMotor": {
+          "type": "string"
+        },
+        "estado": {
+          "type": "string"
+        },
+        "imagenes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Subastas.WebApi.Controllers.ImagenVehiculoBase64"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header usando el esquema Bearer. Ejemplo: \"Bearer {token}\""
+    }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
+}

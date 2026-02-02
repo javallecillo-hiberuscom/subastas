@@ -3,8 +3,6 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\xunit.abstractions.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Subastas.WebApi.deps.json
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Subastas.WebApi.runtimeconfig.json
-C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\appsettings.Development.json
-C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\appsettings.json
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Subastas.WebApi.staticwebassets.runtime.json
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Subastas.WebApi.staticwebassets.endpoints.json
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Subastas.WebApi.exe
@@ -174,3 +172,14 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\obj\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\obj\Debug\net8.0\Subastas.UnitTests.pdb
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\obj\Debug\net8.0\Subastas.UnitTests.genruntimeconfig.cache
 C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\obj\Debug\net8.0\ref\Subastas.UnitTests.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\obj\Debug\net8.0\Subastas.UnitTests.sourcelink.json
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.ApplicationInsights.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.ApplicationInsights.AspNetCore.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.AI.DependencyCollector.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.AI.EventCounterCollector.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.AI.PerfCounterCollector.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.AI.WindowsServer.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.AI.ServerTelemetryChannel.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\Microsoft.Extensions.Logging.ApplicationInsights.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\System.Diagnostics.PerformanceCounter.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\test\Subastas.UnitTests\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Diagnostics.PerformanceCounter.dll

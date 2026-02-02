@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { getApiUrl } from '../utils/api-url.helper';
 
 export interface EstadisticasGenerales {
   totalUsuarios: number;
@@ -93,15 +94,13 @@ export interface UsuarioPendiente {
   providedIn: 'root'
 })
 export class AdminService {
-  private apiUrl = '/api/Admin';
-
   constructor(private http: HttpClient) { }
 
   getDashboard(): Observable<DashboardAdmin> {
-    return this.http.get<DashboardAdmin>(`${this.apiUrl}/dashboard`);
+    return this.http.get<DashboardAdmin>(getApiUrl('/api/Admin/dashboard'));
   }
 
   getUsuariosPendientes(): Observable<UsuarioPendiente[]> {
-    return this.http.get<UsuarioPendiente[]>(`${this.apiUrl}/usuarios-pendientes`);
+    return this.http.get<UsuarioPendiente[]>(getApiUrl('/api/Admin/usuarios-pendientes'));
   }
 }

@@ -8,7 +8,12 @@ import { LoginRequest, LoginResponse, User, AuthState, JwtPayload, ApiResponse }
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = '/api/usuarios';
+  private getApiUrl(): string {
+    const baseUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:56801' 
+      : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+    return `${baseUrl}/api/usuarios`;
+  }
   private readonly TOKEN_KEY = 'auth_token';
   private readonly USER_KEY = 'auth_user';
 
@@ -68,7 +73,7 @@ export class AuthService {
       Password: password
     };
     
-    return this.http.post<ApiResponse<LoginResponse>>(`${this.API_URL}/login`, credentials).pipe(
+    return this.http.post<ApiResponse<LoginResponse>>(`${this.getApiUrl()}/login`, credentials).pipe(
       map(apiResponse => {
         console.log('Respuesta del backend:', apiResponse);
         // Compatibilidad con camelCase y PascalCase

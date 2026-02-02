@@ -16,12 +16,6 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Rele
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Extensions.Caching.Memory.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Extensions.DependencyInjection.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Extensions.Logging.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Extensions.Options.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Identity.Client.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.Identity.Client.Extensions.Msal.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
@@ -38,7 +32,6 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Rele
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\System.ClientModel.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\System.Configuration.ConfigurationManager.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\System.Diagnostics.EventLog.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\System.Memory.Data.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\System.Security.Cryptography.Pkcs.dll
@@ -61,7 +54,6 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Rele
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
-C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\runtimes\win\lib\net8.0\System.Diagnostics.EventLog.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\runtimes\win\lib\net8.0\System.Security.Cryptography.Pkcs.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Subastas.Application.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\bin\Release\net8.0\Subastas.Domain.dll
@@ -96,3 +88,5 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Rele
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Release\net8.0\Subastas.WebApi.pdb
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Release\net8.0\Subastas.WebApi.genruntimeconfig.cache
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Release\net8.0\ref\Subastas.WebApi.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Release\net8.0\Subastas.WebApi.sourcelink.json
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\obj\Release\net8.0\staticwebassets.upToDateCheck.txt

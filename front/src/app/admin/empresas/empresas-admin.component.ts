@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Empresa } from '../../models/app.models';
+import { getApiUrl } from '../../utils/api-url.helper';
 
 @Component({
   selector: 'app-empresas-admin',
@@ -40,7 +41,7 @@ export class EmpresasAdminComponent implements OnInit {
 
   cargarEmpresas() {
     this.loading.set(true);
-    this.http.get<Empresa[]>('/api/Empresas').subscribe({
+    this.http.get<Empresa[]>(getApiUrl('/api/Empresas')).subscribe({
       next: (empresas) => {
         this.empresas.set(empresas);
         this.loading.set(false);
@@ -82,7 +83,7 @@ export class EmpresasAdminComponent implements OnInit {
 
     if (this.editingId) {
       // Actualizar
-      this.http.put(`/api/Empresas/${this.editingId}`, { ...empresaData, idEmpresa: this.editingId }).subscribe({
+      this.http.put(getApiUrl(`/api/Empresas/${this.editingId}`), { ...empresaData, idEmpresa: this.editingId }).subscribe({
         next: () => {
           this.successMessage.set('Empresa actualizada correctamente');
           setTimeout(() => this.successMessage.set(null), 3000);
@@ -97,7 +98,7 @@ export class EmpresasAdminComponent implements OnInit {
       });
     } else {
       // Crear
-      this.http.post('/api/Empresas', empresaData).subscribe({
+      this.http.post(getApiUrl('/api/Empresas'), empresaData).subscribe({
         next: () => {
           this.successMessage.set('Empresa creada correctamente');
           setTimeout(() => this.successMessage.set(null), 3000);
@@ -118,7 +119,7 @@ export class EmpresasAdminComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`/api/Empresas/${id}`).subscribe({
+    this.http.delete(getApiUrl(`/api/Empresas/${id}`)).subscribe({
       next: () => {
         this.successMessage.set('Empresa eliminada correctamente');
         setTimeout(() => this.successMessage.set(null), 3000);
@@ -134,7 +135,7 @@ export class EmpresasAdminComponent implements OnInit {
 
   toggleActivo(empresa: Empresa) {
     const empresaActualizada = { ...empresa, activo: !empresa.activo };
-    this.http.put(`/api/Empresas/${empresa.idEmpresa}`, empresaActualizada).subscribe({
+    this.http.put(getApiUrl(`/api/Empresas/${empresa.idEmpresa}`), empresaActualizada).subscribe({
       next: () => {
         this.successMessage.set('Estado actualizado correctamente');
         setTimeout(() => this.successMessage.set(null), 3000);

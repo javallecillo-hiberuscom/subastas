@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { VehiculoService, PujaService } from '../services/vehiculo.service';
 import { Vehiculo, Puja } from '../models/app.models';
 import { AuthService } from '../services/auth.service';
+import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-mis-pujas',
@@ -70,7 +71,7 @@ export class MisPujasComponent implements OnInit {
     const user = this.currentUser();
     
     if (user?.idUsuario) {
-      this.http.get<Puja[]>(`/api/Pujas/usuario/${user.idUsuario}`).subscribe({
+      this.http.get<Puja[]>(getApiUrl(`/api/Pujas/usuario/${user.idUsuario}`)).subscribe({
         next: (pujas) => {
           this.misPujas.set(pujas);
           this.loading.set(false);

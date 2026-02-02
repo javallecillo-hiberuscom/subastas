@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { interval, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { getApiUrl } from '../utils/api-url.helper';
 
 export interface Notificacion {
   id: number;
@@ -42,7 +43,7 @@ export class NotificationService {
   }
 
   private cargarNotificaciones(idUsuario: number) {
-    this.http.get<any[]>(`/api/Notificaciones/${idUsuario}`)
+    this.http.get<any[]>(getApiUrl(`/api/Notificaciones/${idUsuario}`))
       .pipe(
         catchError((error) => {
           // Si es 404, devolver array vacío (usuario sin notificaciones)
@@ -107,7 +108,7 @@ export class NotificationService {
   }
 
   marcarComoLeida(idNotificacion: number) {
-    this.http.put(`/api/Notificaciones/${idNotificacion}/leida`, {}).pipe(
+    this.http.put(getApiUrl(`/api/Notificaciones/${idNotificacion}/leida`), {}).pipe(
       catchError((error) => {
         // Endpoint no implementado aún, solo actualizar localmente sin mostrar error
         if (error.status !== 404) {
@@ -137,7 +138,7 @@ export class NotificationService {
   }
 
   procesarSubastasFinalizadas() {
-    return this.http.post('/api/Notificaciones/procesar-finalizadas', {});
+    return this.http.post(getApiUrl('/api/Notificaciones/procesar-finalizadas'), {});
   }
 
   agregarNotificacionLocal(notif: Omit<Notificacion, 'id' | 'fecha' | 'leida'>) {

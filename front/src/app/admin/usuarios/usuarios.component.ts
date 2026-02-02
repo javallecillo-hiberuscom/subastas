@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../../services/toast.service';
+import { getApiUrl } from '../../utils/api-url.helper';
 
 interface Usuario {
   idUsuario: number;
@@ -38,7 +39,7 @@ export class UsuariosComponent implements OnInit {
 
   cargarUsuarios(): void {
     this.loading.set(true);
-    this.http.get<Usuario[]>('/api/Usuarios').subscribe({
+    this.http.get<Usuario[]>(getApiUrl('/api/Usuarios')).subscribe({
       next: (usuarios) => {
         this.usuarios.set(usuarios);
         this.loading.set(false);
@@ -54,7 +55,7 @@ export class UsuariosComponent implements OnInit {
   validarUsuario(usuario: Usuario): void {
     const nuevoEstado = usuario.validado === 1 ? 0 : 1;
     
-    this.http.put(`/api/Usuarios/${usuario.idUsuario}/validar`, { Validado: nuevoEstado === 1 })
+    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}/validar`), { Validado: nuevoEstado === 1 })
       .subscribe({
         next: () => {
           usuario.validado = nuevoEstado;
@@ -73,7 +74,7 @@ export class UsuariosComponent implements OnInit {
       return;
     }
 
-    this.http.get(`/api/Documentos/descargar-iae/${usuario.idUsuario}`, {
+    this.http.get(getApiUrl(`/api/Documentos/descargar-iae/${usuario.idUsuario}`), {
       responseType: 'blob'
     }).subscribe({
       next: (blob) => {
@@ -106,7 +107,7 @@ export class UsuariosComponent implements OnInit {
       idEmpresa: usuario.idEmpresa
     };
 
-    this.http.put(`/api/Usuarios/${usuario.idUsuario}`, request)
+    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}`), request)
       .subscribe({
         next: () => {
           usuario.activo = nuevoEstado;
@@ -124,7 +125,7 @@ export class UsuariosComponent implements OnInit {
       return;
     }
 
-    this.http.delete(`/api/Usuarios/${usuario.idUsuario}`)
+    this.http.delete(getApiUrl(`/api/Usuarios/${usuario.idUsuario}`))
       .subscribe({
         next: () => {
           this.usuarios.update(users => users.filter(u => u.idUsuario !== usuario.idUsuario));

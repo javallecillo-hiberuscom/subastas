@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/auth.models';
+import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-login',
@@ -78,7 +79,7 @@ export class LoginComponent {
 
     this.isLoading.set(true);
 
-    this.http.post('/api/Usuarios/recuperar-contrasena', { Email: email }).subscribe({
+    this.http.post(getApiUrl('/api/Usuarios/recuperar-contrasena'), { Email: email }).subscribe({
       next: (response: any) => {
         this.isLoading.set(false);
         
@@ -120,7 +121,7 @@ export class LoginComponent {
 
     this.isLoading.set(true);
 
-    this.http.post('/api/Usuarios/restablecer-contrasena', {
+    this.http.post(getApiUrl('/api/Usuarios/restablecer-contrasena'), {
       Email: email,
       Codigo: codigo,
       NuevaContrasena: nuevaContrasena

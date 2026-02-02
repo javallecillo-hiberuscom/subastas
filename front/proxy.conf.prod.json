@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

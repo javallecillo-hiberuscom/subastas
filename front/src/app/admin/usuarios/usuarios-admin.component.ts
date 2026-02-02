@@ -2,6 +2,7 @@ import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { getApiUrl } from '../../utils/api-url.helper';
 
 interface UsuarioAdmin {
   idUsuario: number;
@@ -57,7 +58,7 @@ export class UsuariosAdminComponent implements OnInit {
 
   cargarUsuarios() {
     this.loading.set(true);
-    this.http.get<UsuarioAdmin[]>('/api/Usuarios').subscribe({
+    this.http.get<UsuarioAdmin[]>(getApiUrl('/api/Usuarios')).subscribe({
       next: (usuarios) => {
         this.usuarios.set(usuarios);
         this.loading.set(false);
@@ -117,7 +118,7 @@ export class UsuariosAdminComponent implements OnInit {
     if (this.usuarioEditando()) {
       // Actualizar usuario existente
       const id = this.usuarioEditando()!.idUsuario;
-      this.http.put(`/api/Usuarios/${id}`, datosUsuario).subscribe({
+      this.http.put(getApiUrl(`/api/Usuarios/${id}`), datosUsuario).subscribe({
         next: () => {
           this.mensaje.set('Usuario actualizado correctamente');
           this.tipoMensaje.set('success');
@@ -134,7 +135,7 @@ export class UsuariosAdminComponent implements OnInit {
       });
     } else {
       // Crear nuevo usuario
-      this.http.post('/api/Usuarios', datosUsuario).subscribe({
+      this.http.post(getApiUrl('/api/Usuarios'), datosUsuario).subscribe({
         next: () => {
           this.mensaje.set('Usuario creado correctamente');
           this.tipoMensaje.set('success');
@@ -155,7 +156,7 @@ export class UsuariosAdminComponent implements OnInit {
   validarUsuario(usuario: UsuarioAdmin) {
     if (!confirm(`¿Validar al usuario ${usuario.nombre}?`)) return;
 
-    this.http.put(`/api/Usuarios/${usuario.idUsuario}`, { ...usuario, rol: 'validado' }).subscribe({
+    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}`), { ...usuario, rol: 'validado' }).subscribe({
       next: () => {
         this.mensaje.set('Usuario validado correctamente');
         this.tipoMensaje.set('success');
@@ -175,7 +176,7 @@ export class UsuariosAdminComponent implements OnInit {
     const accion = usuario.activo ? 'desactivar' : 'activar';
     if (!confirm(`¿${accion.charAt(0).toUpperCase() + accion.slice(1)} al usuario ${usuario.nombre}?`)) return;
 
-    this.http.put(`/api/Usuarios/${usuario.idUsuario}`, { ...usuario, activo: !usuario.activo }).subscribe({
+    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}`), { ...usuario, activo: !usuario.activo }).subscribe({
       next: () => {
         this.mensaje.set(`Usuario ${accion}do correctamente`);
         this.tipoMensaje.set('success');
@@ -194,7 +195,7 @@ export class UsuariosAdminComponent implements OnInit {
   eliminarUsuario(usuario: UsuarioAdmin) {
     if (!confirm(`¿Eliminar definitivamente al usuario ${usuario.nombre}? Esta acción no se puede deshacer.`)) return;
 
-    this.http.delete(`/api/Usuarios/${usuario.idUsuario}`).subscribe({
+    this.http.delete(getApiUrl(`/api/Usuarios/${usuario.idUsuario}`)).subscribe({
       next: () => {
         this.mensaje.set('Usuario eliminado correctamente');
         this.tipoMensaje.set('success');

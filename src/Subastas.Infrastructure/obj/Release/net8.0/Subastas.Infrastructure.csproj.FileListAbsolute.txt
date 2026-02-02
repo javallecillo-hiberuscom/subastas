@@ -21,3 +21,4 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Infrastructure\
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Infrastructure\obj\Release\net8.0\Subastas.Infrastructure.pdb
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Infrastructure\obj\Release\net8.0\Subastas.Infrastructure.genruntimeconfig.cache
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Infrastructure\obj\Release\net8.0\ref\Subastas.Infrastructure.dll
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.Infrastructure\obj\Release\net8.0\Subastas.Infrastructure.sourcelink.json

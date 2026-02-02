@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Vehiculo, TipoMotor, TipoCarroceria, ImagenVehiculo } from '../../models/app.models';
+import { getApiUrl } from '../../utils/api-url.helper';
 
 @Component({
   selector: 'app-vehiculos-admin',
@@ -54,7 +55,7 @@ export class VehiculosAdminComponent implements OnInit {
 
   cargarVehiculos() {
     this.loading.set(true);
-    this.http.get<Vehiculo[]>('/api/Vehiculos').subscribe({
+    this.http.get<Vehiculo[]>(getApiUrl('/api/Vehiculos')).subscribe({
       next: (vehiculos) => {
         this.vehiculos.set(vehiculos);
         this.loading.set(false);
@@ -108,7 +109,7 @@ export class VehiculosAdminComponent implements OnInit {
     
     if (this.editingId) {
       // Actualizar vehículo existente
-      this.http.put(`/api/Vehiculos/${this.editingId}`, { ...vehiculoData, idVehiculo: this.editingId }).subscribe({
+      this.http.put(getApiUrl(`/api/Vehiculos/${this.editingId}`), { ...vehiculoData, idVehiculo: this.editingId }).subscribe({
         next: () => {
           this.successMessage.set('Vehículo actualizado correctamente');
           setTimeout(() => this.successMessage.set(null), 3000);
@@ -123,7 +124,7 @@ export class VehiculosAdminComponent implements OnInit {
       });
     } else {
       // Crear vehículo con imágenes incluidas
-      this.http.post<Vehiculo>('/api/Vehiculos', vehiculoData).subscribe({
+      this.http.post<Vehiculo>(getApiUrl('/api/Vehiculos'), vehiculoData).subscribe({
         next: () => {
           this.successMessage.set('Vehículo creado correctamente');
           setTimeout(() => this.successMessage.set(null), 3000);
@@ -209,7 +210,7 @@ export class VehiculosAdminComponent implements OnInit {
   eliminarVehiculo(id: number) {
     if (!confirm('¿Estás seguro de eliminar este vehículo?')) return;
 
-    this.http.delete(`/api/Vehiculos/${id}`).subscribe({
+    this.http.delete(getApiUrl(`/api/Vehiculos/${id}`)).subscribe({
       next: () => {
         this.successMessage.set('Vehículo eliminado correctamente');
         setTimeout(() => this.successMessage.set(null), 3000);

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "hLwmcZ8Uxf0=",
+  "dgSpecHash": "nC2FRyEG41U=",
   "success": true,
   "projectFilePath": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.Application\\Subastas.Application.csproj",
   "expectedPackageFiles": [
@@ -15,8 +15,8 @@
     "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
     "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.extensions.options\\8.0.2\\microsoft.extensions.options.8.0.2.nupkg.sha512",
     "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
-    "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.23\\microsoft.netcore.app.ref.8.0.23.nupkg.sha512",
     "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.23\\microsoft.windowsdesktop.app.ref.8.0.23.nupkg.sha512",
+    "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.23\\microsoft.netcore.app.ref.8.0.23.nupkg.sha512",
     "C:\\Users\\JoseAntonioVallecill\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.23\\microsoft.aspnetcore.app.ref.8.0.23.nupkg.sha512"
   ],
   "logs": []

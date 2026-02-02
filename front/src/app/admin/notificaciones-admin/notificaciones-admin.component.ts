@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { interval, Subscription } from 'rxjs';
+import { getApiUrl } from '../../utils/api-url.helper';
 
 interface NotificacionAdmin {
   idNotificacion: number;
@@ -59,7 +60,7 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
     const soloNoLeidas = this.filtro() === 'no-leidas';
     this.loading.set(true);
     
-    this.http.get<NotificacionAdmin[]>(`/api/NotificacionesAdmin?soloNoLeidas=${soloNoLeidas}`)
+    this.http.get<NotificacionAdmin[]>(getApiUrl(`/api/NotificacionesAdmin?soloNoLeidas=${soloNoLeidas}`))
       .subscribe({
         next: (notificaciones) => {
           this.notificaciones.set(notificaciones);
@@ -73,7 +74,7 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   }
 
   cargarContador(): void {
-    this.http.get<{contador: number}>('/api/NotificacionesAdmin/contador-no-leidas')
+    this.http.get<{contador: number}>(getApiUrl('/api/NotificacionesAdmin/contador-no-leidas'))
       .subscribe({
         next: (response) => {
           this.contadorNoLeidas.set(response.contador);
@@ -92,7 +93,7 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   marcarComoLeida(notificacion: NotificacionAdmin): void {
     if (notificacion.leida === 1) return;
 
-    this.http.put(`/api/NotificacionesAdmin/${notificacion.idNotificacion}/marcar-leida`, {})
+    this.http.put(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}/marcar-leida`), {})
       .subscribe({
         next: () => {
           notificacion.leida = 1;
@@ -112,7 +113,7 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.http.put('/api/NotificacionesAdmin/marcar-todas-leidas', {})
+    this.http.put(getApiUrl('/api/NotificacionesAdmin/marcar-todas-leidas'), {})
       .subscribe({
         next: () => {
           this.cargarNotificaciones();
@@ -129,7 +130,7 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   eliminarNotificacion(notificacion: NotificacionAdmin): void {
     if (!confirm('¿Eliminar esta notificación?')) return;
 
-    this.http.delete(`/api/NotificacionesAdmin/${notificacion.idNotificacion}`)
+    this.http.delete(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}`))
       .subscribe({
         next: () => {
           this.notificaciones.update(notifs => 
@@ -148,7 +149,7 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   limpiarLeidas(): void {
     if (!confirm('¿Eliminar todas las notificaciones leídas?')) return;
 
-    this.http.delete('/api/NotificacionesAdmin/limpiar-leidas')
+    this.http.delete(getApiUrl('/api/NotificacionesAdmin/limpiar-leidas'))
       .subscribe({
         next: () => {
           this.cargarNotificaciones();

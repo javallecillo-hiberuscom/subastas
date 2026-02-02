@@ -1,7 +1,44 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\src\\subastas.webapi\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|solutionrelative:src\\subastas.webapi\\appsettings.production.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\src\\subastas.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|solutionrelative:src\\subastas.webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\src\\subastas.webapi\\web.config||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|solutionrelative:src\\subastas.webapi\\web.config||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\configure-azure.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:configure-azure.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\AZURE-TROUBLESHOOTING.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AZURE-TROUBLESHOOTING.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\src\\subastas.webapi\\subastas.webapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{6C1E82F5-0A79-4C8D-909C-2E5C6B1B3A2D}|src\\Subastas.WebApi\\Subastas.WebApi.csproj|solutionrelative:src\\subastas.webapi\\subastas.webapi.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\AZURE-CONFIGURATION-GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:AZURE-CONFIGURATION-GUIDE.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\DEPLOYMENT-CHECKLIST.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DEPLOYMENT-CHECKLIST.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\SOLUCION-RAPIDA.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:SOLUCION-RAPIDA.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}|"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +46,128 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Subastas.WebApi",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\Subastas.WebApi.csproj",
+              "RelativeDocumentMoniker": "src\\Subastas.WebApi\\Subastas.WebApi.csproj",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\Subastas.WebApi.csproj",
+              "RelativeToolTip": "src\\Subastas.WebApi\\Subastas.WebApi.csproj",
+              "ViewState": "AgIAAB0AAAAAAAAAAABBwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-02T15:34:11.998Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AZURE-TROUBLESHOOTING.md",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\AZURE-TROUBLESHOOTING.md",
+              "RelativeDocumentMoniker": "AZURE-TROUBLESHOOTING.md",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\AZURE-TROUBLESHOOTING.md",
+              "RelativeToolTip": "AZURE-TROUBLESHOOTING.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-02T15:33:54.955Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "configure-azure.ps1",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\configure-azure.ps1",
+              "RelativeDocumentMoniker": "configure-azure.ps1",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\configure-azure.ps1",
+              "RelativeToolTip": "configure-azure.ps1",
+              "ViewState": "AgIAAGcAAAAAAAAAAIBJwGkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-02-02T15:33:21.805Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "web.config",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\web.config",
+              "RelativeDocumentMoniker": "src\\Subastas.WebApi\\web.config",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\web.config",
+              "RelativeToolTip": "src\\Subastas.WebApi\\web.config",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-02-02T15:33:04.881Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\Program.cs",
+              "RelativeDocumentMoniker": "src\\Subastas.WebApi\\Program.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\Program.cs",
+              "RelativeToolTip": "src\\Subastas.WebApi\\Program.cs",
+              "ViewState": "AgIAAPcAAAAAAAAAAIBJwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-02T15:32:45.961Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.Production.json",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\appsettings.Production.json",
+              "RelativeDocumentMoniker": "src\\Subastas.WebApi\\appsettings.Production.json",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\src\\Subastas.WebApi\\appsettings.Production.json",
+              "RelativeToolTip": "src\\Subastas.WebApi\\appsettings.Production.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-02T15:32:14.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SOLUCION-RAPIDA.md",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\SOLUCION-RAPIDA.md",
+              "RelativeDocumentMoniker": "SOLUCION-RAPIDA.md",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\SOLUCION-RAPIDA.md",
+              "RelativeToolTip": "SOLUCION-RAPIDA.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAKYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-02T15:35:42.931Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DEPLOYMENT-CHECKLIST.md",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\DEPLOYMENT-CHECKLIST.md",
+              "RelativeDocumentMoniker": "DEPLOYMENT-CHECKLIST.md",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\DEPLOYMENT-CHECKLIST.md",
+              "RelativeToolTip": "DEPLOYMENT-CHECKLIST.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-02T15:35:01.306Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "AZURE-CONFIGURATION-GUIDE.md",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\AZURE-CONFIGURATION-GUIDE.md",
+              "RelativeDocumentMoniker": "AZURE-CONFIGURATION-GUIDE.md",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\AZURE-CONFIGURATION-GUIDE.md",
+              "RelativeToolTip": "AZURE-CONFIGURATION-GUIDE.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAGcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-02-02T15:34:38.858Z",
+              "EditorCaption": ""
             }
           ]
         }

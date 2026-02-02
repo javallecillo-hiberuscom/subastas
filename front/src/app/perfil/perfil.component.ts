@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { ToastService } from '../services/toast.service';
+import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-perfil',
@@ -115,7 +116,7 @@ export class PerfilComponent implements OnInit {
 
   cargarEmpresa(idEmpresa: number) {
     console.log('=== CARGAR EMPRESA ===', idEmpresa);
-    this.http.get<any>(`/api/Empresas/${idEmpresa}`).subscribe({
+    this.http.get<any>(getApiUrl(`/api/Empresas/${idEmpresa}`)).subscribe({
       next: (empresa) => {
         console.log('Empresa cargada:', empresa);
         this.empresa.set(empresa);
@@ -269,12 +270,12 @@ export class PerfilComponent implements OnInit {
     console.log('Guardando perfil con payload:', payload);
     console.log('URL:', `/api/Usuarios/${user.idUsuario}`);
 
-    this.http.put(`/api/Usuarios/${user.idUsuario}`, payload).subscribe({
+    this.http.put(getApiUrl(`/api/Usuarios/${user.idUsuario}`), payload).subscribe({
       next: (response) => {
         console.log('Respuesta exitosa:', response);
         
         // Recargar datos frescos del servidor
-        this.http.get<any>(`/api/Usuarios/${user.idUsuario}`).subscribe({
+        this.http.get<any>(getApiUrl(`/api/Usuarios/${user.idUsuario}`)).subscribe({
           next: (usuarioActualizado) => {
             this.authService.setCurrentUser(usuarioActualizado);
             
@@ -360,7 +361,7 @@ export class PerfilComponent implements OnInit {
     if (user.idEmpresa) {
       console.log('Actualizando empresa existente:', user.idEmpresa);
       // Actualizar empresa existente
-      this.http.put(`/api/Empresas/${user.idEmpresa}`, {...payload, idEmpresa: user.idEmpresa}).subscribe({
+      this.http.put(getApiUrl(`/api/Empresas/${user.idEmpresa}`), {...payload, idEmpresa: user.idEmpresa}).subscribe({
         next: () => {
           console.log('Empresa actualizada correctamente');
           this.toast.success('Empresa actualizada correctamente');
@@ -377,10 +378,10 @@ export class PerfilComponent implements OnInit {
       });
     } else {
       // Crear nueva empresa
-      this.http.post('/api/Empresas', payload).subscribe({
+      this.http.post(getApiUrl('/api/Empresas'), payload).subscribe({
         next: (response: any) => {
           // Actualizar usuario con idEmpresa
-          this.http.put(`/api/Usuarios/${user.idUsuario}`, {...user, idEmpresa: response.idEmpresa}).subscribe({
+          this.http.put(getApiUrl(`/api/Usuarios/${user.idUsuario}`), {...user, idEmpresa: response.idEmpresa}).subscribe({
             next: () => {
               this.authService.setCurrentUser({...user, idEmpresa: response.idEmpresa});
               this.toast.success('Empresa creada correctamente');
@@ -517,10 +518,10 @@ export class PerfilComponent implements OnInit {
 
     this.guardando.set(true);
 
-    this.http.delete(`/api/Usuarios/${user.idUsuario}/foto-perfil`).subscribe({
+    this.http.delete(getApiUrl(`/api/Usuarios/${user.idUsuario}/foto-perfil`)).subscribe({
       next: () => {
         // Recargar usuario desde servidor
-        this.http.get<any>(`/api/Usuarios/${user.idUsuario}`).subscribe({
+        this.http.get<any>(getApiUrl(`/api/Usuarios/${user.idUsuario}`)).subscribe({
           next: (usuarioActualizado) => {
             this.authService.setCurrentUser(usuarioActualizado);
             this.toast.success('Foto eliminada correctamente');
@@ -561,12 +562,12 @@ export class PerfilComponent implements OnInit {
     try {
       const base64 = await this.convertirABase64(this.archivoFoto);
 
-      this.http.put(`/api/Usuarios/${user.idUsuario}/foto-perfil`, { 
+      this.http.put(getApiUrl(`/api/Usuarios/${user.idUsuario}/foto-perfil`), { 
         fotoBase64: base64 
       }).subscribe({
         next: () => {
           // Recargar el usuario completo desde el servidor para obtener la foto actualizada
-          this.http.get<any>(`/api/Usuarios/${user.idUsuario}`).subscribe({
+          this.http.get<any>(getApiUrl(`/api/Usuarios/${user.idUsuario}`)).subscribe({
             next: (usuarioActualizado) => {
               // Actualizar en authService y localStorage
               this.authService.setCurrentUser(usuarioActualizado);
