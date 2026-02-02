@@ -117,6 +117,34 @@ h2 {
   opacity: 0.8;
 }
 
+/* Gráficos */
+.graficos-section {
+  margin: 2rem 0;
+}
+
+.graficos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.grafico-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grafico-card canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
 /* Tablas */
 .table-container {
   overflow-x: auto;
@@ -186,17 +214,47 @@ h2 {
 
 .btn-contact {
   display: inline-block;
-  padding: 0.25rem 0.5rem;
-  background-color: #3498db;
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
   color: white !important;
-  border-radius: 4px;
+  border-radius: 6px;
   text-decoration: none !important;
   font-size: 0.85rem;
   margin: 0.1rem 0;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+  transition: all 0.3s ease;
 }
 
 .btn-contact:hover {
-  background-color: #2980b9;
+  background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+}
+
+.section-description {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.subastas-terminadas {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-top: 2rem;
+}
+
+.subastas-terminadas h2 {
+  color: #27ae60;
+  border-bottom-color: #27ae60;
+}
+
+.precio-venta {
+  color: #27ae60;
+  font-size: 1.1rem;
 }
 
 .tiempo-restante {

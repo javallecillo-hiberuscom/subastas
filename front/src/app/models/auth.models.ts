@@ -32,7 +32,7 @@ export interface User {
   telefono?: string;
   direccion?: string;
   idEmpresa?: number;
-  validado?: number;
+  validado?: boolean;
   documentoIAE?: string;
   password?: string;
   fotoPerfilBase64?: string;

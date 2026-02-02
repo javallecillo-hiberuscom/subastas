@@ -42,7 +42,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
         { label: 'Subastas Vencidas', icon: '⏱️', route: '/subastas', queryParams: { filtro: 'vencidas' } }
       ]
     },
-    { label: 'Mis Pujas', icon: '💰', route: '/mis-pujas' },
+    { label: 'Mis Pujas', icon: '💰', route: '/mis-pujas', userOnly: true },
     { label: 'Mi Perfil', icon: '👤', route: '/perfil' },
     { label: 'Subir Documento IAE', icon: '📄', route: '/subir-iae', userOnly: true },
     { label: 'Notificaciones', icon: '🔔', route: '/admin/notificaciones', adminOnly: true },

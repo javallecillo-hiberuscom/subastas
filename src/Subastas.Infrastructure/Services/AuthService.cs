@@ -33,11 +33,14 @@ public class AuthService : IAuthService
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+        // Normalizar el rol: quitar espacios y capitalizar correctamente
+        var rolNormalizado = rol?.Trim().ToLower() == "admin" ? "Admin" : "Usuario";
+
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, email),
-            new Claim(ClaimTypes.Role, rol),
+            new Claim(ClaimTypes.Role, rolNormalizado),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

@@ -15,21 +15,21 @@ export interface EstadisticasGenerales {
 }
 
 export interface VehiculoInfo {
-  Marca: string;
-  Modelo: string;
-  Anio: number;
-  Matricula: string;
+  marca: string;
+  modelo: string;
+  anio: number;
+  matricula: string;
 }
 
 export interface UsuarioGanador {
-  IdUsuario: number;
-  Nombre: string;
-  Apellidos: string;
-  Email: string;
-  Telefono: string;
+  idUsuario: number;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  telefono: string;
   empresa?: {
-    Nombre: string;
-    Cif: string;
+    nombre: string;
+    cif: string;
   };
 }
 
@@ -40,11 +40,11 @@ export interface PujaGanadora {
 }
 
 export interface SubastaActiva {
-  IdSubasta: number;
-  FechaInicio: Date;
-  FechaFin: Date;
-  PrecioInicial: number;
-  PrecioActual: number;
+  idSubasta: number;
+  fechaInicio: Date;
+  fechaFin: Date;
+  precioInicial: number;
+  precioActual: number;
   tiempoRestante: string;
   vehiculo: VehiculoInfo;
   pujaGanadora: PujaGanadora | null;
@@ -52,11 +52,11 @@ export interface SubastaActiva {
 }
 
 export interface SubastaTerminada {
-  IdSubasta: number;
-  FechaInicio: Date;
-  FechaFin: Date;
-  PrecioInicial: number;
-  PrecioActual: number;
+  idSubasta: number;
+  fechaInicio: Date;
+  fechaFin: Date;
+  precioInicial: number;
+  precioActual: number;
   tiempoFinalizada: string;
   vehiculo: VehiculoInfo;
   ganador: {

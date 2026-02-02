@@ -228,7 +228,7 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
     }
 
     // Validar que el usuario esté validado
-    if (user.validado !== 1 && user.rol?.toLowerCase() !== 'administrador') {
+    if (!user.validado && user.rol?.toLowerCase() !== 'administrador') {
       if (!user.documentoIAE) {
         this.toast.error('Debes subir tu documento IAE antes de poder pujar');
         this.router.navigate(['/subir-iae']);

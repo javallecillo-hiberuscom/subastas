@@ -42,7 +42,7 @@ public class UsuariosController : ControllerBase
     /// Obtiene todos los usuarios del sistema.
     /// </summary>
     [HttpGet]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<ApiResponse<IEnumerable<UsuarioResponse>>>> GetUsuarios()
     {
         try
@@ -227,7 +227,14 @@ public class UsuariosController : ControllerBase
             if (usuario.Activo != 1)
             {
                 return Unauthorized(ApiResponse<LoginResponse>.ErrorResult(
-                    "Usuario inactivo"));
+                    "Usuario inactivo o eliminado"));
+            }
+
+            // Solo los usuarios normales necesitan estar validados, los admins no
+            if (usuario.Rol != "Admin" && usuario.Validado != 1)
+            {
+                return Unauthorized(ApiResponse<LoginResponse>.ErrorResult(
+                    "Usuario pendiente de validación por el administrador"));
             }
 
             // Generar token JWT
@@ -332,7 +339,7 @@ public class UsuariosController : ControllerBase
     /// Valida un usuario (solo administradores).
     /// </summary>
     [HttpPut("{id}/validar")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<ApiResponse<UsuarioResponse>>> ValidarUsuario(int id)
     {
         try

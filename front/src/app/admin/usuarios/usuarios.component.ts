@@ -11,7 +11,7 @@ interface Usuario {
   email: string;
   rol: string;
   activo: number;
-  validado: number;
+  validado: boolean;
   telefono?: string;
   direccion?: string;
   documentoIAE?: string;
@@ -53,13 +53,13 @@ export class UsuariosComponent implements OnInit {
   }
 
   validarUsuario(usuario: Usuario): void {
-    const nuevoEstado = usuario.validado === 1 ? 0 : 1;
+    const nuevoEstado = !usuario.validado;
     
-    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}/validar`), { Validado: nuevoEstado === 1 })
+    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}/validar`), { Validado: nuevoEstado })
       .subscribe({
         next: () => {
           usuario.validado = nuevoEstado;
-          this.toast.success(nuevoEstado === 1 ? 'Usuario validado correctamente' : 'Validación revocada');
+          this.toast.success(nuevoEstado ? 'Usuario validado correctamente' : 'Validación revocada');
         },
         error: (error) => {
           console.error('Error validando usuario:', error);
@@ -139,13 +139,13 @@ export class UsuariosComponent implements OnInit {
   }
 
   getEstadoBadgeClass(usuario: Usuario): string {
-    if (usuario.validado === 1) return 'badge-validado';
+    if (usuario.validado) return 'badge-validado';
     if (usuario.documentoIAE) return 'badge-pendiente';
     return 'badge-sin-documento';
   }
 
   getEstadoTexto(usuario: Usuario): string {
-    if (usuario.validado === 1) return 'Validado';
+    if (usuario.validado) return 'Validado';
     if (usuario.documentoIAE) return 'Pendiente';
     return 'Sin Documento';
   }

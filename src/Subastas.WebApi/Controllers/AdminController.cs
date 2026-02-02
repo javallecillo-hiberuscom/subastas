@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Subastas.Infrastructure.Data;
@@ -9,13 +10,16 @@ namespace Subastas.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy = "AdminPolicy")]
 public class AdminController : ControllerBase
 {
     private readonly SubastaContext _context;
+    private readonly ILogger<AdminController> _logger;
 
-    public AdminController(SubastaContext context)
+    public AdminController(SubastaContext context, ILogger<AdminController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     /// <summary>
@@ -26,29 +30,48 @@ public class AdminController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("=== INICIO GetDashboardAdmin ===");
             var ahora = DateTime.Now;
 
             // Estadísticas generales
+            _logger.LogInformation("Obteniendo estadísticas generales...");
             var totalUsuarios = await _context.Usuarios.CountAsync();
+            _logger.LogInformation($"Total usuarios: {totalUsuarios}");
             var totalEmpresas = await _context.Empresas.CountAsync();
+            _logger.LogInformation($"Total empresas: {totalEmpresas}");
+            
             var totalVehiculos = await _context.Vehiculos.CountAsync();
+            _logger.LogInformation($"Total vehículos: {totalVehiculos}");
+            
             var totalSubastas = await _context.Subastas.CountAsync();
+            _logger.LogInformation($"Total subastas: {totalSubastas}");
 
             // Subastas activas con información de quién va ganando
-            var subastasActivas = await _context.Subastas
+            // Subastas activas - Paso 1: Cargar datos con Include
+            _logger.LogInformation("Obteniendo subastas activas (paso 1: carga de datos)...");
+            var subastasActivasData = await _context.Subastas
                 .Include(s => s.Vehiculo)
                 .Include(s => s.Pujas)
                     .ThenInclude(p => p.Usuario)
                 .Where(s => s.Estado == "activa" && s.FechaFin > ahora)
-                .Select(s => new
+                .OrderBy(s => s.FechaFin)
+                .ToListAsync();
+            _logger.LogInformation($"Subastas activas cargadas: {subastasActivasData.Count}");
+
+            // Subastas activas - Paso 2: Proyectar en memoria
+            _logger.LogInformation("Proyectando subastas activas (paso 2: mapeo en memoria)...");
+            var subastasActivas = subastasActivasData.Select(s =>
+            {
+                var tiempoRestante = s.FechaFin - ahora;
+                return new
                 {
                     s.IdSubasta,
                     s.FechaInicio,
                     s.FechaFin,
                     s.PrecioInicial,
                     s.PrecioActual,
-                    tiempoRestante = s.FechaFin > ahora 
-                        ? $"{(s.FechaFin - ahora).Days}d {(s.FechaFin - ahora).Hours}h {(s.FechaFin - ahora).Minutes}m"
+                    tiempoRestante = tiempoRestante > TimeSpan.Zero
+                        ? $"{tiempoRestante.Days}d {tiempoRestante.Hours}h {tiempoRestante.Minutes}m"
                         : "Finalizada",
                     vehiculo = new
                     {
@@ -57,7 +80,7 @@ public class AdminController : ControllerBase
                         s.Vehiculo.Anio,
                         s.Vehiculo.Matricula
                     },
-                    pujaGanadora = s.Pujas.OrderByDescending(p => p.Cantidad).FirstOrDefault() != null
+                    pujaGanadora = s.Pujas.Any()
                         ? new
                         {
                             cantidad = s.Pujas.OrderByDescending(p => p.Cantidad).First().Cantidad,
@@ -73,17 +96,25 @@ public class AdminController : ControllerBase
                         }
                         : null,
                     totalPujas = s.Pujas.Count
-                })
-                .OrderBy(s => s.FechaFin)
-                .ToListAsync();
+                };
+            }).ToList();
+            _logger.LogInformation($"Subastas activas proyectadas: {subastasActivas.Count}");
 
             // Subastas terminadas con información del ganador
+            _logger.LogInformation("Obteniendo subastas terminadas (paso 1: carga de datos)...");
             var subastasTerminadas = await _context.Subastas
                 .Include(s => s.Vehiculo)
                 .Include(s => s.Pujas)
                     .ThenInclude(p => p.Usuario)
+                        .ThenInclude(u => u.Empresa)
                 .Where(s => s.Estado == "finalizada" || s.FechaFin <= ahora)
-                .Select(s => new
+                .OrderByDescending(s => s.FechaFin)
+                .Take(20) // Últimas 20 subastas terminadas
+                .ToListAsync();
+            _logger.LogInformation($"Subastas terminadas cargadas: {subastasTerminadas.Count}");
+
+            _logger.LogInformation("Proyectando subastas terminadas (paso 2: mapeo en memoria)...");
+            var subastasTerminadasDto = subastasTerminadas.Select(s => new
                 {
                     s.IdSubasta,
                     s.FechaInicio,
@@ -106,16 +137,16 @@ public class AdminController : ControllerBase
                             pujaGanadora = s.Pujas.OrderByDescending(p => p.Cantidad).First().Cantidad,
                             usuario = new
                             {
-                                s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.IdUsuario,
-                                s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Nombre,
-                                s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Apellidos,
-                                s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Email,
-                                s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Telefono,
+                                IdUsuario = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.IdUsuario,
+                                Nombre = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Nombre,
+                                Apellidos = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Apellidos,
+                                Email = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Email,
+                                Telefono = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Telefono,
                                 empresa = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Empresa != null
                                     ? new
                                     {
-                                        Nombre = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Empresa.Nombre,
-                                        s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Empresa.Cif
+                                        Nombre = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Empresa!.Nombre,
+                                        Cif = s.Pujas.OrderByDescending(p => p.Cantidad).First().Usuario.Empresa!.Cif
                                     }
                                     : null
                             },
@@ -124,12 +155,11 @@ public class AdminController : ControllerBase
                         : null,
                     totalPujas = s.Pujas.Count,
                     sinPujas = s.Pujas.Count == 0
-                })
-                .OrderByDescending(s => s.FechaFin)
-                .Take(20) // Últimas 20 subastas terminadas
-                .ToListAsync();
+                }).ToList();
+            _logger.LogInformation($"Subastas terminadas proyectadas: {subastasTerminadasDto.Count}");
 
             // Usuarios por estado de validación
+            _logger.LogInformation("Obteniendo usuarios por validación...");
             var usuariosPendientes = await _context.Usuarios
                 .Where(u => u.Validado == 0 && u.Activo == 1)
                 .CountAsync();
@@ -137,7 +167,9 @@ public class AdminController : ControllerBase
             var usuariosValidados = await _context.Usuarios
                 .Where(u => u.Validado == 1 && u.Activo == 1)
                 .CountAsync();
+            _logger.LogInformation($"Usuarios pendientes: {usuariosPendientes}, Usuarios validados: {usuariosValidados}");
 
+            _logger.LogInformation("Construyendo resultado final...");
             var resultado = new
             {
                 estadisticasGenerales = new
@@ -149,22 +181,31 @@ public class AdminController : ControllerBase
                     totalVehiculos,
                     totalSubastas,
                     subastasActivas = subastasActivas.Count,
-                    subastasTerminadas = subastasTerminadas.Count
+                    subastasTerminadas = subastasTerminadasDto.Count
                 },
                 subastasActivas,
-                subastasTerminadas
+                subastasTerminadas = subastasTerminadasDto
             };
 
+            _logger.LogInformation("=== FIN GetDashboardAdmin (ÉXITO) ===");
             return Ok(resultado);
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "ERROR en GetDashboardAdmin: {Message}", ex.Message);
+            _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+            if (ex.InnerException != null)
+            {
+                _logger.LogError("InnerException: {InnerMessage}", ex.InnerException.Message);
+                _logger.LogError("InnerStackTrace: {InnerStackTrace}", ex.InnerException.StackTrace);
+            }
             return StatusCode(500, new 
             { 
                 Success = false, 
                 Message = "Error al cargar dashboard del administrador", 
                 Error = ex.Message,
-                StackTrace = ex.StackTrace 
+                StackTrace = ex.StackTrace,
+                InnerError = ex.InnerException?.Message 
             });
         }
     }

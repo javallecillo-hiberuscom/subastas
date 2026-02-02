@@ -177,7 +177,15 @@
               </div>
               <div class="user-details">
                 <span class="user-name">{{ currentUser()!.email }}</span>
-                <span class="user-role">{{ currentUser()!.validado === 1 ? 'Validado' : 'Pendiente de validación' }}</span>
+                <span class="user-role">
+                  @if (currentUser()!.rol?.toLowerCase() === 'admin' || currentUser()!.rol?.toLowerCase() === 'administrador') {
+                    Administrador
+                  } @else if (currentUser()!.validado) {
+                    Validado
+                  } @else {
+                    Pendiente de validación
+                  }
+                </span>
               </div>
             </a>
           }

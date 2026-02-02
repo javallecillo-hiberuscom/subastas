@@ -63,7 +63,7 @@
                 </button>
               </td>
               <td class="acciones">
-                @if (usuario.documentoIAE && usuario.validado === 0) {
+                @if (usuario.documentoIAE && !usuario.validado) {
                   <button 
                     class="btn-action btn-validar" 
                     (click)="validarUsuario(usuario)"
@@ -71,7 +71,7 @@
                     ✓ Validar
                   </button>
                 }
-                @if (usuario.validado === 1) {
+                @if (usuario.validado) {
                   <button 
                     class="btn-action btn-revocar" 
                     (click)="validarUsuario(usuario)"

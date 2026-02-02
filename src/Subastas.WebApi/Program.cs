@@ -138,11 +138,22 @@ try
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero,
+            // Configurar validación de roles case-insensitive
+            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
+            NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier
         };
     });
 
-    builder.Services.AddAuthorization();
+    builder.Services.AddAuthorization(options =>
+    {
+        // Política para administradores (case-insensitive)
+        options.AddPolicy("AdminPolicy", policy =>
+            policy.RequireAssertion(context =>
+                context.User.IsInRole("Admin") || context.User.IsInRole("admin") || context.User.IsInRole("ADMIN")
+            )
+        );
+    });
 
     // Registrar servicios de Infrastructure (Repositorios y Servicios)
     builder.Services.AddInfrastructure();

@@ -71,6 +71,18 @@
       </div>
     </section>
 
+    <!-- Gráficos de Estadísticas -->
+    <section class="graficos-section">
+      <div class="graficos-container">
+        <div class="grafico-card">
+          <canvas #subastasChart></canvas>
+        </div>
+        <div class="grafico-card">
+          <canvas #pujasChart></canvas>
+        </div>
+      </div>
+    </section>
+
     <!-- Subastas Activas -->
     <section class="subastas-activas">
       <h2>Subastas Activas ({{ dashboard()!.subastasActivas.length }})</h2>
@@ -93,21 +105,21 @@
               </tr>
             </thead>
             <tbody>
-              @for (subasta of dashboard()!.subastasActivas; track subasta.IdSubasta) {
+              @for (subasta of dashboard()!.subastasActivas; track subasta.idSubasta) {
                 <tr>
-                  <td>{{ subasta.IdSubasta }}</td>
+                  <td>{{ subasta.idSubasta }}</td>
                   <td>
-                    <strong>{{ subasta.vehiculo.Marca }} {{ subasta.vehiculo.Modelo }}</strong><br>
-                    <small>{{ subasta.vehiculo.Anio }} - {{ subasta.vehiculo.Matricula }}</small>
+                    <strong>{{ subasta.vehiculo.marca }} {{ subasta.vehiculo.modelo }}</strong><br>
+                    <small>{{ subasta.vehiculo.anio }} - {{ subasta.vehiculo.matricula }}</small>
                   </td>
-                  <td>{{ subasta.PrecioInicial | currency:'EUR' }}</td>
+                  <td>{{ subasta.precioInicial | currency:'EUR' }}</td>
                   <td>
-                    <strong>{{ subasta.PrecioActual || subasta.PrecioInicial | currency:'EUR' }}</strong>
+                    <strong>{{ subasta.precioActual || subasta.precioInicial | currency:'EUR' }}</strong>
                   </td>
                   <td>
                     @if (subasta.pujaGanadora) {
                       <div class="ganador-info">
-                        <strong>{{ subasta.pujaGanadora.usuario.Nombre }} {{ subasta.pujaGanadora.usuario.Apellidos }}</strong><br>
+                        <strong>{{ subasta.pujaGanadora.usuario.nombre }} {{ subasta.pujaGanadora.usuario.apellidos }}</strong><br>
                         <small>{{ subasta.pujaGanadora.cantidad | currency:'EUR' }}</small>
                       </div>
                     } @else {
@@ -121,8 +133,8 @@
                   <td>
                     @if (subasta.pujaGanadora) {
                       <div class="contacto-info">
-                        <a href="mailto:{{ subasta.pujaGanadora.usuario.Email }}">{{ subasta.pujaGanadora.usuario.Email }}</a><br>
-                        <a href="tel:{{ subasta.pujaGanadora.usuario.Telefono }}">{{ subasta.pujaGanadora.usuario.Telefono }}</a>
+                        <a href="mailto:{{ subasta.pujaGanadora.usuario.email }}">{{ subasta.pujaGanadora.usuario.email }}</a><br>
+                        <a href="tel:{{ subasta.pujaGanadora.usuario.telefono }}">{{ subasta.pujaGanadora.usuario.telefono }}</a>
                       </div>
                     } @else {
                       <span>-</span>
@@ -138,7 +150,8 @@
 
     <!-- Subastas Terminadas -->
     <section class="subastas-terminadas">
-      <h2>Subastas Finalizadas Recientes</h2>
+      <h2>🏁 Subastas Finalizadas - Contactar Ganadores</h2>
+      <p class="section-description">Aquí puedes ver los ganadores de cada subasta y sus datos de contacto para completar la venta</p>
       
       @if (dashboard()!.subastasTerminadas.length === 0) {
         <p class="no-data">No hay subastas finalizadas</p>
@@ -158,14 +171,14 @@
               </tr>
             </thead>
             <tbody>
-              @for (subasta of dashboard()!.subastasTerminadas; track subasta.IdSubasta) {
+              @for (subasta of dashboard()!.subastasTerminadas; track subasta.idSubasta) {
                 <tr [class.sin-venta]="subasta.sinPujas">
-                  <td>{{ subasta.IdSubasta }}</td>
+                  <td>{{ subasta.idSubasta }}</td>
                   <td>
-                    <strong>{{ subasta.vehiculo.Marca }} {{ subasta.vehiculo.Modelo }}</strong><br>
-                    <small>{{ subasta.vehiculo.Anio }} - {{ subasta.vehiculo.Matricula }}</small>
+                    <strong>{{ subasta.vehiculo.marca }} {{ subasta.vehiculo.modelo }}</strong><br>
+                    <small>{{ subasta.vehiculo.anio }} - {{ subasta.vehiculo.matricula }}</small>
                   </td>
-                  <td>{{ subasta.PrecioInicial | currency:'EUR' }}</td>
+                  <td>{{ subasta.precioInicial | currency:'EUR' }}</td>
                   <td>
                     @if (subasta.ganador) {
                       <strong class="precio-venta">{{ subasta.ganador.pujaGanadora | currency:'EUR' }}</strong>
@@ -176,8 +189,8 @@
                   <td>
                     @if (subasta.ganador) {
                       <div class="ganador-info">
-                        <strong>{{ subasta.ganador.usuario.Nombre }} {{ subasta.ganador.usuario.Apellidos }}</strong><br>
-                        <small>ID: {{ subasta.ganador.usuario.IdUsuario }}</small>
+                        <strong>{{ subasta.ganador.usuario.nombre }} {{ subasta.ganador.usuario.apellidos }}</strong><br>
+                        <small>ID: {{ subasta.ganador.usuario.idUsuario }}</small>
                       </div>
                     } @else {
                       <span class="sin-pujas">Sin pujas</span>
@@ -186,8 +199,8 @@
                   <td>
                     @if (subasta.ganador?.usuario?.empresa) {
                       <div>
-                        <strong>{{ subasta.ganador!.usuario!.empresa!.Nombre }}</strong><br>
-                        <small>CIF: {{ subasta.ganador!.usuario!.empresa!.Cif }}</small>
+                        <strong>{{ subasta.ganador!.usuario!.empresa!.nombre }}</strong><br>
+                        <small>CIF: {{ subasta.ganador!.usuario!.empresa!.cif }}</small>
                       </div>
                     } @else {
                       <span>-</span>
@@ -196,11 +209,11 @@
                   <td>
                     @if (subasta.ganador) {
                       <div class="contacto-info">
-                        <a href="mailto:{{ subasta.ganador.usuario.Email }}" class="btn-contact">
+                        <a href="mailto:{{ subasta.ganador.usuario.email }}" class="btn-contact">
                           ✉️ Email
                         </a><br>
-                        <a href="tel:{{ subasta.ganador.usuario.Telefono }}" class="btn-contact">
-                          📞 {{ subasta.ganador.usuario.Telefono }}
+                        <a href="tel:{{ subasta.ganador.usuario.telefono }}" class="btn-contact">
+                          📞 {{ subasta.ganador.usuario.telefono }}
                         </a>
                       </div>
                     } @else {
@@ -222,22 +235,22 @@
     <section class="acciones-rapidas">
       <h2>Acciones Rápidas</h2>
       <div class="acciones-grid">
-        <a routerLink="/usuarios" class="accion-card">
+        <a [routerLink]="['/admin/usuarios']" class="accion-card">
           <span class="accion-icon">👥</span>
           <span>Gestionar Usuarios</span>
           @if (dashboard()!.estadisticasGenerales.usuariosPendientes > 0) {
             <span class="badge">{{ dashboard()!.estadisticasGenerales.usuariosPendientes }}</span>
           }
         </a>
-        <a routerLink="/vehiculos-admin" class="accion-card">
+        <a [routerLink]="['/admin/vehiculos']" class="accion-card">
           <span class="accion-icon">🚗</span>
           <span>Gestionar Vehículos</span>
         </a>
-        <a routerLink="/empresas-admin" class="accion-card">
+        <a [routerLink]="['/admin/empresas']" class="accion-card">
           <span class="accion-icon">🏢</span>
           <span>Gestionar Empresas</span>
         </a>
-        <a routerLink="/notificaciones-admin" class="accion-card">
+        <a [routerLink]="['/admin/notificaciones']" class="accion-card">
           <span class="accion-icon">🔔</span>
           <span>Notificaciones</span>
         </a>
