@@ -1,0 +1,266 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\data\\subastacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:data\\subastacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\notificacionescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\notificacionescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\pujascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\pujascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\usuarioscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:models\\usuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\vehiculoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\vehiculoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\tests\\usuarioscontrollertests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:tests\\usuarioscontrollertests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\services\\passwordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:services\\passwordservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\imagenesvehiculocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\imagenesvehiculocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\subastascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\subastascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\tests\\vehiculoscontrollertests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:tests\\vehiculoscontrollertests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\subastas.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:subastas.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\controllers\\empresascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:controllers\\empresascontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|c:\\users\\joseantoniovallecill\\source\\repos\\subastas\\migrations\\20260131080343_agregarfotoperfilusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1522E1C7-B315-4229-A05F-EF60445B2745}|subastas.csproj|solutionrelative:migrations\\20260131080343_agregarfotoperfilusuario.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "PasswordService.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Services\\PasswordService.cs",
+              "RelativeDocumentMoniker": "Services\\PasswordService.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Services\\PasswordService.cs",
+              "RelativeToolTip": "Services\\PasswordService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-31T07:54:39.159Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NotificacionesController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\NotificacionesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NotificacionesController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\NotificacionesController.cs",
+              "RelativeToolTip": "Controllers\\NotificacionesController.cs",
+              "ViewState": "AgIAAHoAAAAAAAAAAAAawIgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T15:14:16.944Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UsuariosController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\UsuariosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UsuariosController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\UsuariosController.cs",
+              "RelativeToolTip": "Controllers\\UsuariosController.cs",
+              "ViewState": "AgIAAM4AAAAAAAAAAAAYwHsAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T13:11:11.535Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SubastaContext.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Data\\SubastaContext.cs",
+              "RelativeDocumentMoniker": "Data\\SubastaContext.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Data\\SubastaContext.cs",
+              "RelativeToolTip": "Data\\SubastaContext.cs",
+              "ViewState": "AgIAABQAAAAAAAAAAAA2wB4AAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T09:25:48.835Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PujasController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\PujasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\PujasController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\PujasController.cs",
+              "RelativeToolTip": "Controllers\\PujasController.cs",
+              "ViewState": "AgIAAF0AAAAAAAAAAAAAAG8AAABlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T14:09:36.508Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "VehiculosController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\VehiculosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\VehiculosController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\VehiculosController.cs",
+              "RelativeToolTip": "Controllers\\VehiculosController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0BAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T16:11:38.241Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UsuariosControllerTests.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Tests\\UsuariosControllerTests.cs",
+              "RelativeDocumentMoniker": "Tests\\UsuariosControllerTests.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Tests\\UsuariosControllerTests.cs",
+              "RelativeToolTip": "Tests\\UsuariosControllerTests.cs",
+              "ViewState": "AgIAAH0AAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-31T07:56:33.064Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Usuario.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Models\\Usuario.cs",
+              "RelativeDocumentMoniker": "Models\\Usuario.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Models\\Usuario.cs",
+              "RelativeToolTip": "Models\\Usuario.cs",
+              "ViewState": "AgIAADUAAAAAAAAAAAAmwEYAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-31T08:03:06.963Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "20260131080343_AgregarFotoPerfilUsuario.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Migrations\\20260131080343_AgregarFotoPerfilUsuario.cs",
+              "RelativeDocumentMoniker": "Migrations\\20260131080343_AgregarFotoPerfilUsuario.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Migrations\\20260131080343_AgregarFotoPerfilUsuario.cs",
+              "RelativeToolTip": "Migrations\\20260131080343_AgregarFotoPerfilUsuario.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-31T08:03:43.528Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-01-31T07:49:42.658Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "EmpresasController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\EmpresasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\EmpresasController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\EmpresasController.cs",
+              "RelativeToolTip": "Controllers\\EmpresasController.cs",
+              "ViewState": "AgIAADcAAAAAAAAAAAAowCUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T16:00:04.411Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ImagenesVehiculoController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\ImagenesVehiculoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ImagenesVehiculoController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\ImagenesVehiculoController.cs",
+              "RelativeToolTip": "Controllers\\ImagenesVehiculoController.cs",
+              "ViewState": "AgIAAEsAAAAAAAAAAAAqwK8AAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T15:07:16.477Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SubastasController.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\SubastasController.cs",
+              "RelativeDocumentMoniker": "Controllers\\SubastasController.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Controllers\\SubastasController.cs",
+              "RelativeToolTip": "Controllers\\SubastasController.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAwK0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T14:11:03.993Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "VehiculosControllerTests.cs",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Tests\\VehiculosControllerTests.cs",
+              "RelativeDocumentMoniker": "Tests\\VehiculosControllerTests.cs",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\Tests\\VehiculosControllerTests.cs",
+              "RelativeToolTip": "Tests\\VehiculosControllerTests.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-01-30T16:50:40.499Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "subastas.csproj",
+              "DocumentMoniker": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\subastas.csproj",
+              "RelativeDocumentMoniker": "subastas.csproj",
+              "ToolTip": "C:\\Users\\JoseAntonioVallecill\\source\\repos\\subastas\\subastas.csproj",
+              "RelativeToolTip": "subastas.csproj",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAwwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-01-30T16:28:30.885Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

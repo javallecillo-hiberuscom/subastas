@@ -1,0 +1,257 @@
+<div class="admin-container">
+  <div class="header">
+    <h1>Gestión de Vehículos</h1>
+    @if (!showForm()) {
+      <button class="btn-primary" (click)="nuevoVehiculo()">
+        + Nuevo Vehículo
+      </button>
+    }
+  </div>
+
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      <span>✓</span>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-error">
+      <span>⚠️</span>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  @if (showForm()) {
+    <div class="form-panel">
+      <h2>{{ editingId ? 'Editar Vehículo' : 'Nuevo Vehículo' }}</h2>
+      
+      <form [formGroup]="vehiculoForm" (ngSubmit)="guardarVehiculo()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Matrícula *</label>
+            <input type="text" formControlName="matricula" placeholder="1234ABC" maxlength="7">
+          </div>
+
+          <div class="form-group">
+            <label>Marca *</label>
+            <input type="text" formControlName="marca" placeholder="Ej: Toyota">
+          </div>
+
+          <div class="form-group">
+            <label>Modelo *</label>
+            <input type="text" formControlName="modelo" placeholder="Ej: Corolla">
+          </div>
+
+          <div class="form-group">
+            <label>Año *</label>
+            <input type="number" formControlName="anio" min="1900" [max]="2025">
+          </div>
+
+          <div class="form-group">
+            <label>Color *</label>
+            <input type="text" formControlName="color" placeholder="Ej: Blanco">
+          </div>
+
+          <div class="form-group">
+            <label>Kilometraje *</label>
+            <input type="number" formControlName="kilometraje" min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Potencia (CV) *</label>
+            <input type="number" formControlName="potencia" min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Nº Puertas *</label>
+            <select formControlName="numeroPuertas">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Tipo Motor *</label>
+            <select formControlName="tipoMotor">
+              @for (tipo of tiposMotor; track tipo) {
+                <option [value]="tipo">{{ tipo }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Carrocería *</label>
+            <select formControlName="tipoCarroceria">
+              @for (tipo of tiposCarroceria; track tipo) {
+                <option [value]="tipo">{{ tipo }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Fecha Matriculación *</label>
+            <input type="date" formControlName="fechaMatriculacion">
+          </div>
+
+          <div class="form-group">
+            <label>Precio Salida (€) *</label>
+            <input type="number" formControlName="precioSalida" min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Valoración Precio (€) *</label>
+            <input type="number" formControlName="valoracionPrecio" min="0">
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label>Descripción</label>
+          <textarea formControlName="descripcion" rows="4" 
+                    placeholder="Descripción detallada del vehículo..."></textarea>
+        </div>
+
+        @if (!editingId) {
+          <div class="form-group full-width">
+            <label>Imágenes del vehículo</label>
+            
+            <!-- Área de drag & drop -->
+            <div 
+              class="dropzone"
+              [class.dragging]="isDragging()"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)"
+              (click)="fileInput.click()">
+              @if (isDragging()) {
+                <div class="dropzone-content">
+                  <span class="dropzone-icon">📷</span>
+                  <p class="dropzone-text">¡Suelta las imágenes aquí!</p>
+                </div>
+              } @else {
+                <div class="dropzone-content">
+                  <span class="dropzone-icon">🖼️</span>
+                  <p class="dropzone-text">Arrastra imágenes aquí</p>
+                  <p class="dropzone-subtext">o haz click para seleccionar</p>
+                </div>
+              }
+            </div>
+            
+            <input 
+              type="file" 
+              #fileInput
+              (change)="onFileSelected($event)" 
+              accept="image/*"
+              multiple
+              style="display: none"
+            >
+            
+            @if (imagenesBase64().length > 0) {
+              <div class="selected-files">
+                <p><strong>{{ imagenesBase64().length }}</strong> imagen(es) seleccionada(s):</p>
+                <div class="images-preview">
+                  @for (imagen of imagenesBase64(); track imagen.nombre; let i = $index) {
+                    <div class="image-preview-item">
+                      <img [src]="'data:image/jpeg;base64,' + imagen.imagenBase64" [alt]="imagen.nombre">
+                      <button type="button" class="btn-remove" (click)="removeFile(i)">×</button>
+                      <span class="image-name">{{ imagen.nombre }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="form-group full-width">
+            <label>Imágenes actuales del vehículo</label>
+            @if (imagenesBase64().length > 0) {
+              <div class="images-preview">
+                @for (imagen of imagenesBase64(); track imagen.idImagen; let i = $index) {
+                  <div class="image-preview-item">
+                    <img [src]="imagen.imagenBase64 ? 'data:image/jpeg;base64,' + imagen.imagenBase64 : imagen.ruta || ''" [alt]="imagen.nombre">
+                    <button type="button" class="btn-remove" (click)="removeFile(i)">×</button>
+                    <span class="image-name">{{ imagen.nombre }}</span>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="no-images">No hay imágenes</p>
+            }
+            
+            <input 
+              type="file" 
+              #fileInputEdit
+              (change)="onFileSelected($event)" 
+              accept="image/*"
+              multiple
+              style="display: none"
+            >
+            <button type="button" class="btn-upload" (click)="fileInputEdit.click()">
+              <span>📷</span>
+              <span>Agregar más Imágenes</span>
+            </button>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="vehiculoForm.invalid">
+            {{ editingId ? 'Actualizar' : 'Crear' }} Vehículo
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="table-container">
+    @if (loading()) {
+      <p class="loading">Cargando vehículos...</p>
+    } @else if (vehiculos().length === 0) {
+      <p class="empty">No hay vehículos registrados</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Matrícula</th>
+            <th>Marca/Modelo</th>
+            <th>Año</th>
+            <th>Kilometraje</th>
+            <th>Precio Salida</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (vehiculo of vehiculos(); track vehiculo.idVehiculo) {
+            <tr>
+              <td><strong>{{ vehiculo.matricula }}</strong></td>
+              <td>{{ vehiculo.marca }} {{ vehiculo.modelo }}</td>
+              <td>{{ vehiculo.anio }}</td>
+              <td>{{ vehiculo.kilometraje.toLocaleString() }} km</td>
+              <td>{{ vehiculo.precioSalida.toLocaleString() }} €</td>
+              <td>
+                <span class="badge" [class.vendido]="vehiculo.estaVendido">
+                  {{ vehiculo.estaVendido ? 'Vendido' : 'Disponible' }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="btn-icon" (click)="editarVehiculo(vehiculo)" title="Editar">
+                    ✏️
+                  </button>
+                  <button class="btn-icon danger" (click)="eliminarVehiculo(vehiculo.idVehiculo)" title="Eliminar">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

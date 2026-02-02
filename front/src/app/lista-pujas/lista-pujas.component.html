@@ -1,0 +1,83 @@
+<div class="pujas-container">
+  <div class="pujas-header">
+    <h2>Vehículos en Subasta</h2>
+    <p>Explora los vehículos disponibles y participa en las pujas activas</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando vehículos...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-state">
+      <span class="error-icon">⚠️</span>
+      <p>{{ errorMessage() }}</p>
+      <button class="btn-retry" (click)="cargarSubastas()">Reintentar</button>
+    </div>
+  } @else if (subastas().length === 0) {
+    <div class="empty-state">
+      <span class="empty-icon">🚗</span>
+      <h3>No hay vehículos en subasta</h3>
+      <p>Por el momento no hay subastas activas</p>
+    </div>
+  } @else {
+    <div class="vehiculos-grid">
+      @for (subasta of subastas(); track subasta.idSubasta) {
+        @if (subasta.vehiculo) {
+          <div class="vehiculo-card fade-in" (click)="verDetalle(subasta.idSubasta)">
+            <div class="vehiculo-imagen">
+              <img [src]="getImagenPrincipal(subasta.vehiculo)" [alt]="subasta.vehiculo.marca + ' ' + subasta.vehiculo.modelo">
+              <div class="tiempo-badge">
+                <span class="icon">⏱️</span>
+                <span>{{ getTiempoRestante(subasta.fechaFin) }}</span>
+              </div>
+              <div class="estado-badge" [ngClass]="'estado-' + getEstadoSubasta(subasta).toLowerCase().replace(' ', '-')">
+                {{ getEstadoSubasta(subasta) }}
+              </div>
+              @if (usuarioHaPujado(subasta.idSubasta)) {
+                <div class="puja-usuario-badge">
+                  <span class="icon">✓</span>
+                  <span>Has pujado</span>
+                </div>
+              }
+            </div>
+
+            <div class="vehiculo-info">
+              <h3 class="vehiculo-titulo">{{ subasta.vehiculo.marca }} {{ subasta.vehiculo.modelo }}</h3>
+              
+              <div class="vehiculo-detalles">
+                <div class="detalle-item">
+                  <span class="icon">📅</span>
+                  <span>{{ subasta.vehiculo.anio }}</span>
+                </div>
+                <div class="detalle-item">
+                  <span class="icon">🛣️</span>
+                  <span>{{ subasta.vehiculo.kilometraje?.toLocaleString() || 0 }} km</span>
+                </div>
+                <div class="detalle-item">
+                  <span class="icon">⚡</span>
+                  <span>{{ subasta.vehiculo.potencia || 0 }} CV</span>
+                </div>
+              </div>
+
+            <div class="vehiculo-footer">
+              <div class="precio-info">
+                <div class="precio-actual">
+                  <span class="label">Puja actual</span>
+                  <span class="precio">{{ (subasta.precioActual || subasta.precioInicial || 0).toLocaleString() }}€</span>
+                </div>
+              </div>
+
+              <button class="btn-pujar">
+                <span>Ver detalle</span>
+                <span class="arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      }
+    </div>
+  }
+</div>

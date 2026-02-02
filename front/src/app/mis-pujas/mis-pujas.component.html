@@ -1,0 +1,98 @@
+<div class="mis-pujas-container">
+  <h1>Mis Pujas</h1>
+
+  <div class="filtros">
+    <button 
+      class="btn-filtro" 
+      [class.active]="filtro() === 'activas'"
+      (click)="filtro.set('activas')">
+      Ganando
+    </button>
+    <button 
+      class="btn-filtro" 
+      [class.active]="filtro() === 'superadas'"
+      (click)="filtro.set('superadas')">
+      Superadas
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <p>Cargando tus pujas...</p>
+    </div>
+  } @else if (pujasFiltradas().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">💰</div>
+      <h3>No tienes pujas {{ filtro() === 'activas' ? 'donde estés ganando' : 'superadas' }}</h3>
+      <p>{{ filtro() === 'activas' ? 'Explora los vehículos disponibles y realiza tu primera puja' : 'No has sido superado en ninguna subasta' }}</p>
+      @if (filtro() === 'activas') {
+        <a routerLink="/subastas" class="btn-primary">Ver Vehículos en Subasta</a>
+      }
+    </div>
+  } @else {
+    <div class="pujas-grid">
+      @for (puja of pujasFiltradas(); track puja.idPuja) {
+        <div class="puja-card">
+          <div class="puja-header">
+            <span class="puja-estado" [class.ganando]="getEstadoPuja(puja) === 'Ganando'" 
+                  [class.superada]="getEstadoPuja(puja) === 'Superada'"
+                  [class.ganada]="getEstadoPuja(puja) === 'Ganada'">{{ getEstadoPuja(puja) }}</span>
+            <span class="puja-tiempo">{{ getTiempoRestante(puja) }}</span>
+          </div>
+          
+          @if (puja.subasta?.vehiculo) {
+            <div class="vehiculo-info">
+              <img [src]="getImagenPrincipal(puja.subasta!.vehiculo!)" 
+                   [alt]="(puja.subasta!.vehiculo!.marca || '') + ' ' + (puja.subasta!.vehiculo!.modelo || '')" 
+                   class="vehiculo-imagen">
+              <div class="vehiculo-datos">
+                <h3>{{ puja.subasta!.vehiculo!.marca }} {{ puja.subasta!.vehiculo!.modelo }}</h3>
+                <p class="vehiculo-specs">
+                  @if (puja.subasta!.vehiculo!.anio) {
+                    {{ puja.subasta!.vehiculo!.anio }}
+                  }
+                  @if (puja.subasta!.vehiculo!.anio && puja.subasta!.vehiculo!.kilometraje) {
+                    •
+                  }
+                  @if (puja.subasta!.vehiculo!.kilometraje) {
+                    {{ puja.subasta!.vehiculo!.kilometraje.toLocaleString() }} km
+                  }
+                </p>
+              </div>
+            </div>
+          } @else {
+            <div class="vehiculo-info">
+              <div class="vehiculo-datos">
+                <h3>Subasta #{{ puja.idSubasta }}</h3>
+                <p class="vehiculo-specs">Información no disponible</p>
+              </div>
+            </div>
+          }
+
+          <div class="puja-detalles">
+            <div class="puja-item">
+              <span class="label">Tu Puja:</span>
+              <span class="valor-destacado">{{ puja.cantidad.toLocaleString() }} €</span>
+            </div>
+            @if (puja.subasta?.precioActual) {
+              <div class="puja-item">
+                <span class="label">Precio Actual:</span>
+                <span class="valor">{{ puja.subasta!.precioActual.toLocaleString() }} €</span>
+              </div>
+            }
+            @if (puja.subasta?.precioInicial) {
+              <div class="puja-item">
+                <span class="label">Precio Inicial:</span>
+                <span class="valor">{{ puja.subasta!.precioInicial.toLocaleString() }} €</span>
+              </div>
+            }
+          </div>
+
+          <div class="puja-actions">
+            <a [routerLink]="['/subastas', puja.subasta?.idSubasta || puja.idSubasta]" class="btn-secondary">Ver Subasta</a>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

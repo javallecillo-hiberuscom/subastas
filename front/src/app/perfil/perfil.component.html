@@ -1,0 +1,298 @@
+<div class="perfil-container">
+  <div class="perfil-header">
+    <h1>Mi Perfil</h1>
+  </div>
+
+  <!-- Foto de Perfil -->
+  <div class="perfil-section">
+    <div class="section-header">
+      <h2>Foto de Perfil</h2>
+    </div>
+
+    <div class="foto-perfil-container">
+      <div class="foto-preview" 
+           [class.dragging]="isDragging()"
+           (click)="clickInputFoto()" 
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)"
+           style="cursor: pointer;" 
+           title="Click o arrastra una imagen aquí">
+        @if (fotoPreview() || currentUser()?.fotoPerfilBase64) {
+          <img 
+            [src]="fotoPreview() || 'data:image/jpeg;base64,' + currentUser()?.fotoPerfilBase64" 
+            alt="Foto de perfil"
+            class="foto-usuario">
+          @if (!guardando()) {
+            <button type="button" class="btn-eliminar-foto" (click)="eliminarFoto(); $event.stopPropagation()" title="Eliminar foto">
+              🗑️
+            </button>
+          }
+        } @else {
+          <div class="foto-placeholder">
+            <!-- Icono moderno de persona -->
+            <svg class="icono-usuario-moderno" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Círculo de fondo -->
+              <circle cx="60" cy="60" r="58" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="2"/>
+              <!-- Cabeza -->
+              <circle cx="60" cy="45" r="18" fill="#0ea5e9"/>
+              <!-- Cuerpo -->
+              <path d="M 35 95 Q 35 70 60 70 Q 85 70 85 95" fill="#0ea5e9"/>
+              <!-- Sombra sutil -->
+              <ellipse cx="60" cy="100" rx="25" ry="8" fill="#bae6fd" opacity="0.5"/>
+            </svg>
+            @if (isDragging()) {
+              <p class="drop-text">¡Suelta la imagen aquí!</p>
+            } @else {
+              <p class="placeholder-text">Click o arrastra</p>
+              <p class="placeholder-subtext">tu foto aquí</p>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="foto-acciones">
+        <!-- Input oculto pero funcional -->
+        <input 
+          type="file" 
+          #fotoInput
+          accept="image/*" 
+          (change)="onFotoSeleccionada($event)"
+          style="display: none;">
+        
+        <!-- Botón visual atractivo -->
+        <button type="button" class="btn-seleccionar-foto" (click)="clickInputFoto()">
+          <span class="btn-icon">📁</span>
+          <span class="btn-text">Seleccionar o arrastrar imagen</span>
+        </button>
+        
+        <p class="help-text">Formatos: JPG, PNG, GIF • Máx. 5MB • Se redimensionará a 400x400px</p>
+
+        @if (archivoFoto) {
+          <button 
+            type="button" 
+            class="btn-guardar-foto" 
+            (click)="guardarFoto()"
+            [disabled]="guardando()">
+            @if (guardando()) {
+              <span class="spinner"></span>
+              <span>Guardando...</span>
+            } @else {
+              <span>💾 Guardar foto</span>
+            }
+          </button>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Información Personal -->
+  <div class="perfil-section">
+    <div class="section-header">
+      <h2>Información Personal</h2>
+      @if (!editandoPerfil()) {
+        <button type="button" class="btn-edit" (click)="toggleEditarPerfil()">
+          ✏️ Editar
+        </button>
+      }
+    </div>
+
+    <form [formGroup]="perfilForm" (ngSubmit)="guardarPerfil()" class="perfil-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="nombre">Nombre</label>
+          <input 
+            type="text" 
+            id="nombre" 
+            formControlName="nombre"
+            placeholder="Nombre completo">
+          @if (perfilForm.get('nombre')?.invalid && perfilForm.get('nombre')?.touched) {
+            <span class="error">El nombre es requerido</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="apellidos">Apellidos</label>
+          <input 
+            type="text" 
+            id="apellidos" 
+            formControlName="apellidos"
+            placeholder="Apellidos">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            class="disabled-field">
+          <span class="help-text">El email no se puede modificar</span>
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono</label>
+          <input 
+            type="tel" 
+            id="telefono" 
+            formControlName="telefono"
+            placeholder="Teléfono de contacto">
+        </div>
+
+        <div class="form-group">
+          <label for="direccion">Dirección</label>
+          <input 
+            type="text" 
+            id="direccion" 
+            formControlName="direccion"
+            placeholder="Dirección completa">
+        </div>
+      </div>
+
+      @if (editandoPerfil()) {
+        <div class="form-group">
+          <label for="password">Nueva Contraseña (opcional)</label>
+          <div class="password-input">
+            <input 
+              [type]="mostrarPassword() ? 'text' : 'password'" 
+              id="password" 
+              formControlName="password"
+              placeholder="Dejar en blanco para mantener la actual">
+            <button type="button" class="btn-toggle-password" (click)="togglePassword()">
+              {{ mostrarPassword() ? '🙈' : '👁️' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="toggleEditarPerfil()">
+            Cancelar
+          </button>
+          <button 
+            type="button" 
+            class="btn-save" 
+            [disabled]="guardando()"
+            (click)="guardarPerfil()">
+            @if (guardando()) {
+              <span class="spinner"></span>
+              <span>Guardando...</span>
+            } @else {
+              <span>💾 Guardar cambios</span>
+            }
+          </button>
+        </div>
+      }
+    </form>
+  </div>
+
+  <!-- Información de Empresa -->
+  <div class="perfil-section">
+    <div class="section-header">
+      <h2>Datos de Empresa</h2>
+      @if (!editandoEmpresa()) {
+        <button type="button" class="btn-edit" (click)="toggleEditarEmpresa()">
+          {{ empresa() ? '✏️ Editar' : '➕ Añadir empresa' }}
+        </button>
+      }
+    </div>
+
+    @if (empresa() || editandoEmpresa()) {
+      <form [formGroup]="empresaForm" (ngSubmit)="guardarEmpresa()" class="perfil-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="empresaNombre">Nombre de Empresa</label>
+            <input 
+              type="text" 
+              id="empresaNombre" 
+              formControlName="nombre"
+              placeholder="Razón social">
+            @if (empresaForm.get('nombre')?.invalid && empresaForm.get('nombre')?.touched) {
+              <span class="error">El nombre es requerido</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="cif">CIF</label>
+            <input 
+              type="text" 
+              id="cif" 
+              formControlName="cif"
+              placeholder="A12345678">
+            @if (empresaForm.get('cif')?.invalid && empresaForm.get('cif')?.touched) {
+              <span class="error">El CIF es requerido</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="empresaDireccion">Dirección</label>
+          <input 
+            type="text" 
+            id="empresaDireccion" 
+            formControlName="direccion"
+            placeholder="Dirección de la empresa">
+          @if (empresaForm.get('direccion')?.invalid && empresaForm.get('direccion')?.touched) {
+            <span class="error">La dirección es requerida</span>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="empresaTelefono">Teléfono</label>
+            <input 
+              type="tel" 
+              id="empresaTelefono" 
+              formControlName="telefono"
+              placeholder="Teléfono de empresa">
+            @if (empresaForm.get('telefono')?.invalid && empresaForm.get('telefono')?.touched) {
+              <span class="error">El teléfono es requerido</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="empresaEmail">Email</label>
+            <input 
+              type="email" 
+              id="empresaEmail" 
+              formControlName="email"
+              placeholder="Email de empresa">
+            @if (empresaForm.get('email')?.invalid && empresaForm.get('email')?.touched) {
+              <span class="error">Email inválido</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="nombreContacto">Nombre de Contacto</label>
+          <input 
+            type="text" 
+            id="nombreContacto" 
+            formControlName="nombreContacto"
+            placeholder="Persona de contacto (opcional)">
+        </div>
+
+        @if (editandoEmpresa()) {
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="toggleEditarEmpresa()">
+              Cancelar
+            </button>
+            <button type="button" class="btn-save" [disabled]="guardando()" (click)="guardarEmpresa()">
+              @if (guardando()) {
+                <span class="spinner"></span>
+                <span>Guardando...</span>
+              } @else {
+                <span>💾 Guardar empresa</span>
+              }
+            </button>
+          </div>
+        }
+      </form>
+    } @else {
+      <div class="empty-state">
+        <p>No hay información de empresa registrada</p>
+        <p class="help-text">Haz clic en "Añadir empresa" para registrar los datos de tu empresa</p>
+      </div>
+    }
+  </div>
+</div>

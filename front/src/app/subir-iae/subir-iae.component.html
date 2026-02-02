@@ -1,0 +1,97 @@
+<div class="subir-iae-container">
+  <div class="card">
+    <div class="card-header">
+      <h2>📄 Subir Documento IAE</h2>
+      <p>Para poder realizar pujas, debes subir tu documento de Impuesto de Actividades Económicas (IAE)</p>
+    </div>
+
+    @if (estadoValidacion()) {
+      <div class="estado-actual" [ngClass]="getEstadoClass()">
+        <p>{{ getEstadoMensaje() }}</p>
+      </div>
+    }
+
+    <div class="card-body">
+      @if (!estadoValidacion()?.validado) {
+        <div class="upload-section">
+          @if (estadoValidacion()?.tieneDocumento) {
+            <div class="aviso-reemplazar">
+              <p>⚠️ Ya has subido un documento previamente. Si subes uno nuevo, reemplazará al anterior.</p>
+            </div>
+          }
+          
+          <div class="drop-zone"
+               [class.drag-over]="dragOver()"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+            <div class="drop-zone-content">
+              <span class="drop-icon">📁</span>
+              <p class="drop-text">Arrastra tu archivo aquí o haz clic para seleccionar</p>
+              <p class="drop-hint">PDF, JPG o PNG (máx. 10MB)</p>
+            </div>
+            <input 
+              type="file" 
+              id="fileInput" 
+              class="file-input-hidden"
+              (change)="onFileSelected($event)"
+              accept=".pdf,.jpg,.jpeg,.png"
+              [disabled]="cargando()">
+          </div>
+
+          @if (archivoSeleccionado()) {
+            <div class="archivo-info">
+              <div class="archivo-detalle">
+                <span class="archivo-nombre">{{ archivoSeleccionado()!.name }}</span>
+                <span class="archivo-tamano">
+                  {{ (archivoSeleccionado()!.size / 1024 / 1024).toFixed(2) }} MB
+                </span>
+              </div>
+              <button 
+                class="btn-limpiar" 
+                (click)="limpiarArchivo()"
+                [disabled]="cargando()">
+                ✕
+              </button>
+            </div>
+          }
+
+          <div class="acciones">
+            <button 
+              class="btn-subir" 
+              (click)="subirDocumento()"
+              [disabled]="!archivoSeleccionado() || cargando()">
+              @if (cargando()) {
+                <span class="spinner"></span>
+                Subiendo...
+              } @else {
+                📤 Subir Documento
+              }
+            </button>
+            @if (!archivoSeleccionado() && !cargando()) {
+              <p class="hint-text">Selecciona un archivo para habilitar el botón</p>
+            }
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>ℹ️ Información importante</h3>
+          <ul>
+            <li>El documento debe estar en formato PDF o imagen (JPG, PNG)</li>
+            <li>El tamaño máximo permitido es 10MB</li>
+            <li>El documento será revisado por un administrador</li>
+            <li>Recibirás una notificación cuando tu cuenta sea validada</li>
+            <li>Mientras tu cuenta no esté validada, no podrás realizar pujas</li>
+          </ul>
+        </div>
+      } @else {
+        <div class="validado-section">
+          <div class="validado-icon">✅</div>
+          <h3>¡Tu cuenta está validada!</h3>
+          <p>Ya puedes participar en las subastas y realizar pujas.</p>
+          <a routerLink="/subastas" class="btn-ir-subastas">Ver Subastas</a>
+        </div>
+      }
+    </div>
+  </div>
+</div>

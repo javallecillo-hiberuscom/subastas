@@ -1,0 +1,110 @@
+<div class="dashboard-container">
+  <div class="welcome-card">
+    <h2>¡Bienvenido a Desguaces Borox!</h2>
+    <p>Has iniciado sesión correctamente en el sistema de subastas de vehículos.</p>
+    <p>Explora las pujas activas y participa en las subastas de automóviles.</p>
+  </div>
+
+  @if (esAdmin()) {
+    <div class="admin-section">
+      <h3>🔧 Panel de Administración</h3>
+      
+      @if (mensajeProceso()) {
+        <div class="alert" [class.success]="mensajeProceso()?.includes('correctamente')">
+          {{ mensajeProceso() }}
+        </div>
+      }
+
+      <button 
+        class="btn-admin" 
+        (click)="procesarSubastasFinalizadas()"
+        [disabled]="procesandoNotificaciones()"
+      >
+        @if (procesandoNotificaciones()) {
+          <span class="spinner"></span>
+          <span>Procesando...</span>
+        } @else {
+          <span>🔔</span>
+          <span>Procesar Subastas Finalizadas</span>
+        }
+      </button>
+      <p class="help-text">Genera notificaciones para los ganadores de subastas finalizadas</p>
+    </div>
+  }
+
+  <div class="cards-grid">
+    <div class="info-card">
+      <div class="card-icon">🏆</div>
+      <h3>Subastas Ganadas</h3>
+      <p class="card-number">{{ subastasGanadas() }}</p>
+      @if (subastasGanadas() > 0) {
+        <div class="card-list">
+          @for (puja of pujasGanadas(); track puja.idPuja) {
+            <div class="mini-item clickable" (click)="verSubasta(puja.idSubasta)">
+              <span class="mini-icon">🚗</span>
+              <span class="mini-text">Subasta #{{ puja.idSubasta }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="info-card">
+      <div class="card-icon">📊</div>
+      <h3>Subastas Participadas</h3>
+      <p class="card-number">{{ subastasParticipadas() }}</p>
+      @if (subastasParticipadas() > 0) {
+        <div class="card-list">
+          @for (subasta of subastasUnicasParticipadas().slice(0, 5); track subasta.idSubasta) {
+            <div class="mini-item clickable" (click)="verSubasta(subasta.idSubasta)">
+              <span class="mini-icon">🔥</span>
+              <span class="mini-text">Subasta #{{ subasta.idSubasta }}</span>
+              <span class="puja-count">{{ subasta.totalPujas }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="info-card">
+      <div class="card-icon">⏰</div>
+      <h3>Próximas a Finalizar</h3>
+      <p class="card-number">{{ proximasAFinalizar() }}</p>
+      <p class="card-subtitle">< 24 horas</p>
+      @if (proximasAFinalizar() > 0) {
+        <div class="card-list">
+          @for (subasta of subastasProximas(); track subasta.idSubasta) {
+            <div class="mini-item clickable" (click)="verSubasta(subasta.idSubasta)">
+              <span class="mini-icon">🔥</span>
+              <span class="mini-text">{{ subasta.vehiculo?.marca }} {{ subasta.vehiculo?.modelo }}</span>
+              @if (usuarioHaPujado(subasta.idSubasta)) {
+                <span class="puja-badge">✓</span>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Acciones principales -->
+  <div class="actions-section">
+    <a routerLink="/subastas" class="action-button primary">
+      <div class="action-icon">🚗</div>
+      <div class="action-content">
+        <h3>Ver todas las subastas</h3>
+        <p>Explora todos los vehículos disponibles y participa en las pujas activas</p>
+      </div>
+      <div class="action-arrow">→</div>
+    </a>
+
+    <a routerLink="/mis-pujas" class="action-button secondary">
+      <div class="action-icon">💰</div>
+      <div class="action-content">
+        <h3>Ver mis pujas</h3>
+        <p>Consulta el estado de tus ofertas y vehículos de interés</p>
+      </div>
+      <div class="action-arrow">→</div>
+    </a>
+  </div>
+</div>

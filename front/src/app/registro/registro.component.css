@@ -1,0 +1,311 @@
+.registro-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #003049 0%, #0077b6 100%);
+  padding: 32px 16px;
+}
+
+.registro-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 8px 32px rgba(0, 48, 73, 0.3);
+  width: 100%;
+  max-width: 720px;
+  padding: 40px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-in;
+}
+
+.registro-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.registro-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #003049;
+  margin: 0 0 8px 0;
+}
+
+.registro-header p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Alertas */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.alert-success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+  border: 2px solid #22c55e;
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #b91c1c;
+  border: 2px solid #ef4444;
+}
+
+.alert-info {
+  background: rgba(0, 119, 182, 0.1);
+  color: #0077b6;
+  border: 2px solid #0077b6;
+}
+
+.alert-info strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+/* Formulario */
+.registro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #003049;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #edf2f4;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #2b2d42;
+  font-size: 14px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"] {
+  padding: 12px 16px;
+  border: 2px solid #edf2f4;
+  border-radius: 10px;
+  font-size: 14px;
+  transition: all 0.2s;
+  outline: none;
+  background: white;
+}
+
+.form-group input:focus {
+  border-color: #0077b6;
+  box-shadow: 0 0 0 4px rgba(0, 119, 182, 0.1);
+}
+
+.form-group input.ng-invalid.ng-touched {
+  border-color: #ef4444;
+}
+
+/* Password toggle */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.password-toggle:hover {
+  transform: scale(1.1);
+}
+
+/* File input */
+.form-group input[type="file"] {
+  padding: 10px;
+  border: 2px dashed #edf2f4;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.form-group input[type="file"]:hover {
+  border-color: #0077b6;
+  background: rgba(0, 119, 182, 0.05);
+}
+
+/* Checkbox */
+.checkbox-group {
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #0077b6;
+}
+
+.checkbox-group a {
+  color: #0077b6;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.checkbox-group a:hover {
+  text-decoration: underline;
+}
+
+/* Textos de ayuda y error */
+.help-text {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.error-text {
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Botones */
+.form-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0077b6 0%, #003049 100%);
+  color: white;
+  box-shadow: 0px 4px 12px rgba(0, 119, 182, 0.3);
+  width: 100%;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0px 8px 24px rgba(0, 119, 182, 0.4);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Footer */
+.registro-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.registro-footer a {
+  color: #0077b6;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.registro-footer a:hover {
+  text-decoration: underline;
+}

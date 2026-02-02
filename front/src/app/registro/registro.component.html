@@ -1,0 +1,207 @@
+<div class="registro-container">
+  <div class="registro-card fade-in">
+    <div class="registro-header">
+      <h1>Crear cuenta</h1>
+      <p>Regístrate para participar en las subastas de Desguaces Borox</p>
+    </div>
+
+    <!-- Advertencia importante -->
+    <div class="alert alert-info">
+      <span>ℹ️</span>
+      <div>
+        <strong>Importante:</strong> Tu cuenta estará pendiente de validación. Un administrador deberá aprobar tu registro antes de que puedas iniciar sesión y participar en las subastas.
+      </div>
+    </div>
+
+    @if (successMessage()) {
+      <div class="alert alert-success">
+        <span>✓</span>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="alert alert-error">
+        <span>⚠️</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="registroForm" (ngSubmit)="onSubmit()" class="registro-form">
+      
+      <!-- Datos personales -->
+      <div class="form-section">
+        <h3>Datos personales</h3>
+        
+        <div class="form-group">
+          <label for="nombre">Nombre completo</label>
+          <input 
+            id="nombre" 
+            type="text" 
+            formControlName="nombre"
+            placeholder="Ej: Juan Pérez García"
+          >
+          @if (registroForm.get('nombre')?.touched && registroForm.get('nombre')?.errors) {
+            <span class="error-text">El nombre es requerido (mínimo 3 caracteres)</span>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              id="email" 
+              type="email" 
+              formControlName="email"
+              placeholder="ejemplo@correo.com"
+            >
+            @if (registroForm.get('email')?.touched && registroForm.get('email')?.errors) {
+              <span class="error-text">Email inválido</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="dni">DNI</label>
+            <input 
+              id="dni" 
+              type="text" 
+              formControlName="dni"
+              placeholder="12345678A"
+              maxlength="9"
+            >
+            @if (registroForm.get('dni')?.touched && registroForm.get('dni')?.errors) {
+              <span class="error-text">DNI inválido (8 dígitos + letra)</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <div class="password-input-wrapper">
+              <input 
+                id="password" 
+                [type]="showPassword() ? 'text' : 'password'" 
+                formControlName="password"
+                placeholder="Mínimo 6 caracteres"
+              >
+              <button 
+                type="button" 
+                class="password-toggle" 
+                (click)="togglePasswordVisibility()"
+              >
+                {{ showPassword() ? '🙈' : '👁️' }}
+              </button>
+            </div>
+            @if (registroForm.get('password')?.touched && registroForm.get('password')?.errors) {
+              <span class="error-text">Mínimo 6 caracteres</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirmar contraseña</label>
+            <input 
+              id="confirmPassword" 
+              [type]="showPassword() ? 'text' : 'password'" 
+              formControlName="confirmPassword"
+              placeholder="Repite la contraseña"
+            >
+            @if (registroForm.get('confirmPassword')?.touched && registroForm.errors?.['mismatch']) {
+              <span class="error-text">Las contraseñas no coinciden</span>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos de empresa -->
+      <div class="form-section">
+        <h3>Datos de empresa</h3>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cif">CIF</label>
+            <input 
+              id="cif" 
+              type="text" 
+              formControlName="cif"
+              placeholder="A12345678"
+              maxlength="9"
+            >
+            @if (registroForm.get('cif')?.touched && registroForm.get('cif')?.errors) {
+              <span class="error-text">CIF inválido (Letra + 8 dígitos)</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="telefonoContacto">Teléfono</label>
+            <input 
+              id="telefonoContacto" 
+              type="tel" 
+              formControlName="telefonoContacto"
+              placeholder="612345678"
+              maxlength="9"
+            >
+            @if (registroForm.get('telefonoContacto')?.touched && registroForm.get('telefonoContacto')?.errors) {
+              <span class="error-text">Teléfono inválido (9 dígitos)</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="direccionEmpresa">Dirección de empresa</label>
+          <input 
+            id="direccionEmpresa" 
+            type="text" 
+            formControlName="direccionEmpresa"
+            placeholder="Calle, número, ciudad"
+          >
+          @if (registroForm.get('direccionEmpresa')?.touched && registroForm.get('direccionEmpresa')?.errors) {
+            <span class="error-text">La dirección es requerida</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="documentoIAE">Documento IAE</label>
+          <input 
+            id="documentoIAE" 
+            type="file" 
+            (change)="onFileSelected($event)"
+            accept=".pdf,.jpg,.jpeg,.png"
+          >
+          <span class="help-text">Adjunta tu documento de alta en el IAE (opcional)</span>
+        </div>
+      </div>
+
+      <!-- Términos -->
+      <div class="form-group checkbox-group">
+        <label>
+          <input type="checkbox" formControlName="aceptaTerminos">
+          <span>Acepto los <a href="/terminos" target="_blank">términos y condiciones</a></span>
+        </label>
+        @if (registroForm.get('aceptaTerminos')?.touched && registroForm.get('aceptaTerminos')?.errors) {
+          <span class="error-text">Debes aceptar los términos</span>
+        }
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button 
+          type="submit" 
+          class="btn btn-primary"
+          [disabled]="loading()"
+        >
+          @if (loading()) {
+            <span class="spinner"></span>
+            <span>Registrando...</span>
+          } @else {
+            <span>Crear cuenta</span>
+          }
+        </button>
+      </div>
+    </form>
+
+    <div class="registro-footer">
+      <p>¿Ya tienes cuenta? <a [routerLink]="['/login']">Inicia sesión</a></p>
+    </div>
+  </div>
+</div>

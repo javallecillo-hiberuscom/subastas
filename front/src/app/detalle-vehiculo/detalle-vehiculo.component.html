@@ -1,0 +1,274 @@
+<div class="detalle-container">
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando subasta...</p>
+    </div>
+  } @else if (subasta()) {
+    <!-- Header con logo -->
+    <div class="detalle-header">
+      <div class="header-content">
+        <div class="logo-title">
+          <h1>Desguaces Borox</h1>
+        </div>
+        <button class="btn-volver" (click)="volver()">
+          <span>←</span>
+          <span>Volver al listado</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="detalle-content">
+      <!-- Columna Izquierda: Galería + Especificaciones -->
+      <div class="columna-principal">
+        <!-- Galería de imágenes - Carrusel Moderno -->
+        <div class="galeria-section">
+          <div class="carousel-container">
+            <div class="imagen-principal" (mouseenter)="pausarAutoplay()" (mouseleave)="autoplayEnabled() && iniciarAutoplay()">
+              @if (subasta()!.vehiculo?.imagenes && subasta()!.vehiculo.imagenes.length > 0) {
+                <img 
+                  [src]="getImagenUrl(subasta()!.vehiculo.imagenes[imagenSeleccionada()])" 
+                  [alt]="subasta()!.vehiculo.marca + ' ' + subasta()!.vehiculo.modelo"
+                  class="imagen-activa"
+                >
+                
+                <!-- Navegación del carrusel -->
+                @if (totalImagenes() > 1) {
+                  <button class="carousel-btn prev" (click)="anteriorImagen()" title="Imagen anterior">
+                    <span>‹</span>
+                  </button>
+                  <button class="carousel-btn next" (click)="siguienteImagen()" title="Siguiente imagen">
+                    <span>›</span>
+                  </button>
+                  
+                  <!-- Indicadores -->
+                  <div class="carousel-indicators">
+                    @for (imagen of subasta()!.vehiculo.imagenes; track imagen.idImagen; let i = $index) {
+                      <button 
+                        class="indicator" 
+                        [class.active]="imagenSeleccionada() === i"
+                        (click)="seleccionarImagen(i)"
+                        [title]="'Imagen ' + (i + 1)"
+                      ></button>
+                    }
+                  </div>
+                  
+                  <!-- Contador de imágenes -->
+                  <div class="image-counter">
+                    {{ imagenSeleccionada() + 1 }} / {{ totalImagenes() }}
+                  </div>
+                }
+                
+                @if (esAdmin()) {
+                  <button class="btn-eliminar-imagen" (click)="eliminarImagen(imagenSeleccionada())" title="Eliminar imagen">
+                    🗑️
+                  </button>
+                }
+              } @else {
+                <div class="no-imagen">
+                  <span>🚗</span>
+                  <p>Sin imagen</p>
+                </div>
+              }
+            </div>
+
+            <!-- Miniaturas -->
+            @if (subasta()!.vehiculo?.imagenes && subasta()!.vehiculo.imagenes.length > 1) {
+              <div class="miniaturas">
+                @for (imagen of subasta()!.vehiculo.imagenes; track imagen.idImagen; let i = $index) {
+                  <div 
+                    class="miniatura-wrapper"
+                    [class.active]="imagenSeleccionada() === i"
+                    (click)="seleccionarImagen(i)"
+                  >
+                    <img 
+                      [src]="getImagenUrl(imagen)" 
+                      [alt]="'Imagen ' + (i + 1)"
+                    >
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          @if (esAdmin()) {
+            <div class="admin-actions">
+              <input 
+                type="file" 
+                #fileInput 
+                (change)="onFileSelected($event)" 
+                accept="image/*"
+                style="display: none"
+                multiple
+              >
+              <button class="btn-add-image" (click)="fileInput.click()">
+                <span>📷</span>
+                <span>Añadir Imágenes</span>
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Especificaciones del vehículo (debajo de la galería) -->
+        <div class="specs-section">
+          <h3>Especificaciones Técnicas</h3>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-icon">📅</span>
+              <div>
+                <span class="spec-label">Año</span>
+                <span class="spec-value">{{ subasta()!.vehiculo.anio }}</span>
+              </div>
+            </div>
+            <div class="spec-item">
+              <span class="spec-icon">🛣️</span>
+              <div>
+                <span class="spec-label">Kilometraje</span>
+                <span class="spec-value">{{ subasta()!.vehiculo.kilometraje.toLocaleString() }} km</span>
+              </div>
+            </div>
+            <div class="spec-item">
+              <span class="spec-icon">⚡</span>
+              <div>
+                <span class="spec-label">Potencia</span>
+                <span class="spec-value">{{ subasta()!.vehiculo.potencia }} CV</span>
+              </div>
+            </div>
+            <div class="spec-item">
+              <span class="spec-icon">🚪</span>
+              <div>
+                <span class="spec-label">Puertas</span>
+                <span class="spec-value">{{ subasta()!.vehiculo.numeroPuertas }}</span>
+              </div>
+            </div>
+            <div class="spec-item">
+              <span class="spec-icon">🎨</span>
+              <div>
+                <span class="spec-label">Color</span>
+                <span class="spec-value">{{ subasta()!.vehiculo.color }}</span>
+              </div>
+            </div>
+            <div class="spec-item">
+              <span class="spec-icon">⛽</span>
+              <div>
+                <span class="spec-label">Combustible</span>
+                <span class="spec-value">{{ subasta()!.vehiculo.tipoMotor }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        @if (subasta()!.vehiculo.descripcion) {
+          <div class="descripcion">
+            <h3>Descripción</h3>
+            <p>{{ subasta()!.vehiculo.descripcion }}</p>
+          </div>
+        }
+      </div>
+
+      <!-- Columna Derecha: Información de Puja -->
+      <div class="columna-lateral">
+        <div class="vehiculo-header">
+          <h1>{{ subasta()!.vehiculo.marca }} {{ subasta()!.vehiculo.modelo }}</h1>
+          <p class="matricula">{{ subasta()!.vehiculo.matricula }}</p>
+          
+          <!-- Estado de la subasta -->
+          <div class="subasta-estado">
+            @if (subastaActiva()) {
+              <span class="badge-activa">⏱️ Subasta activa</span>
+              <span class="tiempo-restante">Termina en: {{ tiempoRestante() }}</span>
+            } @else {
+              <span class="badge-finalizada">🔒 Subasta finalizada</span>
+            }
+          </div>
+        </div>
+
+        <!-- Panel de Puja -->
+        <div class="puja-panel">
+          <div class="puja-info">
+            <div class="precio-actual">
+              <span class="label">Precio actual</span>
+              <span class="precio">{{ subasta()!.precioActual.toLocaleString() }}€</span>
+            </div>
+            <div class="precio-info">
+              <span class="label-small">Precio inicial:</span>
+              <span class="valor-small">{{ subasta()!.precioInicial.toLocaleString() }}€</span>
+            </div>
+            <div class="precio-info">
+              <span class="label-small">Incremento mínimo:</span>
+              <span class="valor-small">{{ subasta()!.incrementoMinimo.toLocaleString() }}€</span>
+            </div>
+          </div>
+
+          @if (!puedePujar()) {
+            <div class="alert alert-info">
+              @if (!subastaActiva()) {
+                <span>ℹ️</span>
+                <span>Esta subasta no está activa en este momento</span>
+              } @else {
+                <span>ℹ️</span>
+                <span>Necesitas ser un usuario validado para pujar</span>
+              }
+            </div>
+          }
+
+          @if (successMessage()) {
+            <div class="alert alert-success">
+              <span>✓</span>
+              <span>{{ successMessage() }}</span>
+            </div>
+          }
+
+          @if (errorMessage()) {
+            <div class="alert alert-error">
+              <span>⚠️</span>
+              <span>{{ errorMessage() }}</span>
+            </div>
+          }
+
+          @if (puedePujar()) {
+            <div class="puja-form">
+              <label>Tu puja (mínimo {{ (subasta()!.precioActual + 1).toLocaleString() }}€)</label>
+              <div class="puja-input-group">
+                <input 
+                  type="number" 
+                  [(ngModel)]="cantidadPuja"
+                  placeholder="Ingresa tu cantidad"
+                >
+                <span class="currency">€</span>
+              </div>
+
+              <div class="puja-incrementos">
+                <button 
+                  (click)="incrementarPuja()" 
+                  class="btn-incremento"
+                >
+                  + {{ subasta()!.incrementoMinimo }}€
+                </button>
+              </div>
+
+              <button 
+                class="btn-pujar-principal" 
+                (click)="realizarPuja()"
+                [disabled]="isPujando()"
+              >
+                @if (isPujando()) {
+                  <span class="spinner-small"></span>
+                  <span>Pujando...</span>
+                } @else {
+                  <span>💰 Realizar Puja</span>
+                }
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="error-state">
+      <span>⚠️</span>
+      <h2>Subasta no encontrada</h2>
+      <button class="btn-volver" (click)="volver()">Volver al listado</button>
+    </div>
+  }
+</div>

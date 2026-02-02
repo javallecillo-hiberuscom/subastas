@@ -1,0 +1,99 @@
+<div class="usuarios-container">
+  <div class="header">
+    <h1>Gestión de Usuarios</h1>
+    <button class="btn-refresh" (click)="cargarUsuarios()">
+      🔄 Actualizar
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Cargando usuarios...</div>
+  } @else {
+    <div class="table-container">
+      <table class="usuarios-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Documento IAE</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (usuario of usuarios(); track usuario.idUsuario) {
+            <tr>
+              <td>{{ usuario.idUsuario }}</td>
+              <td>{{ usuario.nombre }} {{ usuario.apellidos }}</td>
+              <td>{{ usuario.email }}</td>
+              <td>{{ usuario.telefono || '-' }}</td>
+              <td>
+                <span class="badge" [class.badge-admin]="usuario.rol === 'admin'">
+                  {{ usuario.rol }}
+                </span>
+              </td>
+              <td>
+                <span class="badge" [ngClass]="getEstadoBadgeClass(usuario)">
+                  {{ getEstadoTexto(usuario) }}
+                </span>
+              </td>
+              <td class="text-center">
+                @if (usuario.documentoIAE) {
+                  <button 
+                    class="btn-icon btn-download" 
+                    (click)="descargarDocumento(usuario)"
+                    title="Descargar documento IAE">
+                    📥
+                  </button>
+                } @else {
+                  <span class="text-muted">-</span>
+                }
+              </td>
+              <td class="text-center">
+                <button 
+                  class="btn-toggle" 
+                  [class.active]="usuario.activo === 1"
+                  (click)="cambiarEstadoActivo(usuario)"
+                  title="{{ usuario.activo === 1 ? 'Desactivar' : 'Activar' }}">
+                  {{ usuario.activo === 1 ? '✅' : '❌' }}
+                </button>
+              </td>
+              <td class="acciones">
+                @if (usuario.documentoIAE && usuario.validado === 0) {
+                  <button 
+                    class="btn-action btn-validar" 
+                    (click)="validarUsuario(usuario)"
+                    title="Validar usuario">
+                    ✓ Validar
+                  </button>
+                }
+                @if (usuario.validado === 1) {
+                  <button 
+                    class="btn-action btn-revocar" 
+                    (click)="validarUsuario(usuario)"
+                    title="Revocar validación">
+                    ✗ Revocar
+                  </button>
+                }
+                <button 
+                  class="btn-action btn-eliminar" 
+                  (click)="eliminarUsuario(usuario)"
+                  title="Eliminar usuario">
+                  🗑️
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9" class="text-center">No hay usuarios registrados</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

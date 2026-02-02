@@ -1,0 +1,111 @@
+<div class="admin-container">
+  <div class="header">
+    <h1>Gestión de Pujas/Subastas</h1>
+    @if (!showForm()) {
+      <button class="btn-primary" (click)="nuevaPuja()">
+        + Nueva Puja
+      </button>
+    }
+  </div>
+
+  @if (showForm()) {
+    <div class="form-panel">
+      <h2>{{ editingId ? 'Editar Puja' : 'Nueva Puja' }}</h2>
+      
+      <form [formGroup]="pujaForm" (ngSubmit)="guardarPuja()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Subasta *</label>
+            <select formControlName="idSubasta">
+              <option value="">Selecciona una subasta</option>
+              @for (subasta of subastas(); track subasta.idSubasta) {
+                <option [value]="subasta.idSubasta">
+                  Subasta #{{ subasta.idSubasta }} - 
+                  @if (subasta.vehiculo) {
+                    {{ subasta.vehiculo.marca }} {{ subasta.vehiculo.modelo }} ({{ subasta.vehiculo.matricula }})
+                  } @else {
+                    Vehículo #{{ subasta.idVehiculo }}
+                  }
+                </option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>ID Usuario *</label>
+            <input type="number" formControlName="idUsuario" min="1">
+          </div>
+
+          <div class="form-group">
+            <label>Cantidad (€) *</label>
+            <input type="number" formControlName="cantidad" min="0">
+          </div>
+
+          <div class="form-group">
+            <label>Fecha Puja *</label>
+            <input type="datetime-local" formControlName="fechaPuja">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" (click)="cancelar()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-primary" [disabled]="pujaForm.invalid">
+            {{ editingId ? 'Actualizar' : 'Crear' }} Puja
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <div class="table-container">
+    @if (loading()) {
+      <p class="loading">Cargando pujas...</p>
+    } @else if (pujas().length === 0) {
+      <p class="empty">No hay pujas registradas</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Subasta/Vehículo</th>
+            <th>Usuario</th>
+            <th>Cantidad</th>
+            <th>Fecha Puja</th>
+            <th>Estado Subasta</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (puja of pujas(); track puja.idPuja) {
+            <tr>
+              <td><strong>#{{ puja.idPuja }}</strong></td>
+              <td>{{ getSubastaNombre(puja.idSubasta) }}</td>
+              <td>{{ getUsuarioNombre(puja) }}</td>
+              <td>
+                <strong class="puja-actual">{{ puja.cantidad.toLocaleString() }} €</strong>
+              </td>
+              <td>{{ puja.fechaPuja | date:'short' }}</td>
+              <td>
+                <span class="badge" [class.activa]="getEstadoSubasta(puja) === 'Activa'">
+                  {{ getEstadoSubasta(puja) }}
+                </span>
+              </td>
+              <td>
+                <div class="actions">
+                  <button class="btn-icon" (click)="editarPuja(puja)" title="Editar">
+                    ✏️
+                  </button>
+                  <button class="btn-icon danger" (click)="eliminarPuja(puja.idPuja)" title="Eliminar">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+</div>

@@ -1,0 +1,244 @@
+<div class="admin-container">
+  <div class="header">
+    <div class="header-content">
+      <h1>Gestión de Usuarios</h1>
+      <button class="btn-nuevo" (click)="nuevoUsuario()">
+        <span class="icon">➕</span>
+        Nuevo Usuario
+      </button>
+    </div>
+    
+    <div class="filtros">
+      <button 
+        class="filtro-btn" 
+        [class.active]="filtro() === 'todos'"
+        (click)="cambiarFiltro('todos')">
+        Todos
+      </button>
+      <button 
+        class="filtro-btn registrado-btn" 
+        [class.active]="filtro() === 'registrado'"
+        (click)="cambiarFiltro('registrado')">
+        Pendientes
+      </button>
+      <button 
+        class="filtro-btn validado-btn" 
+        [class.active]="filtro() === 'validado'"
+        (click)="cambiarFiltro('validado')">
+        Validados
+      </button>
+      <button 
+        class="filtro-btn admin-btn" 
+        [class.active]="filtro() === 'administrador'"
+        (click)="cambiarFiltro('administrador')">
+        Administradores
+      </button>
+    </div>
+  </div>
+
+  @if (mensaje()) {
+    <div class="alert" [class.success]="tipoMensaje() === 'success'" [class.error]="tipoMensaje() === 'error'">
+      {{ mensaje() }}
+    </div>
+  }
+
+  <div class="usuarios-grid">
+    @if (loading()) {
+      <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Cargando usuarios...</p>
+      </div>
+    } @else if (usuariosFiltrados().length === 0) {
+      <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <p>No hay usuarios que mostrar</p>
+      </div>
+    } @else {
+      @for (usuario of usuariosFiltrados(); track usuario.idUsuario) {
+        <div class="usuario-card">
+          <div class="usuario-header">
+            <div class="usuario-info">
+              <h3>{{ usuario.nombre }}</h3>
+              <p class="email">{{ usuario.email }}</p>
+              <span class="chip" [ngClass]="obtenerChipEstado(usuario.rol)">
+                {{ obtenerTextoEstado(usuario.rol) }}
+              </span>
+            </div>
+            <div class="usuario-estado">
+              <span class="estado-label">{{ usuario.activo ? 'Activo' : 'Inactivo' }}</span>
+            </div>
+          </div>
+
+          <div class="usuario-detalles">
+            @if (usuario.dni) {
+              <div class="detalle-item">
+                <span class="label">DNI:</span>
+                <span class="value">{{ usuario.dni }}</span>
+              </div>
+            }
+            @if (usuario.cif) {
+              <div class="detalle-item">
+                <span class="label">CIF:</span>
+                <span class="value">{{ usuario.cif }}</span>
+              </div>
+            }
+            @if (usuario.telefonoContacto) {
+              <div class="detalle-item">
+                <span class="label">Teléfono:</span>
+                <span class="value">{{ usuario.telefonoContacto }}</span>
+              </div>
+            }
+            @if (usuario.direccionEmpresa) {
+              <div class="detalle-item direccion">
+                <span class="label">Dirección:</span>
+                <span class="value">{{ usuario.direccionEmpresa }}</span>
+              </div>
+            }
+            <div class="detalle-item">
+              <span class="label">Registro:</span>
+              <span class="value">{{ usuario.fechaRegistro | date:'dd/MM/yyyy' }}</span>
+            </div>
+            @if (usuario.documentoIAE) {
+              <div class="detalle-item">
+                <button class="btn-documento" (click)="descargarDocumento(usuario.documentoIAE!)">
+                  📄 Ver IAE
+                </button>
+              </div>
+            }
+          </div>
+
+          <div class="usuario-acciones">
+            @if (usuario.rol === 'registrado') {
+              <button class="btn-accion validar" (click)="validarUsuario(usuario)">
+                ✓ Validar
+              </button>
+            }
+            <button class="btn-accion editar" (click)="editarUsuario(usuario)">
+              ✏️ Editar
+            </button>
+            <button 
+              class="btn-accion toggle" 
+              [class.activar]="!usuario.activo"
+              (click)="toggleActivo(usuario)">
+              {{ usuario.activo ? '🚫 Desactivar' : '✅ Activar' }}
+            </button>
+            @if (usuario.rol !== 'administrador') {
+              <button class="btn-accion eliminar" (click)="eliminarUsuario(usuario)">
+                🗑️ Eliminar
+              </button>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Modal Formulario -->
+  @if (mostrarFormulario()) {
+    <div class="modal-overlay" (click)="cerrarFormulario()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ usuarioEditando() ? 'Editar Usuario' : 'Nuevo Usuario' }}</h2>
+          <button class="btn-cerrar" (click)="cerrarFormulario()">✕</button>
+        </div>
+
+        <form [formGroup]="usuarioForm" (ngSubmit)="guardarUsuario()">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="nombre">Nombre *</label>
+              <input 
+                type="text" 
+                id="nombre" 
+                formControlName="nombre"
+                [class.invalid]="usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched">
+              @if (usuarioForm.get('nombre')?.invalid && usuarioForm.get('nombre')?.touched) {
+                <span class="error-text">El nombre es obligatorio</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email"
+                [class.invalid]="usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched">
+              @if (usuarioForm.get('email')?.invalid && usuarioForm.get('email')?.touched) {
+                <span class="error-text">Email inválido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="dni">DNI *</label>
+              <input 
+                type="text" 
+                id="dni" 
+                formControlName="dni"
+                placeholder="12345678A"
+                [class.invalid]="usuarioForm.get('dni')?.invalid && usuarioForm.get('dni')?.touched">
+              @if (usuarioForm.get('dni')?.invalid && usuarioForm.get('dni')?.touched) {
+                <span class="error-text">DNI debe ser 8 dígitos + letra</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="rol">Rol *</label>
+              <select id="rol" formControlName="rol">
+                <option value="registrado">Registrado</option>
+                <option value="validado">Validado</option>
+                <option value="administrador">Administrador</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="cif">CIF</label>
+              <input 
+                type="text" 
+                id="cif" 
+                formControlName="cif"
+                placeholder="A12345678"
+                [class.invalid]="usuarioForm.get('cif')?.invalid && usuarioForm.get('cif')?.touched">
+              @if (usuarioForm.get('cif')?.invalid && usuarioForm.get('cif')?.touched) {
+                <span class="error-text">CIF debe ser letra + 8 dígitos</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input 
+                type="tel" 
+                id="telefono" 
+                formControlName="telefonoContacto"
+                placeholder="912345678"
+                [class.invalid]="usuarioForm.get('telefonoContacto')?.invalid && usuarioForm.get('telefonoContacto')?.touched">
+              @if (usuarioForm.get('telefonoContacto')?.invalid && usuarioForm.get('telefonoContacto')?.touched) {
+                <span class="error-text">Teléfono debe ser 9 dígitos</span>
+              }
+            </div>
+
+            <div class="form-group full-width">
+              <label for="direccion">Dirección Empresa</label>
+              <input 
+                type="text" 
+                id="direccion" 
+                formControlName="direccionEmpresa"
+                placeholder="Calle, número, ciudad">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-cancelar" (click)="cerrarFormulario()">
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              class="btn-guardar" 
+              [disabled]="guardando()">
+              {{ guardando() ? 'Guardando...' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

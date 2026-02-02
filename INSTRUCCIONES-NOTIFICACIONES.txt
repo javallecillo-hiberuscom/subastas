@@ -1,0 +1,54 @@
+-- Instrucciones para el administrador
+
+-- PASO 1: Ejecuta este script en SQL Server para crear la tabla de notificaciones
+-- Ver archivo: crear-tabla-notificaciones-admin.sql
+
+-- PASO 2: Verifica y corrige el rol de administrador
+-- Ver archivo: verificar-admin.sql
+
+-- PASO 3: Agrega el servicio de notificaciones en Program.cs del backend
+-- Agrega esta línea en la sección de servicios (antes de builder.Build()):
+/*
+builder.Services.AddScoped<subastas.Services.NotificacionAdminService>();
+*/
+
+-- PASO 4: Actualiza UsuariosController.cs
+-- En el método de registro [HttpPost("registro")], después de SaveChangesAsync(), agrega:
+/*
+// Crear notificación para el admin
+await _notificacionAdminService.CrearNotificacionRegistro(
+    usuario.idUsuario,
+    $"{usuario.nombre} {usuario.apellidos}",
+    usuario.email
+);
+*/
+
+-- PASO 5: Actualiza DocumentosController.cs  
+-- En el método de subir IAE, después de SaveChangesAsync(), agrega:
+/*
+// Crear notificación para el admin
+await _notificacionAdminService.CrearNotificacionDocumentoIAE(
+    idUsuario,
+    $"{usuario.nombre} {usuario.apellidos}"
+);
+*/
+
+-- PASO 6: Reinicia el backend de ASP.NET Core
+
+-- PASO 7: El frontend ya está configurado
+-- Navega a http://localhost:4200/admin/notificaciones como administrador
+
+-- RESUMEN DE CAMBIOS:
+-- ✅ Modelo NotificacionAdmin.cs creado
+-- ✅ NotificacionesAdminController.cs creado  
+-- ✅ NotificacionAdminService.cs creado
+-- ✅ Componente frontend notificaciones-admin creado
+-- ✅ Ruta /admin/notificaciones agregada
+-- ✅ Menú actualizado con opción Notificaciones
+
+-- PENDIENTE:
+-- ⏳ Ejecutar crear-tabla-notificaciones-admin.sql
+-- ⏳ Verificar rol admin con verificar-admin.sql
+-- ⏳ Agregar servicio en Program.cs
+-- ⏳ Inyectar servicio en controladores que crean notificaciones
+-- ⏳ Reiniciar backend

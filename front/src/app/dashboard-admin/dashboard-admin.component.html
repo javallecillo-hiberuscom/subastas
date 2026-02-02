@@ -1,0 +1,247 @@
+<div class="dashboard-admin-container">
+  <h1>Panel de Administración</h1>
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información del sistema...</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="alert alert-error">
+      <p>{{ error() }}</p>
+      <button (click)="cargarDashboard()" class="btn-retry">Reintentar</button>
+    </div>
+  }
+
+  @if (dashboard()) {
+    <!-- Estadísticas Generales -->
+    <section class="estadisticas-generales">
+      <h2>Estadísticas del Sistema</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <h3>{{ dashboard()!.estadisticasGenerales.totalUsuarios }}</h3>
+            <p>Usuarios Totales</p>
+            <small>{{ dashboard()!.estadisticasGenerales.usuariosPendientes }} pendientes</small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🏢</div>
+          <div class="stat-info">
+            <h3>{{ dashboard()!.estadisticasGenerales.totalEmpresas }}</h3>
+            <p>Empresas</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🚗</div>
+          <div class="stat-info">
+            <h3>{{ dashboard()!.estadisticasGenerales.totalVehiculos }}</h3>
+            <p>Vehículos</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⏰</div>
+          <div class="stat-info">
+            <h3>{{ dashboard()!.estadisticasGenerales.subastasActivas }}</h3>
+            <p>Subastas Activas</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <h3>{{ dashboard()!.estadisticasGenerales.subastasTerminadas }}</h3>
+            <p>Subastas Finalizadas</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <h3>{{ dashboard()!.estadisticasGenerales.totalSubastas }}</h3>
+            <p>Total Subastas</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subastas Activas -->
+    <section class="subastas-activas">
+      <h2>Subastas Activas ({{ dashboard()!.subastasActivas.length }})</h2>
+      
+      @if (dashboard()!.subastasActivas.length === 0) {
+        <p class="no-data">No hay subastas activas en este momento</p>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Vehículo</th>
+                <th>Precio Inicial</th>
+                <th>Puja Actual</th>
+                <th>Ganando</th>
+                <th>Total Pujas</th>
+                <th>Tiempo Restante</th>
+                <th>Contacto</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (subasta of dashboard()!.subastasActivas; track subasta.IdSubasta) {
+                <tr>
+                  <td>{{ subasta.IdSubasta }}</td>
+                  <td>
+                    <strong>{{ subasta.vehiculo.Marca }} {{ subasta.vehiculo.Modelo }}</strong><br>
+                    <small>{{ subasta.vehiculo.Anio }} - {{ subasta.vehiculo.Matricula }}</small>
+                  </td>
+                  <td>{{ subasta.PrecioInicial | currency:'EUR' }}</td>
+                  <td>
+                    <strong>{{ subasta.PrecioActual || subasta.PrecioInicial | currency:'EUR' }}</strong>
+                  </td>
+                  <td>
+                    @if (subasta.pujaGanadora) {
+                      <div class="ganador-info">
+                        <strong>{{ subasta.pujaGanadora.usuario.Nombre }} {{ subasta.pujaGanadora.usuario.Apellidos }}</strong><br>
+                        <small>{{ subasta.pujaGanadora.cantidad | currency:'EUR' }}</small>
+                      </div>
+                    } @else {
+                      <span class="sin-pujas">Sin pujas</span>
+                    }
+                  </td>
+                  <td>{{ subasta.totalPujas }}</td>
+                  <td>
+                    <span class="tiempo-restante">{{ subasta.tiempoRestante }}</span>
+                  </td>
+                  <td>
+                    @if (subasta.pujaGanadora) {
+                      <div class="contacto-info">
+                        <a href="mailto:{{ subasta.pujaGanadora.usuario.Email }}">{{ subasta.pujaGanadora.usuario.Email }}</a><br>
+                        <a href="tel:{{ subasta.pujaGanadora.usuario.Telefono }}">{{ subasta.pujaGanadora.usuario.Telefono }}</a>
+                      </div>
+                    } @else {
+                      <span>-</span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- Subastas Terminadas -->
+    <section class="subastas-terminadas">
+      <h2>Subastas Finalizadas Recientes</h2>
+      
+      @if (dashboard()!.subastasTerminadas.length === 0) {
+        <p class="no-data">No hay subastas finalizadas</p>
+      } @else {
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Vehículo</th>
+                <th>Precio Inicial</th>
+                <th>Precio Final</th>
+                <th>Ganador</th>
+                <th>Empresa</th>
+                <th>Contacto</th>
+                <th>Finalizada</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (subasta of dashboard()!.subastasTerminadas; track subasta.IdSubasta) {
+                <tr [class.sin-venta]="subasta.sinPujas">
+                  <td>{{ subasta.IdSubasta }}</td>
+                  <td>
+                    <strong>{{ subasta.vehiculo.Marca }} {{ subasta.vehiculo.Modelo }}</strong><br>
+                    <small>{{ subasta.vehiculo.Anio }} - {{ subasta.vehiculo.Matricula }}</small>
+                  </td>
+                  <td>{{ subasta.PrecioInicial | currency:'EUR' }}</td>
+                  <td>
+                    @if (subasta.ganador) {
+                      <strong class="precio-venta">{{ subasta.ganador.pujaGanadora | currency:'EUR' }}</strong>
+                    } @else {
+                      <span class="sin-venta-label">Sin ventas</span>
+                    }
+                  </td>
+                  <td>
+                    @if (subasta.ganador) {
+                      <div class="ganador-info">
+                        <strong>{{ subasta.ganador.usuario.Nombre }} {{ subasta.ganador.usuario.Apellidos }}</strong><br>
+                        <small>ID: {{ subasta.ganador.usuario.IdUsuario }}</small>
+                      </div>
+                    } @else {
+                      <span class="sin-pujas">Sin pujas</span>
+                    }
+                  </td>
+                  <td>
+                    @if (subasta.ganador?.usuario?.empresa) {
+                      <div>
+                        <strong>{{ subasta.ganador!.usuario!.empresa!.Nombre }}</strong><br>
+                        <small>CIF: {{ subasta.ganador!.usuario!.empresa!.Cif }}</small>
+                      </div>
+                    } @else {
+                      <span>-</span>
+                    }
+                  </td>
+                  <td>
+                    @if (subasta.ganador) {
+                      <div class="contacto-info">
+                        <a href="mailto:{{ subasta.ganador.usuario.Email }}" class="btn-contact">
+                          ✉️ Email
+                        </a><br>
+                        <a href="tel:{{ subasta.ganador.usuario.Telefono }}" class="btn-contact">
+                          📞 {{ subasta.ganador.usuario.Telefono }}
+                        </a>
+                      </div>
+                    } @else {
+                      <span>-</span>
+                    }
+                  </td>
+                  <td>
+                    <span class="tiempo-finalizada">{{ subasta.tiempoFinalizada }}</span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+
+    <!-- Enlaces Rápidos -->
+    <section class="acciones-rapidas">
+      <h2>Acciones Rápidas</h2>
+      <div class="acciones-grid">
+        <a routerLink="/usuarios" class="accion-card">
+          <span class="accion-icon">👥</span>
+          <span>Gestionar Usuarios</span>
+          @if (dashboard()!.estadisticasGenerales.usuariosPendientes > 0) {
+            <span class="badge">{{ dashboard()!.estadisticasGenerales.usuariosPendientes }}</span>
+          }
+        </a>
+        <a routerLink="/vehiculos-admin" class="accion-card">
+          <span class="accion-icon">🚗</span>
+          <span>Gestionar Vehículos</span>
+        </a>
+        <a routerLink="/empresas-admin" class="accion-card">
+          <span class="accion-icon">🏢</span>
+          <span>Gestionar Empresas</span>
+        </a>
+        <a routerLink="/notificaciones-admin" class="accion-card">
+          <span class="accion-icon">🔔</span>
+          <span>Notificaciones</span>
+        </a>
+      </div>
+    </section>
+  }
+</div>
