@@ -8,7 +8,7 @@ Fecha: 02/02/2026 19:05
 - **URL Principal**: https://white-bush-0e589c01e.1.azurestaticapps.net
 - **Nombre**: blue-flower-00b3c6b03
 - **Resource Group**: Curso
-- **Estado**: Activo
+- **Estado**: ✅ Desplegado y funcionando (02/02/2026 19:10)
 - **Configuración**: Apunta al backend de Azure
 
 ### 🔧 BACKEND (App Service)
@@ -44,13 +44,14 @@ C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\backend-
 - Deployment ID: 20dd408c787d477fb7992e3ab0aaab48
 - Timestamp: 2026-02-02 19:00:18 UTC
 
-### Frontend (Listo para desplegar)
+### Frontend (Desplegado ✅)
 ```
-C:\Users\JoseAntonioVallecill\source\repos\subastas\front\frontend-deploy-azure.zip
+C:\Users\JoseAntonioVallecill\source\repos\subastas\front\dist\front\browser
 ```
-- Estado: ⏳ Compilado, pendiente deployment manual
-- Build: Production (apunta a backend Azure)
-- Tamaño: ~288 KB (inicial) + ~480 KB (lazy chunks)
+- Estado: ✅ Desplegado exitosamente
+- Deployment: SWA CLI
+- Timestamp: 2026-02-02 19:10 UTC
+- URL: https://white-bush-0e589c01e.1.azurestaticapps.net
 
 ---
 
