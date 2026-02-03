@@ -20,6 +20,60 @@ public class PujasController : ControllerBase
     }
 
     /// <summary>
+    /// Obtiene todas las pujas del sistema.
+    /// </summary>
+    /// <returns>Lista de pujas con información de vehículo.</returns>
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<object>>> GetPujas()
+    {
+        try
+        {
+            var pujas = await _context.Pujas
+                .Include(p => p.Subasta)
+                    .ThenInclude(s => s.Vehiculo)
+                        .ThenInclude(v => v.ImagenesVehiculo)
+                .Include(p => p.Usuario)
+                .Select(p => new
+                {
+                    p.IdPuja,
+                    p.IdSubasta,
+                    p.IdUsuario,
+                    p.Cantidad,
+                    p.FechaPuja,
+                    usuario = new
+                    {
+                        p.Usuario.IdUsuario,
+                        p.Usuario.Nombre,
+                        p.Usuario.Apellidos,
+                        p.Usuario.Email
+                    },
+                    subasta = new
+                    {
+                        p.Subasta.IdSubasta,
+                        p.Subasta.FechaInicio,
+                        p.Subasta.FechaFin,
+                        p.Subasta.Estado,
+                        vehiculo = new
+                        {
+                            p.Subasta.Vehiculo.IdVehiculo,
+                            p.Subasta.Vehiculo.Marca,
+                            p.Subasta.Vehiculo.Modelo,
+                            p.Subasta.Vehiculo.Anio
+                        }
+                    }
+                })
+                .OrderByDescending(p => p.FechaPuja)
+                .ToListAsync();
+
+            return Ok(pujas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { Success = false, Message = "Error al cargar pujas", Error = ex.Message });
+        }
+    }
+
+    /// <summary>
     /// Obtiene todas las pujas activas incluyendo los datos completos del vehículo y sus imágenes.
     /// </summary>
     /// <returns>Lista de pujas activas con información de vehículo.</returns>

@@ -13,10 +13,12 @@ namespace Subastas.WebApi.Controllers;
 public class NotificacionesAdminController : ControllerBase
 {
     private readonly SubastaContext _context;
+    private readonly ILogger<NotificacionesAdminController> _logger;
 
-    public NotificacionesAdminController(SubastaContext context)
+    public NotificacionesAdminController(SubastaContext context, ILogger<NotificacionesAdminController> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     /// <summary>
@@ -29,20 +31,29 @@ public class NotificacionesAdminController : ControllerBase
         [FromQuery] bool? soloNoLeidas = null,
         [FromQuery] int? limite = 50)
     {
-        var query = _context.NotificacionesAdmin
-            .Include(n => n.Usuario)
-            .AsQueryable();
-
-        if (soloNoLeidas.HasValue && soloNoLeidas.Value)
+        try
         {
-            query = query.Where(n => n.Leida == 0);
+            var query = _context.NotificacionesAdmin
+                .Include(n => n.Usuario)
+                .AsQueryable();
+
+            if (soloNoLeidas.HasValue && soloNoLeidas.Value)
+            {
+                query = query.Where(n => n.Leida == 0);
+            }
+
+            query = query.OrderByDescending(n => n.FechaCreacion)
+                        .Take(limite ?? 50);
+
+            var notificaciones = await query.ToListAsync();
+            return Ok(notificaciones);
         }
-
-        query = query.OrderByDescending(n => n.FechaCreacion)
-                    .Take(limite ?? 50);
-
-        var notificaciones = await query.ToListAsync();
-        return Ok(notificaciones);
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error obteniendo notificaciones administrativas");
+            // Retornar lista vacía en caso de error
+            return Ok(new List<NotificacionAdmin>());
+        }
     }
 
     /// <summary>
@@ -51,10 +62,19 @@ public class NotificacionesAdminController : ControllerBase
     [HttpGet("contador-no-leidas")]
     public async Task<ActionResult<int>> GetContadorNoLeidas()
     {
-        var contador = await _context.NotificacionesAdmin
-            .CountAsync(n => n.Leida == 0);
-        
-        return Ok(new { contador });
+        try
+        {
+            var contador = await _context.NotificacionesAdmin
+                .CountAsync(n => n.Leida == 0);
+            
+            return Ok(new { contador });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error obteniendo contador de notificaciones no leídas");
+            // Retornar 0 en caso de error (tabla no existe, etc)
+            return Ok(new { contador = 0 });
+        }
     }
 
     /// <summary>

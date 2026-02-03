@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Subastas.WebApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+18c1a0f7ae46aa6daf000765ec8121f66909c680")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dce0100ecf7d14e6d1cd4e4bae47230b30e076c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("Subastas.WebApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Subastas.WebApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

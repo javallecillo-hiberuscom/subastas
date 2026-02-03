@@ -146,5 +146,10 @@
             <param name="hashedPassword">Hash almacenado</param>
             <returns>True si coinciden, false si no</returns>
         </member>
+        <member name="T:Subastas.Infrastructure.Services.UsuarioService">
+            <summary>
+            Servicio para gestión de usuarios y autenticación.
+            </summary>
+        </member>
     </members>
 </doc>

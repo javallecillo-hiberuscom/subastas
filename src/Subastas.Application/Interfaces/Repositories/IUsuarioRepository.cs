@@ -26,4 +26,9 @@ public interface IUsuarioRepository : IRepository<Usuario>
     /// Obtiene usuarios por rol.
     /// </summary>
     Task<IEnumerable<Usuario>> GetByRolAsync(string rol);
+
+    /// <summary>
+    /// Cuenta el número de administradores en el sistema.
+    /// </summary>
+    Task<int> CountAdminsAsync();
 }

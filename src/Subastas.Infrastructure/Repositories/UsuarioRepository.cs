@@ -42,6 +42,13 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
             .ToListAsync();
     }
 
+    public async Task<int> CountAdminsAsync()
+    {
+        return await _dbSet
+            .Where(u => u.Rol != null && u.Rol.ToLower() == "admin")
+            .CountAsync();
+    }
+
     public override async Task<Usuario?> GetByIdAsync(int id)
     {
         return await _dbSet

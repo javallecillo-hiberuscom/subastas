@@ -117,7 +117,9 @@ export class MisPujasComponent implements OnInit {
     
     // Si la ruta existe, construir la URL completa apuntando al backend
     if (imagen?.ruta) {
-      return `https://localhost:7249${imagen.ruta}`;
+      // Usar getApiUrl sin path para obtener solo la URL base del backend
+      const backendUrl = getApiUrl('').replace('/api', '');
+      return `${backendUrl}${imagen.ruta}`;
     }
     
     return '/assets/no-image.jpg';

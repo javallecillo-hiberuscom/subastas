@@ -25,14 +25,15 @@ export class RegistroComponent {
 
   constructor() {
     this.registroForm = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      nombre: ['', [Validators.required, Validators.minLength(2)]],
+      apellidos: [''],
       email: ['', [Validators.required, Validators.email]],
-      dni: ['', [Validators.required, Validators.pattern(/^[0-9]{8}[A-Z]$/)]],
+      dni: [''],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
-      cif: ['', [Validators.required, Validators.pattern(/^[A-Z][0-9]{8}$/)]],
-      direccionEmpresa: ['', Validators.required],
-      telefonoContacto: ['', [Validators.required, Validators.pattern(/^[0-9]{9}$/)]],
+      cif: [''],
+      direccionEmpresa: [''],
+      telefonoContacto: [''],
       aceptaTerminos: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
   }
@@ -71,12 +72,12 @@ export class RegistroComponent {
 
       this.http.post(getApiUrl('/api/Usuarios/registro'), registroData).subscribe({
         next: () => {
-          this.successMessage.set('Registro exitoso. Tu cuenta está pendiente de validación por un administrador.');
+          this.successMessage.set('Registro exitoso. Redirigiendo al login...');
           this.loading.set(false);
           
           setTimeout(() => {
             this.router.navigate(['/login']);
-          }, 3000);
+          }, 1500);
         },
         error: (error) => {
           this.errorMessage.set(error.error?.Message || error.error?.message || 'Error al registrar usuario');

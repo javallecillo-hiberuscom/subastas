@@ -1,4 +1,6 @@
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Subastas.WebApi.exe
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\appsettings.json
+C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\appsettings.Development.json
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Subastas.WebApi.dll
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Subastas.WebApi.deps.json
 C:\Users\JoseAntonioVallecill\source\repos\subastas\src\Subastas.WebApi\publish\Subastas.WebApi.runtimeconfig.json

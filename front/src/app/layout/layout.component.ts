@@ -32,7 +32,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   expandedMenus = signal(new Set<string>());
 
   menuItems: MenuItem[] = [
-    { label: 'Dashboard', icon: '🏠', route: '/dashboard' },
+    { label: 'Dashboard', icon: '🏠', route: '/dashboard', userOnly: true },
     { label: 'Dashboard Admin', icon: '📊', route: '/admin/dashboard', adminOnly: true },
     { 
       label: 'Vehículos en Subasta', 

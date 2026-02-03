@@ -90,7 +90,9 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
   // Computed: puede pujar
   puedePujar = computed(() => {
     const user = this.currentUser();
-    return this.subastaActiva() && (user?.rol === 'validado' || user?.rol === 'administrador');
+    // Usuario debe estar validado O ser administrador
+    const esAdministrador = user?.rol?.toLowerCase() === 'administrador' || user?.rol?.toLowerCase() === 'admin';
+    return this.subastaActiva() && (user?.validado === true || esAdministrador);
   });
 
   // Computed: es admin

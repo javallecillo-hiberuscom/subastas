@@ -189,6 +189,12 @@
             Controlador API para operaciones sobre la entidad Puja.
             </summary>
         </member>
+        <member name="M:Subastas.WebApi.Controllers.PujasController.GetPujas">
+            <summary>
+            Obtiene todas las pujas del sistema.
+            </summary>
+            <returns>Lista de pujas con información de vehículo.</returns>
+        </member>
         <member name="M:Subastas.WebApi.Controllers.PujasController.GetPujasActivas">
             <summary>
             Obtiene todas las pujas activas incluyendo los datos completos del vehículo y sus imágenes.
@@ -271,6 +277,11 @@
             Valida un usuario (solo administradores).
             </summary>
         </member>
+        <member name="M:Subastas.WebApi.Controllers.UsuariosController.EliminarUsuario(System.Int32)">
+            <summary>
+            Elimina un usuario (solo administradores).
+            </summary>
+        </member>
         <member name="T:Subastas.WebApi.Controllers.VehiculosController">
             <summary>
             Controlador API para operaciones sobre vehículos.
@@ -309,6 +320,11 @@
         <member name="T:Subastas.WebApi.Controllers.ImagenVehiculoBase64">
             <summary>
             Representa una imagen en Base64 para un vehículo.
+            </summary>
+        </member>
+        <member name="T:Subastas.WebApi.Middleware.ExceptionHandlingMiddleware">
+            <summary>
+            Middleware para manejo global de excepciones.
             </summary>
         </member>
     </members>

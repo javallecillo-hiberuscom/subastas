@@ -210,11 +210,15 @@
                     @if (subasta.ganador) {
                       <div class="contacto-info">
                         <a href="mailto:{{ subasta.ganador.usuario.email }}" class="btn-contact">
-                          ✉️ Email
+                          ✉️ {{ subasta.ganador.usuario.email }}
                         </a><br>
-                        <a href="tel:{{ subasta.ganador.usuario.telefono }}" class="btn-contact">
-                          📞 {{ subasta.ganador.usuario.telefono }}
-                        </a>
+                        @if (subasta.ganador.usuario.telefono) {
+                          <a href="tel:{{ subasta.ganador.usuario.telefono }}" class="btn-contact">
+                            📞 {{ subasta.ganador.usuario.telefono }}
+                          </a>
+                        } @else {
+                          <span class="no-phone">Sin teléfono</span>
+                        }
                       </div>
                     } @else {
                       <span>-</span>

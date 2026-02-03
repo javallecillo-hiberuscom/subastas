@@ -90,6 +90,7 @@ export class AuthService {
         return data;
       }),
       tap(response => {
+        console.log('Procesando respuesta de login:', response);
         // Crear el usuario desde la respuesta del backend (ahora en camelCase)
         const user: User = {
           id: response.idUsuario?.toString() || response.IdUsuario?.toString() || '',
@@ -97,8 +98,9 @@ export class AuthService {
           email: response.email || response.Email,
           nombre: response.nombreCompleto || response.NombreCompleto,
           rol: response.rol || response.Rol,
-          validado: response.validado !== undefined ? response.validado : response.Validado
+          validado: response.validado !== undefined ? response.validado : (response.Validado !== undefined ? response.Validado : true)
         };
+        console.log('Usuario creado:', user);
         this.setAuthState(response.token || response.Token, user);
       }),
       catchError(error => {

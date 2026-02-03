@@ -4,6 +4,7 @@ import { RouterModule, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { NotificationService } from '../services/notification.service';
+import { getApiUrl } from '../utils/api-url.helper';
 
 interface Puja {
   idPuja: number;
@@ -57,7 +58,7 @@ export class DashboardComponent implements OnInit {
     if (!user?.idUsuario) return;
 
     // Cargar pujas del usuario
-    this.http.get<Puja[]>(`/api/Pujas/usuario/${user.idUsuario}`).subscribe({
+    this.http.get<Puja[]>(getApiUrl(`/api/Pujas/usuario/${user.idUsuario}`)).subscribe({
       next: (pujas) => {
         // Contar subastas ganadas y guardar lista
         const pujasGanadasList = pujas.filter(p => p.esGanadora === true);
@@ -91,7 +92,7 @@ export class DashboardComponent implements OnInit {
     });
 
     // Cargar subastas activas próximas a finalizar (menos de 24 horas)
-    this.http.get<any[]>('/api/Subastas?activas=true').subscribe({
+    this.http.get<any[]>(getApiUrl('/api/Subastas?activas=true')).subscribe({
       next: (subastas) => {
         const ahora = new Date().getTime();
         const proximasAfinalizar = subastas.filter(s => {

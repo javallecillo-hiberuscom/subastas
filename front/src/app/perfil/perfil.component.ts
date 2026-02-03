@@ -75,8 +75,11 @@ export class PerfilComponent implements OnInit {
     const user = this.currentUser();
     if (!user || !user.idUsuario) return;
 
-    this.http.get<any>(`/api/Usuarios/${user.idUsuario}`).subscribe({
-      next: (usuarioActualizado) => {
+    this.http.get<any>(getApiUrl(`/api/Usuarios/${user.idUsuario}`)).subscribe({
+      next: (response) => {
+        // Manejar respuesta tipo ApiResponse
+        const usuarioActualizado = response.data || response;
+        
         // Actualizar el usuario en el authService y localStorage
         this.authService.setCurrentUser(usuarioActualizado);
         
@@ -276,13 +279,23 @@ export class PerfilComponent implements OnInit {
         
         // Recargar datos frescos del servidor
         this.http.get<any>(getApiUrl(`/api/Usuarios/${user.idUsuario}`)).subscribe({
-          next: (usuarioActualizado) => {
+          next: (response) => {
+            const usuarioActualizado = response.data || response;
             this.authService.setCurrentUser(usuarioActualizado);
+            
+            // Actualizar formulario con los nuevos datos
+            this.perfilForm.patchValue({
+              nombre: usuarioActualizado.nombre,
+              apellidos: usuarioActualizado.apellidos,
+              email: usuarioActualizado.email,
+              telefono: usuarioActualizado.telefono,
+              direccion: usuarioActualizado.direccion,
+              password: ''
+            });
             
             this.toast.success('Perfil actualizado correctamente');
             this.editandoPerfil.set(false);
             this.perfilForm.disable();
-            this.perfilForm.patchValue({password: ''});
             this.guardando.set(false);
           },
           error: () => {

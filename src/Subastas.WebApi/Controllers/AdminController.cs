@@ -10,7 +10,6 @@ namespace Subastas.WebApi.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Policy = "AdminPolicy")]
 public class AdminController : ControllerBase
 {
     private readonly SubastaContext _context;

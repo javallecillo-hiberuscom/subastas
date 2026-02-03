@@ -289,6 +289,11 @@
             Rol del usuario en el sistema.
             </summary>
         </member>
+        <member name="P:Subastas.Application.DTOs.Responses.LoginResponse.Validado">
+            <summary>
+            Indica si el usuario ha sido validado por el administrador.
+            </summary>
+        </member>
         <member name="T:Subastas.Application.DTOs.Responses.PujaResponse">
             <summary>
             DTO de respuesta con información de puja.
@@ -420,6 +425,11 @@
             Obtiene usuarios por rol.
             </summary>
         </member>
+        <member name="M:Subastas.Application.Interfaces.Repositories.IUsuarioRepository.CountAdminsAsync">
+            <summary>
+            Cuenta el número de administradores en el sistema.
+            </summary>
+        </member>
         <member name="T:Subastas.Application.Interfaces.Repositories.IVehiculoRepository">
             <summary>
             Interfaz para operaciones específicas del repositorio de vehículos.
@@ -528,6 +538,46 @@
         <member name="M:Subastas.Application.Interfaces.Services.IPasswordService.VerifyPassword(System.String,System.String)">
             <summary>
             Verifica si una contraseña coincide con su hash.
+            </summary>
+        </member>
+        <member name="T:Subastas.Application.Interfaces.Services.IUsuarioService">
+            <summary>
+            Interfaz para el servicio de gestión de usuarios.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.ObtenerTodosAsync">
+            <summary>
+            Obtiene todos los usuarios del sistema.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.ObtenerPorIdAsync(System.Int32)">
+            <summary>
+            Obtiene un usuario por su ID.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.RegistrarAsync(Subastas.Application.DTOs.Requests.RegistroUsuarioRequest)">
+            <summary>
+            Registra un nuevo usuario en el sistema.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.LoginAsync(Subastas.Application.DTOs.Requests.LoginRequest)">
+            <summary>
+            Inicia sesión y devuelve un token JWT.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.ActualizarPerfilAsync(System.Int32,Subastas.Application.DTOs.Requests.ActualizarPerfilRequest)">
+            <summary>
+            Actualiza el perfil de un usuario.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.ValidarUsuarioAsync(System.Int32)">
+            <summary>
+            Valida un usuario (marca como validado).
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IUsuarioService.EliminarUsuarioAsync(System.Int32)">
+            <summary>
+            Elimina un usuario del sistema.
             </summary>
         </member>
     </members>

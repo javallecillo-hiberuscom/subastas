@@ -86,15 +86,18 @@ erDiagram
 
 ```mermaid
 graph TB
-    subgraph "Frontend - Angular 21"
+    subgraph "Azure Static Web App"
         A[Navegador Web]
-        B[Componentes Angular]
+        SWA[Static Web App<br/>white-bush-0e589c01e]
+        B[Angular 18 - Componentes]
         C[Guards: authGuard, adminGuard]
         D[Services: AuthService, ToastService, NotificationService]
         E[HttpClient - API Calls]
+        CFG[staticwebapp.config.json<br/>Navigation Fallback]
     end
     
-    subgraph "Backend - ASP.NET Core"
+    subgraph "Azure App Service"
+        CORS[CORS Platform Config<br/>4 AllowedOrigins]
         F[Controllers]
         G[UsuariosController]
         H[SubastasController]
@@ -103,18 +106,22 @@ graph TB
         K[Entity Framework Core]
         L[Password Service BCrypt]
         M[JWT Authentication]
+        APPSETTINGS[appsettings.json]
     end
     
     subgraph "Almacenamiento"
-        N[SQL Server Database]
+        N[Azure SQL Server<br/>fpcursos.database.windows.net]
         O[File System /Uploads/IAE/]
     end
     
-    A --> B
+    A --> SWA
+    SWA --> CFG
+    CFG --> B
     B --> C
     C --> D
     D --> E
-    E --> F
+    E -->|HTTPS| CORS
+    CORS --> F
     F --> G
     F --> H
     F --> I
@@ -127,11 +134,15 @@ graph TB
     G --> M
     K --> N
     I --> O
+    F --> APPSETTINGS
     
     style A fill:#e1f5ff
+    style SWA fill:#4ECDC4
+    style CORS fill:#FF6B6B
     style N fill:#ffe1e1
     style O fill:#ffe1e1
     style F fill:#e1ffe1
+    style CFG fill:#95E1D3
 ```
 
 ## 3. Diagrama de Flujo: Registro y Validación de Usuario
@@ -213,17 +224,20 @@ flowchart LR
         E2[Usuario sube IAE]
     end
     
-    subgraph "Backend"
+    subgraph "Backend con Manejo de Errores"
         C1[UsuariosController.Registro]
         C2[DocumentosController.SubirIAE]
         DB[(NotificacionAdmin Table)]
+        TRY{Tabla existe?}
+        CATCH[Logger.LogError<br/>Return empty array/0]
     end
     
-    subgraph "Frontend Admin"
+    subgraph "Frontend Admin - Defensivo"
         P[Polling cada 30s]
         N[Componente Notificaciones]
         L[Lista de notificaciones]
         B[Badge contador no leídas]
+        EMPTY[Estado vacío]
     end
     
     E1 --> C1
@@ -232,9 +246,13 @@ flowchart LR
     C2 --> DB
     
     P --> API[GET /api/NotificacionesAdmin]
-    API --> DB
+    API --> TRY
+    TRY -->|Sí| DB
+    TRY -->|No| CATCH
     DB --> N
-    N --> L
+    CATCH --> N
+    N -->|Datos vacíos| EMPTY
+    N -->|Datos válidos| L
     N --> B
     
     L --> M[Marcar como leída]
@@ -245,6 +263,8 @@ flowchart LR
     style E2 fill:#FFE4B5
     style DB fill:#FFA07A
     style B fill:#98FB98
+    style CATCH fill:#FF6B6B
+    style EMPTY fill:#E8E8E8
 ```
 
 ## 6. Diagrama de Casos de Uso
@@ -421,6 +441,12 @@ sequenceDiagram
     F->>F: localStorage.setItem('token')
     F->>F: authService.currentUser.set(usuario)
     
+    alt Rol es Admin
+        F->>F: router.navigate(['/admin/dashboard'])
+    else Rol es Usuario
+        F->>F: router.navigate(['/dashboard'])
+    end
+    
     Note over U,DB: Usuario intenta acceder a ruta protegida
     
     F->>Guard: canActivate()
@@ -523,23 +549,39 @@ graph TB
 
 ## Tecnologías Visualizadas
 
-- **Frontend**: Angular 21 + Signals + Standalone Components
-- **Backend**: ASP.NET Core + Entity Framework Core
-- **Base de Datos**: SQL Server
+- **Frontend**: Angular 18 + Signals + Standalone Components
+- **Hosting Frontend**: Azure Static Web App (white-bush-0e589c01e.1.azurestaticapps.net)
+- **Backend**: ASP.NET Core 8 + Entity Framework Core
+- **Hosting Backend**: Azure App Service (subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net)
+- **Base de Datos**: Azure SQL Server (fpcursos.database.windows.net)
 - **Autenticación**: JWT (2h expiración) + BCrypt
-- **Almacenamiento**: File System para documentos IAE
-- **Comunicación**: RESTful API + HttpClient
-- **Notificaciones**: Polling cada 30 segundos
+- **CORS**: Configuración a nivel de Azure App Service (platform-level)
+- **Routing**: staticwebapp.config.json con navigationFallback
+- **Almacenamiento**: File System para documentos IAE e imágenes
+- **Comunicación**: RESTful API + HttpClient + ApiResponse wrapper pattern
+- **Notificaciones**: Polling cada 30 segundos con manejo defensivo de errores
 
 ---
 
-## Notas de Implementación
-
-1. **Guards**: Los guards verifican tanto el token JWT como el estado del usuario (validado=1 para usuarios, rol=admin/administrador para admins)
-
-2. **Notificaciones**: Sistema de polling que consulta cada 30 segundos. Considera implementar SignalR para notificaciones en tiempo real.
+## Notas de Implementación Implementa manejo defensivo de errores retornando arrays vacíos cuando la tabla no existe.
 
 3. **Validación en cascada**: Un usuario debe estar registrado → subir IAE → ser validado por admin → antes de poder pujar.
+
+4. **Seguridad**: Las contraseñas se hashean con BCrypt (salt rounds: 10). Los tokens JWT expiran a las 2 horas.
+
+5. **Estados**: Tanto usuarios como subastas tienen máquinas de estados bien definidas que deben respetarse.
+
+6. **CORS**: Configurado a nivel de Azure App Service usando `az webapp cors add`, no mediante código. Orígenes permitidos: Static Web App production URL, localhost:4200, localhost:4201.
+
+7. **Routing SPA**: Se utiliza `staticwebapp.config.json` con `navigationFallback` para que todas las rutas (404) redirijan a `/index.html` y Angular maneje el routing.
+
+8. **Login basado en roles**: Después del login exitoso, los usuarios admin son redirigidos a `/admin/dashboard` y los usuarios regulares a `/dashboard`.
+
+9. **ApiResponse Pattern**: Los endpoints wrappean respuestas en `{ success: bool, data: T, message?: string }`. El frontend maneja ambos formatos (`response.data || response`).
+
+10. **Manejo de Errores Defensivo**: Componentes usan `|| []` y `|| 0` para valores fallback. Backend usa try-catch retornando defaults en vez de 500 errors cuando recursos no existen.
+
+11. **Null Safety**: Templates usan `(valor || 0).toLocaleString()` para evitar TypeErrors cuando datos numéricos son null/undefined de poder pujar.
 
 4. **Seguridad**: Las contraseñas se hashean con BCrypt (salt rounds: 10). Los tokens JWT expiran a las 2 horas.
 

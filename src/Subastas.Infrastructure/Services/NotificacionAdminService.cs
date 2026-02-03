@@ -37,10 +37,17 @@ public class NotificacionAdminService : INotificacionAdminService
         await _context.NotificacionesAdmin.AddAsync(notificacion);
         await _context.SaveChangesAsync();
         
-        // Enviar email al administrador
-        await _emailService.EnviarEmailAdminAsync(
-            notificacion.Titulo,
-            notificacion.Mensaje);
+        // Enviar email al administrador (no falla si el email no se puede enviar)
+        try
+        {
+            await _emailService.EnviarEmailAdminAsync(
+                notificacion.Titulo,
+                notificacion.Mensaje);
+        }
+        catch
+        {
+            // Ignorar errores de email, la notificación ya está creada
+        }
     }
 
     /// <summary>

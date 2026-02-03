@@ -64,7 +64,7 @@ public class Usuario
     /// <summary>
     /// Identificador de la empresa a la que pertenece el usuario.
     /// </summary>
-    public int IdEmpresa { get; set; }
+    public int? IdEmpresa { get; set; }
 
     /// <summary>
     /// Teléfono de contacto del usuario.

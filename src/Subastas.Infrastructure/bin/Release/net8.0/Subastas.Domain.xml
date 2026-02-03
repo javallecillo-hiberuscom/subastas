@@ -399,5 +399,30 @@
             Estado del vehículo (Disponible, En Subasta, Vendido).
             </summary>
         </member>
+        <member name="T:Subastas.Domain.Exceptions.DomainException">
+            <summary>
+            Excepción base para la capa de dominio.
+            </summary>
+        </member>
+        <member name="T:Subastas.Domain.Exceptions.EntityNotFoundException">
+            <summary>
+            Excepción cuando no se encuentra una entidad.
+            </summary>
+        </member>
+        <member name="T:Subastas.Domain.Exceptions.BusinessRuleException">
+            <summary>
+            Excepción cuando se viola una regla de negocio.
+            </summary>
+        </member>
+        <member name="T:Subastas.Domain.Exceptions.DuplicateEntityException">
+            <summary>
+            Excepción cuando ya existe una entidad duplicada.
+            </summary>
+        </member>
+        <member name="T:Subastas.Domain.Exceptions.InvalidCredentialsException">
+            <summary>
+            Excepción cuando las credenciales son inválidas.
+            </summary>
+        </member>
     </members>
 </doc>

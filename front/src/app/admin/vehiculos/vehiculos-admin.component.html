@@ -231,8 +231,8 @@
               <td><strong>{{ vehiculo.matricula }}</strong></td>
               <td>{{ vehiculo.marca }} {{ vehiculo.modelo }}</td>
               <td>{{ vehiculo.anio }}</td>
-              <td>{{ vehiculo.kilometraje.toLocaleString() }} km</td>
-              <td>{{ vehiculo.precioSalida.toLocaleString() }} €</td>
+              <td>{{ (vehiculo.kilometraje || 0).toLocaleString() }} km</td>
+              <td>{{ (vehiculo.precioSalida || 0).toLocaleString() }} €</td>
               <td>
                 <span class="badge" [class.vendido]="vehiculo.estaVendido">
                   {{ vehiculo.estaVendido ? 'Vendido' : 'Disponible' }}

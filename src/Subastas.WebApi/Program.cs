@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Subastas.Infrastructure.Data;
 using Subastas.Infrastructure.Configuration;
+using Subastas.WebApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -179,6 +180,9 @@ try
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
     logger.LogInformation("Iniciando aplicación Subastas API en entorno: {Environment}", app.Environment.EnvironmentName);
 
+    // Middleware de manejo de excepciones global
+    app.UseMiddleware<ExceptionHandlingMiddleware>();
+
     // Configuración del pipeline HTTP
     if (app.Environment.IsDevelopment())
     {
@@ -233,7 +237,7 @@ try
     }
 
     app.UseHttpsRedirection();
-    app.UseCors();
+    app.UseCors(); // CORS debe ir ANTES de Authentication/Authorization
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();

@@ -39,8 +39,9 @@ export class UsuariosComponent implements OnInit {
 
   cargarUsuarios(): void {
     this.loading.set(true);
-    this.http.get<Usuario[]>(getApiUrl('/api/Usuarios')).subscribe({
-      next: (usuarios) => {
+    this.http.get<any>(getApiUrl('/api/Usuarios')).subscribe({
+      next: (response) => {
+        const usuarios = Array.isArray(response) ? response : (response.data || []);
         this.usuarios.set(usuarios);
         this.loading.set(false);
       },

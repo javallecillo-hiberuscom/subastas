@@ -63,11 +63,12 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
     this.http.get<NotificacionAdmin[]>(getApiUrl(`/api/NotificacionesAdmin?soloNoLeidas=${soloNoLeidas}`))
       .subscribe({
         next: (notificaciones) => {
-          this.notificaciones.set(notificaciones);
+          this.notificaciones.set(notificaciones || []);
           this.loading.set(false);
         },
         error: (error) => {
           console.error('Error cargando notificaciones:', error);
+          this.notificaciones.set([]);
           this.loading.set(false);
         }
       });
@@ -77,10 +78,11 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
     this.http.get<{contador: number}>(getApiUrl('/api/NotificacionesAdmin/contador-no-leidas'))
       .subscribe({
         next: (response) => {
-          this.contadorNoLeidas.set(response.contador);
+          this.contadorNoLeidas.set(response?.contador || 0);
         },
         error: (error) => {
           console.error('Error cargando contador:', error);
+          this.contadorNoLeidas.set(0);
         }
       });
   }
@@ -92,7 +94,12 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
 
   marcarComoLeida(notificacion: NotificacionAdmin): void {
     if (notificacion.leida === 1) return;
-
+    // Si es notificación de registro, navegar a gestión de usuarios
+    if (notificacion.tipo === 'registro' && notificacion.idUsuario) {
+      this.router.navigate(['/admin/usuarios'], { 
+        queryParams: { destacar: notificacion.idUsuario } 
+      });
+    }
     this.http.put(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}/marcar-leida`), {})
       .subscribe({
         next: () => {

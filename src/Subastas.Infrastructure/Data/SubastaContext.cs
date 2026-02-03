@@ -59,6 +59,7 @@ public class SubastaContext : DbContext
         // Notificacion
         modelBuilder.Entity<Notificacion>(entity =>
         {
+            entity.ToTable("Notificacion");
             entity.HasKey(e => e.IdNotificacion).HasName("PK__Notifica__AFE1D7E48069B189");
             entity.HasOne(d => d.Subasta)
                 .WithMany(p => p.Notificaciones)
@@ -75,6 +76,7 @@ public class SubastaContext : DbContext
         // NotificacionAdmin
         modelBuilder.Entity<NotificacionAdmin>(entity =>
         {
+            entity.ToTable("NotificacionAdmin");
             entity.HasKey(e => e.IdNotificacion);
             entity.HasOne(d => d.Usuario)
                 .WithMany()
@@ -130,7 +132,7 @@ public class SubastaContext : DbContext
             entity.HasOne(d => d.Empresa)
                 .WithMany(p => p.Usuarios)
                 .HasForeignKey(d => d.IdEmpresa)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_Usuario_Empresa")
                 .IsRequired(false);
         });

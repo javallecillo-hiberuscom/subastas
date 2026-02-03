@@ -29,4 +29,9 @@ public class LoginResponse
     /// Rol del usuario en el sistema.
     /// </summary>
     public string Rol { get; set; } = null!;
+
+    /// <summary>
+    /// Indica si el usuario ha sido validado por el administrador.
+    /// </summary>
+    public bool Validado { get; set; }
 }

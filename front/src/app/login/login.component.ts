@@ -39,7 +39,13 @@ export class LoginComponent {
     this.authService.login(this.credentials().Email, this.credentials().Password).subscribe({
       next: () => {
         this.isLoading.set(false);
-        this.router.navigate(['/']);
+        const user = this.authService.currentUser();
+        // Redirigir según el rol
+        if (user?.rol?.toLowerCase() === 'admin') {
+          this.router.navigate(['/admin/dashboard']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: (error) => {
         this.isLoading.set(false);

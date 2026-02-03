@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PujaService, VehiculoService } from '../../services/vehiculo.service';
 import { Puja, Vehiculo, Subasta } from '../../models/app.models';
 import { HttpClient } from '@angular/common/http';
+import { getApiUrl } from '../../utils/api-url.helper';
 
 @Component({
   selector: 'app-pujas-admin',
@@ -56,7 +57,7 @@ export class PujasAdminComponent implements OnInit {
 
   cargarSubastas() {
     // Cargar TODAS las subastas (activas e inactivas) para mostrar información completa
-    this.http.get<Subasta[]>('/api/Subastas').subscribe({
+    this.http.get<Subasta[]>(getApiUrl('/api/Subastas')).subscribe({
       next: (subastas) => {
         console.log('Subastas cargadas:', subastas.length);
         this.subastas.set(subastas);
@@ -64,7 +65,7 @@ export class PujasAdminComponent implements OnInit {
       error: (error) => {
         console.error('Error cargando subastas:', error);
         // Si falla, intentar solo activas
-        this.http.get<Subasta[]>('/api/Subastas?activas=true').subscribe({
+        this.http.get<Subasta[]>(getApiUrl('/api/Subastas?activas=true')).subscribe({
           next: (subastas) => this.subastas.set(subastas),
           error: (e) => console.error('Error cargando subastas activas:', e)
         });
