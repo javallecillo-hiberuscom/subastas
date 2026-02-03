@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Subastas.Application.Interfaces.Services;
 using Subastas.Domain.Entities;
 using Subastas.Infrastructure.Data;
@@ -12,11 +13,18 @@ public class NotificacionAdminService : INotificacionAdminService
 {
     private readonly SubastaContext _context;
     private readonly IEmailService _emailService;
+    private readonly ILogger<NotificacionAdminService> _logger;
 
-    public NotificacionAdminService(SubastaContext context, IEmailService emailService)
+    public NotificacionAdminService(
+        SubastaContext context,
+        IEmailService emailService,
+        ILogger<NotificacionAdminService> logger)
     {
         _context = context;
         _emailService = emailService;
+        _logger = logger;
+        var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+        _logger.LogWarning(">>> [{Timestamp}] NotificacionAdminService CONSTRUCTOR <<<", timestamp);
     }
 
     /// <summary>
@@ -24,29 +32,53 @@ public class NotificacionAdminService : INotificacionAdminService
     /// </summary>
     public async Task CrearNotificacionRegistroAsync(int idUsuario, string nombreUsuario, string email)
     {
-        var notificacion = new NotificacionAdmin
-        {
-            Titulo = "Nuevo usuario registrado",
-            Mensaje = $"El usuario {nombreUsuario} ({email}) se ha registrado y está pendiente de validación.",
-            Tipo = "registro",
-            IdUsuario = idUsuario,
-            Leida = 0,
-            FechaCreacion = DateTime.Now
-        };
-
-        await _context.NotificacionesAdmin.AddAsync(notificacion);
-        await _context.SaveChangesAsync();
-        
-        // Enviar email al administrador (no falla si el email no se puede enviar)
+        var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
         try
         {
-            await _emailService.EnviarEmailAdminAsync(
-                notificacion.Titulo,
-                notificacion.Mensaje);
+            _logger.LogWarning(">>> [{Timestamp}] PUNTO A: INICIO CrearNotificacionRegistroAsync ID={IdUsuario}", timestamp, idUsuario);
+            
+            var notificacion = new NotificacionAdmin
+            {
+                Titulo = "Nuevo usuario registrado",
+                Mensaje = $"El usuario {nombreUsuario} ({email}) se ha registrado y está pendiente de validación.",
+                Tipo = "registro",
+                IdUsuario = idUsuario,
+                Leida = 0,
+                FechaCreacion = DateTime.Now
+            };
+
+            _logger.LogWarning(">>> [{Timestamp}] PUNTO B: Agregando notificación...", DateTime.Now.ToString("HH:mm:ss.fff"));
+            _context.NotificacionesAdmin.Add(notificacion);
+            
+            _logger.LogWarning(">>> [{Timestamp}] PUNTO C: Guardando en BD...", DateTime.Now.ToString("HH:mm:ss.fff"));
+            var rowsAffected = await _context.SaveChangesAsync();
+            _logger.LogWarning(">>> [{Timestamp}] PUNTO D: Filas={Rows}, IdNotif={IdNotificacion}", DateTime.Now.ToString("HH:mm:ss.fff"), rowsAffected, notificacion.IdNotificacion);
+            
+            // Enviar email al administrador
+            try
+            {
+                _logger.LogWarning(">>> [{Timestamp}] PUNTO E: Enviando email...", DateTime.Now.ToString("HH:mm:ss.fff"));
+                await _emailService.EnviarEmailAdminAsync(
+                    notificacion.Titulo,
+                    notificacion.Mensaje);
+                _logger.LogWarning(">>> [{Timestamp}] PUNTO F: Email enviado EXITOSAMENTE", DateTime.Now.ToString("HH:mm:ss.fff"));
+            }
+            catch (Exception emailEx)
+            {
+                _logger.LogWarning(emailEx, ">>> [{Timestamp}] Email falló pero notificación guardada", DateTime.Now.ToString("HH:mm:ss.fff"));
+            }
+            
+            _logger.LogWarning(">>> [{Timestamp}] PUNTO G: FIN - ÉXITO TOTAL", DateTime.Now.ToString("HH:mm:ss.fff"));
         }
-        catch
+        catch (Exception ex)
         {
-            // Ignorar errores de email, la notificación ya está creada
+            _logger.LogError(ex, ">>> [{Timestamp}] ERROR CRÍTICO: {Message}", DateTime.Now.ToString("HH:mm:ss.fff"), ex.Message);
+            _logger.LogError("StackTrace: {StackTrace}", ex.StackTrace);
+            if (ex.InnerException != null)
+            {
+                _logger.LogError("InnerException: {InnerMessage}", ex.InnerException.Message);
+            }
+            throw;
         }
     }
 
@@ -67,11 +99,6 @@ public class NotificacionAdminService : INotificacionAdminService
 
         await _context.NotificacionesAdmin.AddAsync(notificacion);
         await _context.SaveChangesAsync();
-        
-        // Enviar email al administrador
-        await _emailService.EnviarEmailAdminAsync(
-            notificacion.Titulo,
-            notificacion.Mensaje);
     }
 
     /// <summary>

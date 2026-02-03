@@ -540,6 +540,31 @@
             Verifica si una contraseña coincide con su hash.
             </summary>
         </member>
+        <member name="T:Subastas.Application.Interfaces.Services.IPujaService">
+            <summary>
+            Contrato para el servicio de pujas.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IPujaService.ObtenerTodasAsync">
+            <summary>
+            Obtiene todas las pujas del sistema.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IPujaService.ObtenerPorUsuarioAsync(System.Int32)">
+            <summary>
+            Obtiene las pujas realizadas por un usuario específico.
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IPujaService.ObtenerActivasAsync">
+            <summary>
+            Obtiene las pujas activas (en subastas no finalizadas).
+            </summary>
+        </member>
+        <member name="M:Subastas.Application.Interfaces.Services.IPujaService.CrearPujaAsync(Subastas.Application.DTOs.Requests.CrearPujaRequest)">
+            <summary>
+            Crea una nueva puja en una subasta.
+            </summary>
+        </member>
         <member name="T:Subastas.Application.Interfaces.Services.IUsuarioService">
             <summary>
             Interfaz para el servicio de gestión de usuarios.

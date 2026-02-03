@@ -84,20 +84,25 @@ public class UsuarioService : IUsuarioService
             Direccion = request.Direccion
         };
 
+        _logger.LogWarning(">>> PUNTO 1: Guardando usuario en BD...");
         await _usuarioRepository.AddAsync(usuario);
         await _usuarioRepository.SaveChangesAsync();
+        _logger.LogWarning(">>> PUNTO 2: Usuario ID={IdUsuario} guardado", usuario.IdUsuario);
 
-        // Crear notificación administrativa (en segundo plano, no bloquea el registro)
         try
         {
+            _logger.LogWarning(">>> PUNTO 3: Llamando a notificación ID={IdUsuario}", usuario.IdUsuario);
             await _notificacionAdminService.CrearNotificacionRegistroAsync(
                 usuario.IdUsuario,
                 $"{usuario.Nombre} {usuario.Apellidos}".Trim(),
                 usuario.Email);
+            _logger.LogWarning(">>> PUNTO 4: Notificación EXITOSA ID={IdUsuario}", usuario.IdUsuario);
         }
         catch (Exception notifEx)
         {
-            _logger.LogError(notifEx, "Error al crear notificación administrativa");
+            _logger.LogError(notifEx, "=== ERROR FATAL al crear notificación: {Message} ===", notifEx.Message);
+            _logger.LogError("Tipo de excepción: {Type}", notifEx.GetType().FullName);
+            _logger.LogError("StackTrace completo: {StackTrace}", notifEx.StackTrace);
         }
 
         return MapearAResponse(usuario);

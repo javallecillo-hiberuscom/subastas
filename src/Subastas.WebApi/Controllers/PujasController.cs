@@ -200,23 +200,20 @@ public class PujasController : ControllerBase
         if (subasta == null || usuario == null)
             return BadRequest("Subasta o usuario no válido.");
 
-        // Validar que el usuario NO sea administrador
-        if (usuario.Rol?.Trim().ToLower() == "admin")
+        if (usuario.Rol?.Trim().ToLower() == "admin" || usuario.Rol?.Trim().ToLower() == "administrador")
             return BadRequest(new 
             { 
                 mensaje = "Los administradores no pueden realizar pujas. Los vehículos son propiedad del sistema.",
                 esAdmin = true
             });
 
-        // Validar que el usuario esté validado (COMENTADO PARA DESARROLLO)
-        // if (usuario.Validado == 0)
-        //     return BadRequest(new 
-        //     { 
-        //         mensaje = "Tu cuenta debe estar validada para poder pujar. Por favor, sube tu documento IAE y espera la validación del administrador.",
-        //         requiereValidacion = true
-        //     });
+        if (usuario.Validado == 0)
+            return BadRequest(new 
+            { 
+                mensaje = "Tu cuenta debe estar validada para poder pujar. Por favor, sube tu documento IAE y espera la validación del administrador.",
+                requiereValidacion = true
+            });
 
-        // Validar que el usuario tenga documento IAE subido
         if (string.IsNullOrEmpty(usuario.DocumentoIAE))
             return BadRequest(new 
             { 

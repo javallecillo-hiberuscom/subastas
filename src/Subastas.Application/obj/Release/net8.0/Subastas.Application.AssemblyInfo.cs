@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Subastas.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dce0100ecf7d14e6d1cd4e4bae47230b30e076c6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b751a82795f36db71e52bf4ab93893d1c30fdd93")]
 [assembly: System.Reflection.AssemblyProductAttribute("Subastas.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Subastas.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
