@@ -1,10 +1,19 @@
 <div class="empresas-admin-container">
   <div class="header">
     <h1>Gestión de Empresas</h1>
-    <button class="btn-primary" (click)="mostrarFormulario()">
-      <span>+</span>
-      <span>Nueva Empresa</span>
-    </button>
+    <div class="header-actions">
+      <input 
+        type="text" 
+        class="search-input"
+        placeholder="Buscar por nombre, CIF, email o teléfono..."
+        [value]="busqueda()"
+        (input)="busqueda.set($any($event.target).value)"
+      />
+      <button class="btn-primary" (click)="mostrarFormulario()">
+        <span>+</span>
+        <span>Nueva Empresa</span>
+      </button>
+    </div>
   </div>
 
   @if (successMessage()) {
@@ -129,7 +138,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (empresa of empresas(); track empresa.idEmpresa) {
+          @for (empresa of empresasFiltradas(); track empresa.idEmpresa) {
             <tr>
               <td>{{ empresa.cif }}</td>
               <td>{{ empresa.nombre }}</td>

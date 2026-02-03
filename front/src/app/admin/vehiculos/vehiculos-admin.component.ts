@@ -17,6 +17,7 @@ export class VehiculosAdminComponent implements OnInit {
   
   vehiculos = signal<Vehiculo[]>([]);
   loading = signal(true);
+  busqueda = signal('');
   showForm = signal(false);
   vehiculoForm!: FormGroup;
   editingId: number | null = null;
@@ -66,6 +67,18 @@ export class VehiculosAdminComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  vehiculosFiltrados() {
+    const busquedaLower = this.busqueda().toLowerCase();
+    if (!busquedaLower) return this.vehiculos();
+    
+    return this.vehiculos().filter(v => 
+      v.marca?.toLowerCase().includes(busquedaLower) ||
+      v.modelo?.toLowerCase().includes(busquedaLower) ||
+      v.matricula?.toLowerCase().includes(busquedaLower) ||
+      v.color?.toLowerCase().includes(busquedaLower)
+    );
   }
 
   nuevoVehiculo() {

@@ -2,9 +2,18 @@
   <div class="header">
     <h1>Gestión de Vehículos</h1>
     @if (!showForm()) {
-      <button class="btn-primary" (click)="nuevoVehiculo()">
-        + Nuevo Vehículo
-      </button>
+      <div class="header-actions">
+        <input 
+          type="text" 
+          class="search-input"
+          placeholder="Buscar por marca, modelo, matrícula o color..."
+          [value]="busqueda()"
+          (input)="busqueda.set($any($event.target).value)"
+        />
+        <button class="btn-primary" (click)="nuevoVehiculo()">
+          + Nuevo Vehículo
+        </button>
+      </div>
     }
   </div>
 
@@ -226,7 +235,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (vehiculo of vehiculos(); track vehiculo.idVehiculo) {
+          @for (vehiculo of vehiculosFiltrados(); track vehiculo.idVehiculo) {
             <tr>
               <td><strong>{{ vehiculo.matricula }}</strong></td>
               <td>{{ vehiculo.marca }} {{ vehiculo.modelo }}</td>

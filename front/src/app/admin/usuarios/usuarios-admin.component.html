@@ -9,6 +9,13 @@
     </div>
     
     <div class="filtros">
+      <input 
+        type="text" 
+        class="search-input"
+        placeholder="Buscar por nombre, email, DNI o CIF..."
+        [value]="busqueda()"
+        (input)="busqueda.set($any($event.target).value)"
+      />
       <button 
         class="filtro-btn" 
         [class.active]="filtro() === 'todos'"

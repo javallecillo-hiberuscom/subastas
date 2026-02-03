@@ -6,13 +6,14 @@ import { getApiUrl } from '../utils/api-url.helper';
 
 export interface Notificacion {
   id: number;
-  tipo: 'puja_ganada' | 'puja_superada' | 'subasta_finalizada' | 'nueva_subasta';
+  tipo: 'puja_ganada' | 'puja_superada' | 'subasta_finalizada' | 'nueva_subasta' | 'registro';
   mensaje: string;
   fecha: Date;
   leida: boolean;
   idSubasta?: number;
   idVehiculo?: number;
   vehiculoInfo?: string; // Info adicional del vehículo para mostrar
+  idUsuario?: number; // Para notificaciones admin
 }
 
 @Injectable({
@@ -25,8 +26,11 @@ export class NotificationService {
   noLeidas = signal(0);
   
   private checkInterval: any;
+  private esAdmin = false;
 
-  iniciarMonitoreo(idUsuario: number) {
+  iniciarMonitoreo(idUsuario: number, esAdmin: boolean = false) {
+    console.log('NotificationService: Iniciando monitoreo para usuario:', idUsuario, 'esAdmin:', esAdmin);
+    this.esAdmin = esAdmin;
     // Cargar notificaciones iniciales
     this.cargarNotificaciones(idUsuario);
     
@@ -43,20 +47,30 @@ export class NotificationService {
   }
 
   private cargarNotificaciones(idUsuario: number) {
-    this.http.get<any[]>(getApiUrl(`/api/Notificaciones/${idUsuario}`))
+    // Si es admin, usar endpoint de notificaciones admin, si no, endpoint de usuario
+    const url = this.esAdmin 
+      ? getApiUrl('/api/NotificacionesAdmin?soloNoLeidas=false')
+      : getApiUrl(`/api/Notificaciones/${idUsuario}`);
+    
+    console.log('NotificationService: Cargando notificaciones desde:', url);
+    
+    this.http.get<any[]>(url)
       .pipe(
         catchError((error) => {
           // Si es 404, devolver array vacío (usuario sin notificaciones)
           if (error.status === 404) {
+            console.log('NotificationService: Usuario sin notificaciones (404)');
             return of([]);
           }
           // Otros errores sí los mostramos
-          console.error('Error cargando notificaciones:', error);
+          console.error('NotificationService: Error cargando notificaciones:', error);
           return of([]);
         })
       )
       .subscribe({
         next: (notificaciones) => {
+          console.log('NotificationService: Notificaciones recibidas:', notificaciones);
+          
           // Mapear respuesta del backend a nuestro modelo
           const mapped = notificaciones.map(n => {
             // Construir información del vehículo si está disponible
@@ -67,20 +81,44 @@ export class NotificationService {
               vehiculoInfo = `Subasta #${n.idSubasta}`;
             }
             
+            // Obtener mensaje correcto según estructura
+            let mensajeBase = n.mensaje || n.Mensaje || n.titulo || n.Titulo || '';
+            
+            // Para notificaciones admin, agregar info del usuario si existe
+            if (this.esAdmin && n.usuario) {
+              const nombreUsuario = `${n.usuario.nombre || ''} ${n.usuario.apellidos || ''}`.trim() || n.usuario.email;
+              if (nombreUsuario && !mensajeBase.includes(nombreUsuario)) {
+                mensajeBase = `${nombreUsuario}: ${mensajeBase}`;
+              }
+            }
+            
+            // Determinar si está leída (puede venir como boolean o number)
+            let estaLeida = false;
+            if (typeof n.leida === 'boolean') {
+              estaLeida = n.leida;
+            } else if (typeof n.leida === 'number') {
+              estaLeida = n.leida === 1;
+            } else if (typeof n.Leida === 'number') {
+              estaLeida = n.Leida === 1;
+            }
+            
             return {
-              id: n.idNotificacion || n.id,
-              tipo: this.mapearTipo(n.tipo),
-              mensaje: n.mensaje,
-              fecha: new Date(n.fechaCreacion || n.fecha),
-              leida: n.leida,
-              idSubasta: n.idSubasta,
-              idVehiculo: n.idVehiculo,
-              vehiculoInfo: vehiculoInfo || this.extraerInfoVehiculo(n.mensaje)
+              id: n.idNotificacion || n.IdNotificacion || n.id,
+              tipo: this.mapearTipo(n.tipo || n.Tipo || ''),
+              mensaje: mensajeBase,
+              fecha: new Date(n.fechaCreacion || n.FechaCreacion || n.fecha || n.FechaEnvio),
+              leida: estaLeida,
+              idSubasta: n.idSubasta || n.IdSubasta,
+              idVehiculo: n.idVehiculo || n.IdVehiculo,
+              vehiculoInfo: vehiculoInfo || this.extraerInfoVehiculo(mensajeBase),
+              idUsuario: n.idUsuario || n.IdUsuario // Para poder navegar en admin
             };
           });
           
+          console.log('NotificationService: Notificaciones mapeadas:', mapped);
           this.notificaciones.set(mapped);
           this.noLeidas.set(mapped.filter(n => !n.leida).length);
+          console.log('NotificationService: Total:', mapped.length, 'No leídas:', mapped.filter(n => !n.leida).length);
         }
       });
   }
@@ -98,17 +136,34 @@ export class NotificationService {
   private mapearTipo(tipo: string): any {
     if (!tipo) return 'nueva_subasta'; // Valor por defecto si tipo es undefined
     
+    // Normalizar a minúsculas
+    const tipoLower = tipo.toLowerCase();
+    
     const mapa: any = {
-      'PujaGanada': 'puja_ganada',
-      'PujaSuperada': 'puja_superada',
-      'SubastaFinalizada': 'subasta_finalizada',
-      'NuevaSubasta': 'nueva_subasta'
+      'pujaganada': 'puja_ganada',
+      'puja_ganada': 'puja_ganada',
+      'pujasuperada': 'puja_superada',
+      'puja_superada': 'puja_superada',
+      'subastafinalizada': 'subasta_finalizada',
+      'subasta_finalizada': 'subasta_finalizada',
+      'nuevasubasta': 'nueva_subasta',
+      'nueva_subasta': 'nueva_subasta',
+      'registro': 'registro',
+      'documento_subido': 'registro',
+      'puja': 'puja_ganada',
+      'otro': 'nueva_subasta'
     };
-    return mapa[tipo] || tipo.toLowerCase();
+    
+    return mapa[tipoLower] || tipoLower;
   }
 
   marcarComoLeida(idNotificacion: number) {
-    this.http.put(getApiUrl(`/api/Notificaciones/${idNotificacion}/leida`), {}).pipe(
+    // Si es admin, usar endpoint de admin
+    const url = this.esAdmin 
+      ? getApiUrl(`/api/NotificacionesAdmin/${idNotificacion}/marcar-leida`)
+      : getApiUrl(`/api/Notificaciones/${idNotificacion}/leida`);
+    
+    this.http.put(url, {}).pipe(
       catchError((error) => {
         // Endpoint no implementado aún, solo actualizar localmente sin mostrar error
         if (error.status !== 404) {

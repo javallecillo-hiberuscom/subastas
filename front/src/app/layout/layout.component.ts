@@ -69,9 +69,19 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const user = this.currentUser();
-    if (user?.id) {
-      this.notificationService.iniciarMonitoreo(Number(user.id));
+    // Usar idUsuario que es la propiedad correcta, con fallback a id
+    const userId = user?.idUsuario || (user?.id ? parseInt(user.id) : null);
+    
+    // Verificar si el usuario es administrador
+    const rolLower = user?.rol?.toLowerCase() || '';
+    const esAdmin = rolLower === 'administrador' || rolLower === 'admin';
+    
+    if (userId) {
+      console.log('Iniciando monitoreo de notificaciones para usuario:', userId, 'esAdmin:', esAdmin);
+      this.notificationService.iniciarMonitoreo(userId, esAdmin);
       this.notificationService.solicitarPermiso();
+    } else {
+      console.warn('No se pudo obtener el ID del usuario para iniciar monitoreo de notificaciones', user);
     }
   }
 
@@ -92,8 +102,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
       this.notificationService.marcarComoLeida(notif.id);
     }
     
+    // Si es notificación de registro (admin), navegar a gestión de usuarios
+    if (notif.tipo === 'registro' && notif.idUsuario) {
+      this.router.navigate(['/admin/usuarios'], { 
+        queryParams: { destacar: notif.idUsuario } 
+      });
+    }
     // Navegar a la subasta si existe
-    if (notif.idSubasta) {
+    else if (notif.idSubasta) {
       this.router.navigate(['/subastas', notif.idSubasta]);
     }
     
@@ -102,8 +118,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   marcarTodasLeidas(): void {
     const user = this.currentUser();
-    if (user?.id) {
-      this.notificationService.marcarTodasComoLeidas(Number(user.id));
+    // Usar idUsuario con fallback a id
+    const userId = user?.idUsuario || (user?.id ? parseInt(user.id) : null);
+    if (userId) {
+      this.notificationService.marcarTodasComoLeidas(userId);
     }
   }
 

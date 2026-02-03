@@ -17,6 +17,7 @@ export class EmpresasAdminComponent implements OnInit {
   
   empresas = signal<Empresa[]>([]);
   loading = signal(true);
+  busqueda = signal('');
   showForm = signal(false);
   empresaForm!: FormGroup;
   editingId: number | null = null;
@@ -52,6 +53,18 @@ export class EmpresasAdminComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  empresasFiltradas() {
+    const busquedaLower = this.busqueda().toLowerCase();
+    if (!busquedaLower) return this.empresas();
+    
+    return this.empresas().filter(e => 
+      e.nombre?.toLowerCase().includes(busquedaLower) ||
+      e.cif?.toLowerCase().includes(busquedaLower) ||
+      e.email?.toLowerCase().includes(busquedaLower) ||
+      e.telefono?.includes(busquedaLower)
+    );
   }
 
   mostrarFormulario() {

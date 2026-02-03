@@ -31,6 +31,7 @@ export class UsuariosAdminComponent implements OnInit {
   usuarios = signal<UsuarioAdmin[]>([]);
   loading = signal(true);
   filtro = signal<'todos' | 'registrado' | 'validado' | 'administrador'>('todos');
+  busqueda = signal('');
   
   mostrarFormulario = signal(false);
   usuarioEditando = signal<UsuarioAdmin | null>(null);
@@ -73,10 +74,25 @@ export class UsuariosAdminComponent implements OnInit {
   }
 
   usuariosFiltrados() {
-    if (this.filtro() === 'todos') {
-      return this.usuarios();
+    let usuarios = this.usuarios();
+    
+    // Filtrar por rol
+    if (this.filtro() !== 'todos') {
+      usuarios = usuarios.filter(u => u.rol === this.filtro());
     }
-    return this.usuarios().filter(u => u.rol === this.filtro());
+    
+    // Filtrar por búsqueda
+    const busquedaLower = this.busqueda().toLowerCase();
+    if (busquedaLower) {
+      usuarios = usuarios.filter(u => 
+        u.nombre?.toLowerCase().includes(busquedaLower) ||
+        u.email?.toLowerCase().includes(busquedaLower) ||
+        u.dni?.toLowerCase().includes(busquedaLower) ||
+        u.cif?.toLowerCase().includes(busquedaLower)
+      );
+    }
+    
+    return usuarios;
   }
 
   cambiarFiltro(filtro: 'todos' | 'registrado' | 'validado' | 'administrador') {
@@ -156,7 +172,7 @@ export class UsuariosAdminComponent implements OnInit {
   validarUsuario(usuario: UsuarioAdmin) {
     if (!confirm(`¿Validar al usuario ${usuario.nombre}?`)) return;
 
-    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}`), { ...usuario, rol: 'validado' }).subscribe({
+    this.http.put(getApiUrl(`/api/Usuarios/${usuario.idUsuario}/validar`), {}).subscribe({
       next: () => {
         this.mensaje.set('Usuario validado correctamente');
         this.tipoMensaje.set('success');

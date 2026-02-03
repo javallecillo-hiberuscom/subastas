@@ -19,16 +19,6 @@
             Obtiene lista de usuarios pendientes de validación con sus documentos IAE.
             </summary>
         </member>
-        <member name="T:Subastas.WebApi.Controllers.DiagnosticoController">
-            <summary>
-            Controlador de diagnóstico (TEMPORAL - solo para pruebas).
-            </summary>
-        </member>
-        <member name="M:Subastas.WebApi.Controllers.DiagnosticoController.TestNotificacion(System.Int32)">
-            <summary>
-            Prueba crear una notificación administrativa directamente.
-            </summary>
-        </member>
         <member name="T:Subastas.WebApi.Controllers.DocumentosController">
             <summary>
             Controlador para gestión de documentos IAE de usuarios.
@@ -250,16 +240,6 @@
         <member name="M:Subastas.WebApi.Controllers.SubastasController.ConvertirImagenABase64(Subastas.Domain.Entities.ImagenVehiculo)">
             <summary>
             Convierte una imagen física a Base64.
-            </summary>
-        </member>
-        <member name="M:Subastas.WebApi.Controllers.TestNotificacionController.CrearNotificacionDirecto">
-            <summary>
-            TEST DIRECTO: Crear notificación sin servicios intermedios
-            </summary>
-        </member>
-        <member name="M:Subastas.WebApi.Controllers.TestNotificacionController.ObtenerUltimas">
-            <summary>
-            Ver últimas 5 notificaciones
             </summary>
         </member>
         <member name="T:Subastas.WebApi.Controllers.UsuariosController">
