@@ -246,6 +246,7 @@ public class UsuarioService : IUsuarioService
             Telefono = usuario.Telefono,
             Direccion = usuario.Direccion,
             IdEmpresa = usuario.IdEmpresa,
+            NombreEmpresa = usuario.Empresa?.Nombre,
             FotoPerfilBase64 = usuario.FotoPerfilBase64,
             DocumentoIAE = usuario.DocumentoIAE
         };

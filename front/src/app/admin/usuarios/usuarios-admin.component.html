@@ -77,6 +77,12 @@
           </div>
 
           <div class="usuario-detalles">
+            @if (usuario.nombreEmpresa) {
+              <div class="detalle-item empresa-destacada">
+                <span class="label">🏢 Empresa:</span>
+                <span class="value empresa-nombre">{{ usuario.nombreEmpresa }}</span>
+              </div>
+            }
             @if (usuario.dni) {
               <div class="detalle-item">
                 <span class="label">DNI:</span>

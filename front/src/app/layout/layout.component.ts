@@ -69,6 +69,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const user = this.currentUser();
+    console.log('LayoutComponent: Usuario actual:', user);
     // Usar idUsuario que es la propiedad correcta, con fallback a id
     const userId = user?.idUsuario || (user?.id ? parseInt(user.id) : null);
     
@@ -76,12 +77,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
     const rolLower = user?.rol?.toLowerCase() || '';
     const esAdmin = rolLower === 'administrador' || rolLower === 'admin';
     
+    console.log('LayoutComponent: userId:', userId, 'rolLower:', rolLower, 'esAdmin:', esAdmin);
+    
     if (userId) {
-      console.log('Iniciando monitoreo de notificaciones para usuario:', userId, 'esAdmin:', esAdmin);
+      console.log('LayoutComponent: Iniciando monitoreo de notificaciones para usuario:', userId, 'esAdmin:', esAdmin);
       this.notificationService.iniciarMonitoreo(userId, esAdmin);
       this.notificationService.solicitarPermiso();
     } else {
-      console.warn('No se pudo obtener el ID del usuario para iniciar monitoreo de notificaciones', user);
+      console.warn('LayoutComponent: No se pudo obtener el ID del usuario para iniciar monitoreo de notificaciones', user);
     }
   }
 
@@ -95,6 +98,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   toggleNotifications(): void {
     this.showNotifications = !this.showNotifications;
+    if (this.showNotifications) {
+      console.log('=== DEBUG NOTIFICACIONES ===');
+      console.log('Total notificaciones:', this.notificationService.notificaciones().length);
+      console.log('No leídas:', this.notificationService.noLeidas());
+      console.log('Notificaciones:', this.notificationService.notificaciones());
+    }
   }
 
   verNotificacion(notif: any): void {

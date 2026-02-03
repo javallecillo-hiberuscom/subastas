@@ -16,6 +16,8 @@ interface UsuarioAdmin {
   documentoIAE?: string;
   fechaRegistro: Date;
   activo: boolean;
+  idEmpresa?: number;
+  nombreEmpresa?: string;
 }
 
 @Component({

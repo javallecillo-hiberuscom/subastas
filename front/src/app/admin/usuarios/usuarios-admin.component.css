@@ -298,6 +298,25 @@
   gap: 0.5rem;
 }
 
+.detalle-item.empresa-destacada {
+  background: linear-gradient(135deg, rgba(0, 119, 182, 0.08) 0%, rgba(0, 48, 73, 0.05) 100%);
+  padding: 0.875rem;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 119, 182, 0.2);
+  margin-bottom: 0.75rem;
+}
+
+.detalle-item.empresa-destacada .label {
+  color: #0077b6;
+  font-size: 0.9rem;
+}
+
+.detalle-item.empresa-destacada .value.empresa-nombre {
+  color: #003049;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
 .detalle-item .label {
   color: #8d99ae;
   font-size: 0.85rem;

@@ -52,7 +52,7 @@ export class NotificationService {
       ? getApiUrl('/api/NotificacionesAdmin?soloNoLeidas=false')
       : getApiUrl(`/api/Notificaciones/${idUsuario}`);
     
-    console.log('NotificationService: Cargando notificaciones desde:', url);
+    console.log('NotificationService: Cargando notificaciones desde:', url, 'esAdmin:', this.esAdmin);
     
     this.http.get<any[]>(url)
       .pipe(
@@ -64,15 +64,20 @@ export class NotificationService {
           }
           // Otros errores sí los mostramos
           console.error('NotificationService: Error cargando notificaciones:', error);
+          console.error('NotificationService: Status:', error.status, 'URL:', url);
           return of([]);
         })
       )
       .subscribe({
         next: (notificaciones) => {
-          console.log('NotificationService: Notificaciones recibidas:', notificaciones);
+          console.log('NotificationService: Notificaciones recibidas RAW:', notificaciones);
+          console.log('NotificationService: Tipo de respuesta:', typeof notificaciones, 'Es array:', Array.isArray(notificaciones));
+          
+          // Asegurarse de que sea un array
+          const notifArray = Array.isArray(notificaciones) ? notificaciones : [];
           
           // Mapear respuesta del backend a nuestro modelo
-          const mapped = notificaciones.map(n => {
+          const mapped = notifArray.map(n => {
             // Construir información del vehículo si está disponible
             let vehiculoInfo = '';
             if (n.vehiculo) {
@@ -81,44 +86,58 @@ export class NotificationService {
               vehiculoInfo = `Subasta #${n.idSubasta}`;
             }
             
-            // Obtener mensaje correcto según estructura
-            let mensajeBase = n.mensaje || n.Mensaje || n.titulo || n.Titulo || '';
+            // Obtener mensaje correcto según estructura (admin usa Mensaje, usuario usa mensaje)
+            let mensajeBase = '';
+            if (this.esAdmin) {
+              // NotificacionAdmin tiene Titulo y Mensaje con mayúscula
+              mensajeBase = n.Mensaje || n.Titulo || n.mensaje || n.titulo || '';
+            } else {
+              // Notificacion de usuario tiene mensaje con minúscula
+              mensajeBase = n.mensaje || n.Mensaje || n.titulo || n.Titulo || '';
+            }
             
             // Para notificaciones admin, agregar info del usuario si existe
-            if (this.esAdmin && n.usuario) {
-              const nombreUsuario = `${n.usuario.nombre || ''} ${n.usuario.apellidos || ''}`.trim() || n.usuario.email;
+            if (this.esAdmin && n.Usuario) {
+              const nombreUsuario = `${n.Usuario.nombre || n.Usuario.Nombre || ''} ${n.Usuario.apellidos || n.Usuario.Apellidos || ''}`.trim() || n.Usuario.email || n.Usuario.Email;
               if (nombreUsuario && !mensajeBase.includes(nombreUsuario)) {
                 mensajeBase = `${nombreUsuario}: ${mensajeBase}`;
               }
             }
             
-            // Determinar si está leída (puede venir como boolean o number)
+            // Determinar si está leída (NotificacionAdmin usa Leida como byte 0/1)
             let estaLeida = false;
-            if (typeof n.leida === 'boolean') {
-              estaLeida = n.leida;
-            } else if (typeof n.leida === 'number') {
-              estaLeida = n.leida === 1;
-            } else if (typeof n.Leida === 'number') {
-              estaLeida = n.Leida === 1;
+            const leidaValue = n.Leida ?? n.leida;
+            
+            if (typeof leidaValue === 'boolean') {
+              estaLeida = leidaValue;
+            } else if (typeof leidaValue === 'number') {
+              estaLeida = leidaValue === 1;
             }
             
+            console.log('NotificationService: Mapeo notif ID:', n.IdNotificacion || n.idNotificacion, 'Tipo:', n.Tipo || n.tipo, 'Leida raw:', leidaValue, 'Leida calculada:', estaLeida);
+            
             return {
-              id: n.idNotificacion || n.IdNotificacion || n.id,
-              tipo: this.mapearTipo(n.tipo || n.Tipo || ''),
+              id: n.IdNotificacion || n.idNotificacion || n.id,
+              tipo: this.mapearTipo(n.Tipo || n.tipo || ''),
               mensaje: mensajeBase,
-              fecha: new Date(n.fechaCreacion || n.FechaCreacion || n.fecha || n.FechaEnvio),
+              fecha: new Date(n.FechaCreacion || n.fechaCreacion || n.fecha || n.FechaEnvio),
               leida: estaLeida,
               idSubasta: n.idSubasta || n.IdSubasta,
               idVehiculo: n.idVehiculo || n.IdVehiculo,
               vehiculoInfo: vehiculoInfo || this.extraerInfoVehiculo(mensajeBase),
-              idUsuario: n.idUsuario || n.IdUsuario // Para poder navegar en admin
+              idUsuario: n.IdUsuario || n.idUsuario // Para poder navegar en admin
             };
           });
           
           console.log('NotificationService: Notificaciones mapeadas:', mapped);
+          console.log('NotificationService: Total mapeadas:', mapped.length);
+          console.log('NotificationService: No leídas:', mapped.filter(n => !n.leida).length);
+          
           this.notificaciones.set(mapped);
           this.noLeidas.set(mapped.filter(n => !n.leida).length);
-          console.log('NotificationService: Total:', mapped.length, 'No leídas:', mapped.filter(n => !n.leida).length);
+          
+          console.log('NotificationService: Signal notificaciones actualizada, total:', this.notificaciones().length);
+          console.log('NotificationService: Signal noLeidas actualizada:', this.noLeidas());
         }
       });
   }
