@@ -157,6 +157,28 @@ public class AdminController : ControllerBase
                 }).ToList();
             _logger.LogInformation($"Subastas terminadas proyectadas: {subastasTerminadasDto.Count}");
 
+            // Todas las subastas con pujas para la gráfica (ordenadas por cantidad de pujas)
+            _logger.LogInformation("Obteniendo TODAS las subastas para gráficas...");
+            var todasSubastasConPujas = await _context.Subastas
+                .Include(s => s.Vehiculo)
+                .Include(s => s.Pujas)
+                .OrderByDescending(s => s.Pujas.Count)
+                .ToListAsync();
+            
+            var todasSubastasDto = todasSubastasConPujas.Select(s => new
+            {
+                s.IdSubasta,
+                vehiculo = new
+                {
+                    s.Vehiculo.Marca,
+                    s.Vehiculo.Modelo,
+                    s.Vehiculo.Anio
+                },
+                totalPujas = s.Pujas.Count,
+                s.Estado
+            }).ToList();
+            _logger.LogInformation($"Todas las subastas cargadas: {todasSubastasDto.Count}");
+
             // Usuarios por estado de validación
             _logger.LogInformation("Obteniendo usuarios por validación...");
             var usuariosPendientes = await _context.Usuarios
@@ -183,7 +205,8 @@ public class AdminController : ControllerBase
                     subastasTerminadas = subastasTerminadasDto.Count
                 },
                 subastasActivas,
-                subastasTerminadas = subastasTerminadasDto
+                subastasTerminadas = subastasTerminadasDto,
+                todasSubastas = todasSubastasDto
             };
 
             _logger.LogInformation("=== FIN GetDashboardAdmin (ÉXITO) ===");

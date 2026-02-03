@@ -68,10 +68,22 @@ export interface SubastaTerminada {
   sinPujas: boolean;
 }
 
+export interface SubastaConPujas {
+  idSubasta: number;
+  vehiculo: {
+    marca: string;
+    modelo: string;
+    anio: number;
+  };
+  totalPujas: number;
+  estado: string;
+}
+
 export interface DashboardAdmin {
   estadisticasGenerales: EstadisticasGenerales;
   subastasActivas: SubastaActiva[];
   subastasTerminadas: SubastaTerminada[];
+  todasSubastas: SubastaConPujas[];
 }
 
 export interface UsuarioPendiente {

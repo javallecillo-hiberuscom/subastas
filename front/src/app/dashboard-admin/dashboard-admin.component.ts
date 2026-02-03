@@ -116,8 +116,8 @@ export class DashboardAdminComponent implements OnInit, AfterViewInit {
       this.pujasChart.destroy();
     }
 
-    // Preparar datos de pujas por subasta (top 5)
-    const subastasConPujas = data.subastasActivas
+    // Preparar datos de pujas por subasta (top 5) - USAR TODAS LAS SUBASTAS
+    const subastasConPujas = (data.todasSubastas || [])
       .map(s => ({
         nombre: `${s.vehiculo.marca} ${s.vehiculo.modelo}`,
         pujas: s.totalPujas
