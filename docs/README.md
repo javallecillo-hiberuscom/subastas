@@ -1,291 +1,322 @@
-# 📖 README - Sistema de Subastas (Clean Architecture)
-
-## 🎯 Descripción del Proyecto
-
-Sistema de gestión de subastas de vehículos desarrollado con **Clean Architecture** para Desguaces Borox. Permite a usuarios autenticados participar en subastas, realizar pujas y gestionar vehículos.
-
-## 🏗️ Arquitectura
-
-Este proyecto implementa **Clean Architecture** (Arquitectura Limpia) con las siguientes capas:
-
-```
-📦 Subastas
-├── 🔵 Domain          (Entidades de negocio)
-├── 🟢 Application     (Contratos y DTOs)
-├── 🟡 Infrastructure  (Implementaciones)
-└── 🔴 WebApi          (API REST)
-```
-
-Para más detalles, consulta [ARQUITECTURA.md](ARQUITECTURA.md)
-
-## 🚀 Tecnologías
-
-- **.NET 8.0**
-- **Entity Framework Core 8.0**
-- **SQL Server**
-- **JWT Authentication**
-- **BCrypt** para hash de contraseñas
-- **Swagger/OpenAPI**
-- **xUnit** para testing
-- **Angular 19** (frontend en `front/`)
-
-## 📋 Requisitos Previos
-
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads) (Express o superior)
-- [Node.js](https://nodejs.org/) v18+ (para el frontend)
-- Visual Studio 2022 / VS Code / Rider
-
-## ⚙️ Configuración
-
-### 1. Clonar el repositorio
-
-```bash
-git clone <repository-url>
-cd subastas
-```
-
-### 2. Configurar Base de Datos
-
-Edita `src/Subastas.WebApi/appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "SubastaConnection": "Server=localhost;Database=SubastasDB;Trusted_Connection=True;TrustServerCertificate=True;"
-  }
-}
-```
-
-### 3. Aplicar Migraciones
-
-```bash
-cd src/Subastas.WebApi
-dotnet ef database update
-```
-
-### 4. Configurar JWT
-
-Edita la clave secreta en `appsettings.json`:
-
-```json
-{
-  "JwtSettings": {
-    "SecretKey": "TU_CLAVE_SECRETA_SUPER_SEGURA_DE_AL_MENOS_32_CARACTERES",
-    "Issuer": "SubastasAPI",
-    "Audience": "SubastasClient",
-    "ExpirationMinutes": "60"
-  }
-}
-```
-
-## 🎮 Ejecución
-
-### Backend (API)
-
-```bash
-cd src/Subastas.WebApi
-dotnet run
-```
-
-La API estará disponible en:
-- HTTPS: `https://localhost:5001`
-- HTTP: `http://localhost:5000`
-- Swagger: `https://localhost:5001` (raíz)
-
-### Frontend (Angular)
-
-```bash
-cd front/front
-npm install
-ng serve
-```
-
-El frontend estará en `http://localhost:4200`
-
-## 📚 Documentación API
-
-### Swagger UI
-
-Una vez ejecutando la API, abre tu navegador en:
-```
-https://localhost:5001
-```
-
-### Endpoints Principales
-
-#### Autenticación
-
-**POST** `/api/Usuarios/registro`
-```json
-{
-  "nombre": "Juan",
-  "apellidos": "Pérez",
-  "email": "juan@example.com",
-  "password": "Password123!",
-  "telefono": "123456789",
-  "direccion": "Calle Principal 123"
-}
-```
-
-**POST** `/api/Usuarios/login`
-```json
-{
-  "email": "juan@example.com",
-  "password": "Password123!"
-}
-```
-
-#### Usuarios
-
-**GET** `/api/Usuarios` - Obtener todos los usuarios (Admin)  
-**GET** `/api/Usuarios/{id}` - Obtener usuario por ID  
-**PUT** `/api/Usuarios/{id}` - Actualizar perfil  
-
-#### Subastas
-
-**GET** `/api/Subastas` - Listar subastas  
-**GET** `/api/Subastas/{id}` - Obtener subasta  
-**POST** `/api/Subastas` - Crear subasta (Admin)  
-
-#### Pujas
-
-**GET** `/api/Pujas/subasta/{idSubasta}` - Pujas de una subasta  
-**POST** `/api/Pujas` - Realizar puja  
-
-## 🧪 Testing
-
-### Ejecutar Tests Unitarios
-
-```bash
-cd test/Subastas.UnitTests
-dotnet test
-```
-
-### Cobertura de Tests
-
-```bash
-dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-```
-
-## 📁 Estructura del Proyecto
-
-```
-subastas/
-├── src/
-│   ├── Subastas.Domain/              # Entidades
-│   ├── Subastas.Application/         # DTOs e Interfaces
-│   ├── Subastas.Infrastructure/      # Repositorios y Servicios
-│   └── Subastas.WebApi/              # API REST
-├── test/
-│   └── Subastas.UnitTests/           # Pruebas
-├── front/                            # Frontend Angular
-├── img/                              # Imágenes de vehículos
-├── Uploads/                          # Archivos subidos
-├── ARQUITECTURA.md                   # Documentación de arquitectura
-├── MIGRACION.md                      # Guía de migración
-└── SubastasCleanArchitecture.sln    # Solución de Visual Studio
-```
-
-## 🔐 Seguridad
-
-### Autenticación
-- JWT con HMACSHA256
-- Tokens con expiración configurable
-- Claims: userId, email, rol
-
-### Contraseñas
-- Hash con BCrypt
-- Salt automático
-- Factor de trabajo ajustable
-
-### CORS
-- Configurado para `localhost:4200` (Angular)
-- Credenciales habilitadas
-- Headers personalizados permitidos
-
-## 🐛 Solución de Problemas
-
-### "Could not find file or assembly"
-```bash
-dotnet clean
-dotnet restore
-dotnet build
-```
-
-### "Cannot connect to SQL Server"
-Verifica:
-1. SQL Server está corriendo
-2. Cadena de conexión correcta
-3. Usuario tiene permisos
-
-### "Unauthorized" en Swagger
-1. Hacer POST a `/api/Usuarios/login`
-2. Copiar el token
-3. Clic en "Authorize" en Swagger
-4. Pegar: `Bearer <tu-token>`
-
-## 📝 Convenciones de Código
-
-- **Idioma:** Español (nombres de clases, propiedades)
-- **Nomenclatura:** PascalCase para públicos, camelCase para privados
-- **Comentarios:** XML comments en inglés/español
-- **Async/Await:** Obligatorio para I/O operations
-- **DTOs:** Request/Response separados
-- **Repository Pattern:** Para acceso a datos
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea una rama (`git checkout -b feature/NuevaFuncionalidad`)
-3. Commit cambios (`git commit -m 'Añadir nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/NuevaFuncionalidad`)
-5. Abre un Pull Request
-
-### Guía de Estilo
-- Seguir principios SOLID
-- Mantener separación de capas
-- Escribir tests unitarios
-- Documentar código público
-
-## 📜 Licencia
-
-Este proyecto es privado y de uso exclusivo para Desguaces Borox.
-
-## 👥 Equipo
-
-- **Desarrollador:** José Antonio Valle
-- **Cliente:** Desguaces Borox
-
-## 📞 Soporte
-
-Para reportar bugs o solicitar funcionalidades:
-- Email: dev@subastas.com
-- Issues: [GitHub Issues]
-
-## 📅 Roadmap
-
-### Versión 1.1 (Q1 2026)
-- [ ] Migrar todos los controladores
-- [ ] Implementar CQRS
-- [ ] Añadir caching con Redis
-- [ ] Mejorar logging con Serilog
-
-### Versión 2.0 (Q2 2026)
-- [ ] Microservicios
-- [ ] Event Sourcing
-- [ ] SignalR para pujas en tiempo real
-- [ ] Notificaciones push
-
-## 🎓 Recursos de Aprendizaje
-
-- [Clean Architecture - Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [.NET Clean Architecture Template](https://github.com/jasontaylordev/CleanArchitecture)
-- [Entity Framework Core Documentation](https://docs.microsoft.com/ef/core/)
-- [ASP.NET Core Web API](https://docs.microsoft.com/aspnet/core/web-api/)
+# 📚 Índice de Documentación - Sistema de Subastas
+
+## 🎯 Guías Rápidas
+
+### Para Desarrolladores Nuevos
+1. **[README.md](../README.md)** - Inicio rápido y estructura del proyecto
+2. **[MANUAL-DESPLIEGUE.md](MANUAL-DESPLIEGUE.md)** ⭐ **NUEVO** - Tutorial completo paso a paso
+3. **[DIAGRAMAS.html](DIAGRAMAS.html)** - Visualización interactiva de arquitectura (abrir en navegador)
+4. **[CASOS-DE-USO.md](CASOS-DE-USO.md)** - Funcionalidades por tipo de usuario
+
+### Para Arquitectura y Diseño
+1. **[ARQUITECTURA-DESPLIEGUE-AZURE.md](ARQUITECTURA-DESPLIEGUE-AZURE.md)** - Arquitectura completa y deployment
+2. **[ANALISIS-OPTIMIZACION-BD.md](ANALISIS-OPTIMIZACION-BD.md)** ⭐ **NUEVO** - Análisis y mejoras de BD
+3. **[CLEAN-CODE-PRACTICAS.md](CLEAN-CODE-PRACTICAS.md)** - Principios SOLID y buenas prácticas
+4. **[DIAGRAMAS.html](DIAGRAMAS.html)** - Diagramas de arquitectura, BD, flujos
+
+### Para Deployment y DevOps
+1. **[MANUAL-DESPLIEGUE.md](MANUAL-DESPLIEGUE.md)** ⭐ **NUEVO** - Guía completa de deployment
+2. **[ARQUITECTURA-DESPLIEGUE-AZURE.md](ARQUITECTURA-DESPLIEGUE-AZURE.md)** - Configuración Azure
+3. **[../deployment-scripts/](../deployment-scripts/)** - Scripts PowerShell para deploy
+4. **[../database-scripts/](../database-scripts/)** - Scripts SQL incluyendo optimizaciones
 
 ---
 
-**Versión:** 1.0.0  
-**Última actualización:** Febrero 2026  
-**Estado:** ✅ En desarrollo activo
+## 📖 Documentos Disponibles
+
+### 1. ⭐ MANUAL-DESPLIEGUE.md **NUEVO**
+**Contenido:**
+- ✅ Requisitos previos (software, cuentas, herramientas)
+- ✅ Configuración entorno local paso a paso
+- ✅ Configuración de Azure SQL Database
+- ✅ Despliegue Backend (.NET 8 → Azure App Service)
+- ✅ Despliegue Frontend (Angular → Static Web App)
+- ✅ Solución de problemas comunes (troubleshooting)
+- ✅ Comandos útiles (dotnet, npm, git, azure cli)
+- ✅ Checklist completo de despliegue
+
+**Secciones:**
+- 📋 Requisitos (Node.js, .NET, Git, Azure CLI)
+- 🖥️ Setup Local (backend + frontend + base de datos)
+- ☁️ Despliegue Azure (paso a paso con scripts)
+- 🔧 Troubleshooting (10+ problemas comunes resueltos)
+- 📚 Comandos de referencia rápida
+
+**Ideal para:**
+- ✅ Primera instalación del proyecto
+- ✅ Configurar entorno de desarrollo local
+- ✅ Deployments a Azure desde cero
+- ✅ Resolver problemas comunes (CORS, DB, JWT)
+- ✅ Desarrolladores nuevos en el equipo
+
+---
+
+### 2. ⭐ ANALISIS-OPTIMIZACION-BD.md **NUEVO**
+**Contenido:**
+- ✅ Análisis del esquema actual (9 tablas base)
+- ✅ Verificación: ¿La tabla Usuario sobra? **NO, es fundamental**
+- ✅ Identificación de problemas (datos hardcodeados, falta normalización)
+- ✅ Propuesta: 8 tablas maestras/catálogos nuevas
+- ✅ Mejoras a tabla Pago (campos adicionales para transacciones)
+- ✅ Sistema de auditoría y trazabilidad
+- ✅ 12+ índices de performance
+- ✅ Script de migración completo incluido
+
+**Tablas Maestras Propuestas:**
+- EstadoVehiculo (7 estados)
+- EstadoSubasta (6 estados)
+- Rol (4 roles con niveles)
+- TipoNotificacion (10 tipos con plantillas)
+- MetodoPago (4 métodos)
+- EstadoPago (7 estados)
+- MarcaVehiculo (18 marcas)
+- TipoVehiculo (10 tipos)
+- ConfiguracionSistema (parámetros dinámicos)
+
+**Mejoras de Performance:**
+- 12 índices estratégicos
+- Normalización de direcciones
+- Sistema de documentos
+
+**Ideal para:**
+- ✅ Entender el modelo de datos
+- ✅ Escalabilidad y optimización
+- ✅ Migración a tablas maestras
+- ✅ Auditoría y compliance
+- ✅ DBAs y arquitectos de datos
+
+---
+
+### 3. ARQUITECTURA-DESPLIEGUE-AZURE.md
+**Contenido:**
+- ✅ Arquitectura de 3 capas (Frontend, Backend, Base de Datos)
+- ✅ Configuración de Azure SQL Database
+- ✅ Despliegue en Azure App Service (Backend)
+- ✅ Despliegue en Azure Static Web Apps (Frontend)
+- ✅ Flujos de comunicación completos
+- ✅ Variables de configuración
+- ✅ URLs de producción y desarrollo
+- ✅ Credenciales de acceso
+
+**Ideal para:**
+- Entender la arquitectura global del sistema
+- Realizar deployments a Azure
+- Configurar entornos de desarrollo/producción
+
+---
+
+### 3. ARQUITECTURA-DESPLIEGUE-AZURE.md
+**Contenido:**
+- ✅ Arquitectura de 3 capas (Frontend, Backend, Base de Datos)
+- ✅ Configuración de Azure SQL Database
+- ✅ Despliegue en Azure App Service (Backend)
+- ✅ Despliegue en Azure Static Web Apps (Frontend)
+- ✅ Flujos de comunicación completos
+- ✅ Variables de configuración
+- ✅ URLs de producción y desarrollo
+- ✅ Credenciales de acceso
+
+**Ideal para:**
+- Entender la arquitectura global del sistema
+- Realizar deployments a Azure
+- Configurar entornos de desarrollo/producción
+
+---
+
+### 4. CASOS-DE-USO.md
+**Contenido:**
+- ✅ Actores del sistema (Usuario Registrado, Validado, Administrador)
+- ✅ 12 casos de uso detallados con flujos principales y alternativos
+- ✅ Precondiciones y postcondiciones
+- ✅ Flujos de trabajo completos
+- ✅ Reglas de negocio (10 RN documentadas)
+
+**Casos de Uso Incluidos:**
+- CU-01: Registro de Usuario
+- CU-02: Subir Documento IAE
+- CU-03: Ver Subastas
+- CU-04: Realizar Puja
+- CU-05: Ver Mis Pujas
+- CU-06: Actualizar Perfil
+- CU-07: Validar Usuario (Admin)
+- CU-08: Gestionar Vehículos (Admin)
+- CU-09: Crear Subasta (Admin)
+- CU-10: Gestionar Empresas (Admin)
+- CU-11: Ver Dashboard Administrativo
+- CU-12: Gestionar Notificaciones
+
+**Ideal para:**
+- Entender funcionalidades del sistema
+- Testeo de casos de uso
+- Capacitación de nuevos usuarios
+- Especificación de requisitos
+
+### 4. CASOS-DE-USO.md
+**Contenido:**
+- ✅ Actores del sistema (Usuario Registrado, Validado, Administrador)
+- ✅ 12 casos de uso detallados con flujos principales y alternativos
+- ✅ Precondiciones y postcondiciones
+- ✅ Flujos de trabajo completos
+- ✅ Reglas de negocio (10 RN documentadas)
+
+**Casos de Uso Incluidos:**
+- CU-01: Registro de Usuario
+- CU-02: Subir Documento IAE
+- CU-03: Ver Subastas
+- CU-04: Realizar Puja
+- CU-05: Ver Mis Pujas
+- CU-06: Actualizar Perfil
+- CU-07: Validar Usuario (Admin)
+- CU-08: Gestionar Vehículos (Admin)
+- CU-09: Crear Subasta (Admin)
+- CU-10: Gestionar Empresas (Admin)
+- CU-11: Ver Dashboard Administrativo
+- CU-12: Gestionar Notificaciones
+
+**Ideal para:**
+- Entender funcionalidades del sistema
+- Testeo de casos de uso
+- Capacitación de nuevos usuarios
+- Especificación de requisitos
+
+---
+
+### 5. DIAGRAMAS.html
+**Contenido:** (Visualización interactiva HTML)
+- ✅ Diagrama de Arquitectura Clean Architecture (3 capas)
+- ✅ Diagrama de Base de Datos (Entidades y relaciones)
+- ✅ Diagramas de Flujo (Autenticación, Pujas)
+- ✅ Diagrama de Casos de Uso por Actor
+- ✅ Diagrama de Despliegue en Azure
+
+**Características:**
+- 🎨 **Interfaz interactiva** con tabs
+- 🖼️ **Gráficos visuales** de arquitectura
+- 📊 **Modelo de datos** completo con PK/FK
+- 🔄 **Flujos paso a paso** con explicaciones
+- ☁️ **Arquitectura de deployment** en Azure
+
+**Ideal para:**
+- Presentaciones y demos
+- Onboarding de equipo
+- Explicar arquitectura a stakeholders
+- Videos de capacitación
+
+### 5. DIAGRAMAS.html
+**Contenido:** (Visualización interactiva HTML)
+- ✅ Diagrama de Arquitectura Clean Architecture (3 capas)
+- ✅ Diagrama de Base de Datos (Entidades y relaciones)
+- ✅ Diagramas de Flujo (Autenticación, Pujas)
+- ✅ Diagrama de Casos de Uso por Actor
+- ✅ Diagrama de Despliegue en Azure
+
+**Características:**
+- 🎨 **Interfaz interactiva** con tabs
+- 🖼️ **Gráficos visuales** de arquitectura
+- 📊 **Modelo de datos** completo con PK/FK
+- 🔄 **Flujos paso a paso** con explicaciones
+- ☁️ **Arquitectura de deployment** en Azure
+
+**Ideal para:**
+- Presentaciones y demos
+- Onboarding de equipo
+- Explicar arquitectura a stakeholders
+- Videos de capacitación
+
+---
+
+### 6. CLEAN-CODE-PRACTICAS.md
+**Contenido:**
+- ✅ Principios SOLID aplicados (con ejemplos de código)
+- ✅ Arquitectura Clean Architecture explicada
+- ✅ Patrones de diseño (Repository, DI, DTO, Service Layer)
+- ✅ Convenciones de nomenclatura (.NET y TypeScript)
+- ✅ Buenas prácticas de seguridad
+- ✅ Manejo de errores consistente
+- ✅ Code smells evitados
+
+**Principios Cubiertos:**
+- Single Responsibility Principle (SRP)
+- Open/Closed Principle (OCP)
+- Liskov Substitution Principle (LSP)
+- Interface Segregation Principle (ISP)
+- Dependency Inversion Principle (DIP)
+
+**Ideal para:**
+- Code reviews
+- Capacitación en clean code
+- Establecer estándares de equipo
+- Refactoring guiado
+
+---
+
+## 🗂️ Otros Recursos
+
+### Scripts de Base de Datos
+**Ubicación:** `../database-scripts/`
+
+- `migracion-tablas-maestras.sql` ⭐ **NUEVO** - Script completo de optimización BD
+- `crear-tabla-notificaciones-admin.sql` - Crear tabla de notificaciones admin
+- `fix-fk-empresa.sql` - Corregir foreign keys de empresas
+- `insertar-vehiculos-subastas.sql` - Datos de ejemplo (5 vehículos con subastas)
+- `verificar-actualizar-admin.sql` - Crear usuario administrador
+
+### Scripts de Deployment
+**Ubicación:** `../deployment-scripts/`
+
+- `deploy-frontend.ps1` - Deploy frontend a Azure Static Web Apps
+- `deploy-backend.ps1` - Deploy backend a Azure App Service
+- `deploy-backend-completo.ps1` - Deploy completo con dependencias
+- `deploy-to-azure.ps1` - Deploy full stack
+
+---
+
+## 🚀 Inicio Rápido por Rol
+
+### 🎨 Frontend Developer
+1. Leer **README.md** (estructura del proyecto)
+2. Ver **DIAGRAMAS.html** → Tab "Arquitectura" → Sección "Frontend Angular"
+3. Consultar **CLEAN-CODE-PRACTICAS.md** → Convenciones TypeScript
+
+### 🔧 Backend Developer
+1. Leer **README.md** (estructura del proyecto)
+2. Ver **DIAGRAMAS.html** → Tab "Arquitectura" → Sección "Clean Architecture"
+3. Revisar **CLEAN-CODE-PRACTICAS.md** → Principios SOLID
+4. Consultar **ARQUITECTURA-DESPLIEGUE-AZURE.md** → Estructura del Backend
+
+### 🗄️ Database Administrator
+1. Ver **DIAGRAMAS.html** → Tab "Base de Datos"
+2. Ejecutar scripts en **../database-scripts/**
+3. Consultar **ARQUITECTURA-DESPLIEGUE-AZURE.md** → Azure SQL Database
+
+### ☁️ DevOps Engineer
+1. Leer **ARQUITECTURA-DESPLIEGUE-AZURE.md** completo
+2. Revisar **../deployment-scripts/**
+3. Ver **DIAGRAMAS.html** → Tab "Despliegue"
+
+### 📋 Product Owner / Business Analyst
+1. Leer **CASOS-DE-USO.md** completo
+2. Ver **DIAGRAMAS.html** → Tab "Casos de Uso"
+3. Revisar reglas de negocio en **CASOS-DE-USO.md** (sección final)
+
+### 🎓 Nuevo en el Equipo
+1. **README.md** (visión general)
+2. **DIAGRAMAS.html** (explorar todos los tabs)
+3. **CASOS-DE-USO.md** (entender funcionalidades)
+4. **ARQUITECTURA-DESPLIEGUE-AZURE.md** (arquitectura técnica)
+
+---
+
+## 📞 Información de Contacto
+
+**URLs Importantes:**
+- Frontend Producción: https://blue-flower-00b3c6b03.1.azurestaticapps.net
+- Backend API: https://subastaswebapi20260202162157.azurewebsites.net
+- Azure Portal: https://portal.azure.com
+
+**Repositorio:**
+- Ubicación: `c:\Users\JoseAntonioVallecill\source\repos\subastas`
+
+---
+
+*Índice actualizado: 3 de febrero de 2026*

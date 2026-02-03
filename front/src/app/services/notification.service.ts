@@ -29,7 +29,7 @@ export class NotificationService {
   private esAdmin = false;
 
   iniciarMonitoreo(idUsuario: number, esAdmin: boolean = false) {
-    console.log('NotificationService: Iniciando monitoreo para usuario:', idUsuario, 'esAdmin:', esAdmin);
+    console.error('🔔🔔🔔 NotificationService: INICIANDO MONITOREO - Usuario:', idUsuario, 'esAdmin:', esAdmin);
     this.esAdmin = esAdmin;
     // Cargar notificaciones iniciales
     this.cargarNotificaciones(idUsuario);
@@ -52,92 +52,39 @@ export class NotificationService {
       ? getApiUrl('/api/NotificacionesAdmin?soloNoLeidas=false')
       : getApiUrl(`/api/Notificaciones/${idUsuario}`);
     
-    console.log('NotificationService: Cargando notificaciones desde:', url, 'esAdmin:', this.esAdmin);
-    
     this.http.get<any[]>(url)
       .pipe(
         catchError((error) => {
-          // Si es 404, devolver array vacío (usuario sin notificaciones)
           if (error.status === 404) {
-            console.log('NotificationService: Usuario sin notificaciones (404)');
             return of([]);
           }
-          // Otros errores sí los mostramos
-          console.error('NotificationService: Error cargando notificaciones:', error);
-          console.error('NotificationService: Status:', error.status, 'URL:', url);
+          console.error('Error cargando notificaciones:', error);
           return of([]);
         })
       )
       .subscribe({
         next: (notificaciones) => {
-          console.log('NotificationService: Notificaciones recibidas RAW:', notificaciones);
-          console.log('NotificationService: Tipo de respuesta:', typeof notificaciones, 'Es array:', Array.isArray(notificaciones));
-          
-          // Asegurarse de que sea un array
           const notifArray = Array.isArray(notificaciones) ? notificaciones : [];
-          
-          // Mapear respuesta del backend a nuestro modelo
-          const mapped = notifArray.map(n => {
-            // Construir información del vehículo si está disponible
-            let vehiculoInfo = '';
-            if (n.vehiculo) {
-              vehiculoInfo = `${n.vehiculo.marca} ${n.vehiculo.modelo}`.trim();
-            } else if (n.idSubasta) {
-              vehiculoInfo = `Subasta #${n.idSubasta}`;
-            }
-            
-            // Obtener mensaje correcto según estructura (admin usa Mensaje, usuario usa mensaje)
-            let mensajeBase = '';
-            if (this.esAdmin) {
-              // NotificacionAdmin tiene Titulo y Mensaje con mayúscula
-              mensajeBase = n.Mensaje || n.Titulo || n.mensaje || n.titulo || '';
-            } else {
-              // Notificacion de usuario tiene mensaje con minúscula
-              mensajeBase = n.mensaje || n.Mensaje || n.titulo || n.Titulo || '';
-            }
-            
-            // Para notificaciones admin, agregar info del usuario si existe
-            if (this.esAdmin && n.Usuario) {
-              const nombreUsuario = `${n.Usuario.nombre || n.Usuario.Nombre || ''} ${n.Usuario.apellidos || n.Usuario.Apellidos || ''}`.trim() || n.Usuario.email || n.Usuario.Email;
-              if (nombreUsuario && !mensajeBase.includes(nombreUsuario)) {
-                mensajeBase = `${nombreUsuario}: ${mensajeBase}`;
-              }
-            }
-            
-            // Determinar si está leída (NotificacionAdmin usa Leida como byte 0/1)
-            let estaLeida = false;
-            const leidaValue = n.Leida ?? n.leida;
-            
-            if (typeof leidaValue === 'boolean') {
-              estaLeida = leidaValue;
-            } else if (typeof leidaValue === 'number') {
-              estaLeida = leidaValue === 1;
-            }
-            
-            console.log('NotificationService: Mapeo notif ID:', n.IdNotificacion || n.idNotificacion, 'Tipo:', n.Tipo || n.tipo, 'Leida raw:', leidaValue, 'Leida calculada:', estaLeida);
-            
+
+          const mapped = notifArray.map((n) => {
             return {
-              id: n.IdNotificacion || n.idNotificacion || n.id,
-              tipo: this.mapearTipo(n.Tipo || n.tipo || ''),
-              mensaje: mensajeBase,
-              fecha: new Date(n.FechaCreacion || n.fechaCreacion || n.fecha || n.FechaEnvio),
-              leida: estaLeida,
-              idSubasta: n.idSubasta || n.IdSubasta,
-              idVehiculo: n.idVehiculo || n.IdVehiculo,
-              vehiculoInfo: vehiculoInfo || this.extraerInfoVehiculo(mensajeBase),
-              idUsuario: n.IdUsuario || n.idUsuario // Para poder navegar en admin
+              id: n.idNotificacion ?? n.id, // Soporta ambos nombres
+              tipo: n.tipo,
+              mensaje: n.mensaje,
+              fecha: n.fecha ? new Date(n.fecha) : new Date(),
+              leida: n.leida ?? false,
+              idSubasta: n.idSubasta,
+              idVehiculo: n.idVehiculo,
+              vehiculoInfo: '',
+              idUsuario: n.idUsuario
             };
           });
-          
-          console.log('NotificationService: Notificaciones mapeadas:', mapped);
-          console.log('NotificationService: Total mapeadas:', mapped.length);
-          console.log('NotificationService: No leídas:', mapped.filter(n => !n.leida).length);
-          
+
+          // Log de depuración para ver el array mapeado
+          console.warn('🔔 Array de notificaciones mapeado:', mapped);
+
           this.notificaciones.set(mapped);
           this.noLeidas.set(mapped.filter(n => !n.leida).length);
-          
-          console.log('NotificationService: Signal notificaciones actualizada, total:', this.notificaciones().length);
-          console.log('NotificationService: Signal noLeidas actualizada:', this.noLeidas());
         }
       });
   }

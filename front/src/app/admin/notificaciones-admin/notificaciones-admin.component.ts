@@ -7,18 +7,18 @@ import { interval, Subscription } from 'rxjs';
 import { getApiUrl } from '../../utils/api-url.helper';
 
 interface NotificacionAdmin {
-  idNotificacion: number;
-  titulo: string;
-  mensaje: string;
-  tipo: string;
-  idUsuario?: number;
-  leida: number;
-  fechaCreacion: string;
-  usuario?: {
-    idUsuario: number;
-    nombre: string;
-    apellidos: string;
-    email: string;
+  IdNotificacion: number;
+  Titulo: string;
+  Mensaje: string;
+  Tipo: string;
+  IdUsuario?: number;
+  Leida: number;
+  FechaCreacion: string;
+  Usuario?: {
+    IdUsuario: number;
+    Nombre: string;
+    Apellidos: string;
+    Email: string;
   };
 }
 
@@ -60,10 +60,21 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
     const soloNoLeidas = this.filtro() === 'no-leidas';
     this.loading.set(true);
     
-    this.http.get<NotificacionAdmin[]>(getApiUrl(`/api/NotificacionesAdmin?soloNoLeidas=${soloNoLeidas}`))
+    this.http.get<any[]>(getApiUrl(`/api/NotificacionesAdmin?soloNoLeidas=${soloNoLeidas}`))
       .subscribe({
         next: (notificaciones) => {
-          this.notificaciones.set(notificaciones || []);
+          // Mapear las propiedades a las esperadas por el frontend
+          const mapped = (notificaciones || []).map(n => ({
+            IdNotificacion: n.idNotificacion ?? n.id ?? n.IdNotificacion,
+            Titulo: n.titulo ?? n.Titulo ?? '',
+            Mensaje: n.mensaje ?? n.Mensaje ?? '',
+            Tipo: n.tipo ?? n.Tipo ?? '',
+            IdUsuario: n.idUsuario ?? n.IdUsuario,
+            Leida: n.leida ?? n.Leida ?? 0,
+            FechaCreacion: n.fechaCreacion ?? n.fecha ?? n.FechaCreacion ?? '',
+            Usuario: n.usuario ?? n.Usuario ?? undefined
+          }));
+          this.notificaciones.set(mapped);
           this.loading.set(false);
         },
         error: (error) => {
@@ -93,17 +104,17 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   }
 
   marcarComoLeida(notificacion: NotificacionAdmin): void {
-    if (notificacion.leida === 1) return;
+    if (notificacion.Leida === 1) return;
     // Si es notificación de registro, navegar a gestión de usuarios
-    if (notificacion.tipo === 'registro' && notificacion.idUsuario) {
+    if (notificacion.Tipo === 'registro' && notificacion.IdUsuario) {
       this.router.navigate(['/admin/usuarios'], { 
-        queryParams: { destacar: notificacion.idUsuario } 
+        queryParams: { destacar: notificacion.IdUsuario } 
       });
     }
-    this.http.put(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}/marcar-leida`), {})
+    this.http.put(getApiUrl(`/api/NotificacionesAdmin/${notificacion.IdNotificacion}/marcar-leida`), {})
       .subscribe({
         next: () => {
-          notificacion.leida = 1;
+          notificacion.Leida = 1;
           this.cargarContador();
           this.toast.success('Notificación marcada como leída');
         },
@@ -137,11 +148,11 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   eliminarNotificacion(notificacion: NotificacionAdmin): void {
     if (!confirm('¿Eliminar esta notificación?')) return;
 
-    this.http.delete(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}`))
+    this.http.delete(getApiUrl(`/api/NotificacionesAdmin/${notificacion.IdNotificacion}`))
       .subscribe({
         next: () => {
           this.notificaciones.update(notifs => 
-            notifs.filter(n => n.idNotificacion !== notificacion.idNotificacion)
+            notifs.filter(n => n.IdNotificacion !== notificacion.IdNotificacion)
           );
           this.cargarContador();
           this.toast.success('Notificación eliminada');

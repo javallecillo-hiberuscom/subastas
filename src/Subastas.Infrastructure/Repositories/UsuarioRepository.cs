@@ -62,11 +62,4 @@ public class UsuarioRepository : Repository<Usuario>, IUsuarioRepository
             .Where(u => u.Rol != null && u.Rol.ToLower() == "admin")
             .CountAsync();
     }
-
-    public override async Task<Usuario?> GetByIdAsync(int id)
-    {
-        return await _dbSet
-            .Include(u => u.Empresa)
-            .FirstOrDefaultAsync(u => u.IdUsuario == id);
-    }
 }

@@ -101,9 +101,19 @@ export class VehiculosAdminComponent implements OnInit {
   editarVehiculo(vehiculo: Vehiculo) {
     this.editingId = vehiculo.idVehiculo;
     this.imagenesBase64.set(vehiculo.imagenes || []);
+    
+    // Convertir fechaMatriculacion solo si existe y es válida
+    let fechaMatriculacion = null;
+    if (vehiculo.fechaMatriculacion) {
+      const fecha = new Date(vehiculo.fechaMatriculacion);
+      if (!isNaN(fecha.getTime())) {
+        fechaMatriculacion = fecha.toISOString().split('T')[0];
+      }
+    }
+    
     this.vehiculoForm.patchValue({
       ...vehiculo,
-      fechaMatriculacion: new Date(vehiculo.fechaMatriculacion).toISOString().split('T')[0]
+      fechaMatriculacion: fechaMatriculacion
     });
     this.showForm.set(true);
   }

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagramas - Sistema de Subastas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #667eea;
+            background: #f5f7ff;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .diagram-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        .diagram-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .architecture-diagram {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        .layer {
+            background: linear-gradient(135deg, #f5f7ff 0%, #fff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.15);
+        }
+        
+        .layer h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .layer ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .layer li {
+            padding: 8px 0;
+            color: #555;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .layer li:last-child {
+            border-bottom: none;
+        }
+        
+        .layer li:before {
+            content: "▸ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .flow-diagram {
+            background: #f5f7ff;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .flow-step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .flow-step:before {
+            content: attr(data-step);
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .flow-step h4 {
+            color: #333;
+            margin-bottom: 10px;
+            padding-left: 25px;
+        }
+        
+        .flow-step p {
+            color: #666;
+            line-height: 1.6;
+            padding-left: 25px;
+        }
+        
+        .entity-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .entity {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .entity-header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .entity-body {
+            padding: 15px;
+        }
+        
+        .entity-field {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+            font-size: 0.9em;
+        }
+        
+        .entity-field:last-child {
+            border-bottom: none;
+        }
+        
+        .entity-field .pk {
+            color: #ff6b6b;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .entity-field .fk {
+            color: #4ecdc4;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+        
+        .use-case-diagram {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 20px 0;
+        }
+        
+        .actor-section {
+            background: linear-gradient(135deg, #fff 0%, #f5f7ff 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .actor-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            font-size: 1.2em;
+        }
+        
+        .use-case {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 50px;
+            border: 2px solid #667eea;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .use-case:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .legend {
+            background: #f5f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .legend h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            color: #555;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .info-box p {
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Diagramas del Sistema de Subastas</h1>
+        <p class="subtitle">Arquitectura Clean Architecture - .NET 8 + Angular 18</p>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showDiagram('architecture')">🏗️ Arquitectura</button>
+            <button class="tab" onclick="showDiagram('database')">🗄️ Base de Datos</button>
+            <button class="tab" onclick="showDiagram('flow')">🔄 Flujos</button>
+            <button class="tab" onclick="showDiagram('usecase')">👥 Casos de Uso</button>
+            <button class="tab" onclick="showDiagram('deployment')">🚀 Despliegue</button>
+        </div>
+        
+        <!-- Arquitectura -->
+        <div id="architecture" class="diagram-content active">
+            <div class="info-box">
+                <h4>Clean Architecture en 3 Capas</h4>
+                <p>El backend sigue el patrón Clean Architecture con separación clara de responsabilidades. 
+                Cada capa solo depende de las capas interiores, garantizando bajo acoplamiento y alta cohesión.</p>
+            </div>
+            
+            <div class="architecture-diagram">
+                <div class="layer">
+                    <h3>🎯 Dominio</h3>
+                    <ul>
+                        <li>Usuario</li>
+                        <li>Empresa</li>
+                        <li>Vehiculo</li>
+                        <li>Subasta</li>
+                        <li>Puja</li>
+                        <li>Notificacion</li>
+                        <li>NotificacionAdmin</li>
+                        <li>Pago</li>
+                    </ul>
+                </div>
+                
+                <div class="layer">
+                    <h3>💼 Aplicación</h3>
+                    <ul>
+                        <li>DTOs Request/Response</li>
+                        <li>IUsuarioService</li>
+                        <li>IVehiculoService</li>
+                        <li>ISubastaService</li>
+                        <li>IPujaService</li>
+                        <li>IEmpresaService</li>
+                    </ul>
+                </div>
+                
+                <div class="layer">
+                    <h3>⚙️ Infraestructura</h3>
+                    <ul>
+                        <li>SubastaContext (EF Core)</li>
+                        <li>UsuarioRepository</li>
+                        <li>VehiculoRepository</li>
+                        <li>SubastaRepository</li>
+                        <li>PujaRepository</li>
+                        <li>Azure Blob Storage</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="architecture-diagram">
+                <div class="layer">
+                    <h3>🌐 WebApi</h3>
+                    <ul>
+                        <li>UsuariosController</li>
+                        <li>VehiculosController</li>
+                        <li>SubastasController</li>
+                        <li>PujasController</li>
+                        <li>AdminController</li>
+                        <li>DocumentosController</li>
+                        <li>JWT Authentication</li>
+                        <li>CORS Policy</li>
+                    </ul>
+                </div>
+                
+                <div class="layer">
+                    <h3>🎨 Frontend Angular</h3>
+                    <ul>
+                        <li>Layout Component</li>
+                        <li>Dashboard (User/Admin)</li>
+                        <li>Gestión Usuarios</li>
+                        <li>Gestión Vehículos</li>
+                        <li>Gestión Subastas</li>
+                        <li>Detalle Vehículo</li>
+                        <li>Mis Pujas</li>
+                        <li>Auth Service</li>
+                        <li>Notification Service</li>
+                    </ul>
+                </div>
+                
+                <div class="layer">
+                    <h3>☁️ Azure</h3>
+                    <ul>
+                        <li>Static Web Apps (Front)</li>
+                        <li>App Service (API)</li>
+                        <li>SQL Database</li>
+                        <li>Blob Storage</li>
+                        <li>Application Insights</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Base de Datos -->
+        <div id="database" class="diagram-content">
+            <div class="info-box">
+                <h4>Modelo de Datos Relacional</h4>
+                <p>La base de datos está normalizada y optimizada para consultas de subastas y pujas en tiempo real.</p>
+            </div>
+            
+            <div class="entity-diagram">
+                <div class="entity">
+                    <div class="entity-header">👤 Usuario</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdUsuario</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdEmpresa</div>
+                        <div class="entity-field">Nombre</div>
+                        <div class="entity-field">Apellidos</div>
+                        <div class="entity-field">Email (unique)</div>
+                        <div class="entity-field">Password (hash)</div>
+                        <div class="entity-field">Rol</div>
+                        <div class="entity-field">Validado (bit)</div>
+                        <div class="entity-field">Activo (bit)</div>
+                        <div class="entity-field">DocumentoIAE</div>
+                        <div class="entity-field">FotoPerfilBase64</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">🏢 Empresa</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdEmpresa</div>
+                        <div class="entity-field">Cif (unique)</div>
+                        <div class="entity-field">Nombre</div>
+                        <div class="entity-field">Direccion</div>
+                        <div class="entity-field">Telefono</div>
+                        <div class="entity-field">Email</div>
+                        <div class="entity-field">Activo (bit)</div>
+                        <div class="entity-field">FechaCreacion</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">🚗 Vehiculo</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdVehiculo</div>
+                        <div class="entity-field">Matricula</div>
+                        <div class="entity-field">Marca</div>
+                        <div class="entity-field">Modelo</div>
+                        <div class="entity-field">Anio</div>
+                        <div class="entity-field">Kilometraje</div>
+                        <div class="entity-field">TipoMotor</div>
+                        <div class="entity-field">TipoCarroceria</div>
+                        <div class="entity-field">Transmision</div>
+                        <div class="entity-field">FechaMatriculacion</div>
+                        <div class="entity-field">FechaITV</div>
+                        <div class="entity-field">Descripcion</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">🖼️ ImagenVehiculo</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdImagen</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdVehiculo</div>
+                        <div class="entity-field">Ruta</div>
+                        <div class="entity-field">Nombre</div>
+                        <div class="entity-field">Activo (bit)</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">⚡ Subasta</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdSubasta</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdVehiculo</div>
+                        <div class="entity-field">FechaInicio</div>
+                        <div class="entity-field">FechaFin</div>
+                        <div class="entity-field">PrecioInicial</div>
+                        <div class="entity-field">PrecioActual</div>
+                        <div class="entity-field">IncrementoMinimo</div>
+                        <div class="entity-field">Estado</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">💰 Puja</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdPuja</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdSubasta</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdUsuario</div>
+                        <div class="entity-field">Cantidad</div>
+                        <div class="entity-field">FechaPuja</div>
+                        <div class="entity-field">EsGanadora (bit)</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">🔔 NotificacionAdmin</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdNotificacion</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdUsuario</div>
+                        <div class="entity-field">Titulo</div>
+                        <div class="entity-field">Mensaje</div>
+                        <div class="entity-field">Tipo</div>
+                        <div class="entity-field">Leida (tinyint)</div>
+                        <div class="entity-field">FechaCreacion</div>
+                    </div>
+                </div>
+                
+                <div class="entity">
+                    <div class="entity-header">💳 Pago</div>
+                    <div class="entity-body">
+                        <div class="entity-field"><span class="pk">PK</span> IdPago</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdSubasta</div>
+                        <div class="entity-field"><span class="fk">FK</span> IdUsuario</div>
+                        <div class="entity-field">Cantidad</div>
+                        <div class="entity-field">FechaPago</div>
+                        <div class="entity-field">MetodoPago</div>
+                        <div class="entity-field">Estado</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h4>Leyenda</h4>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #ff6b6b;"></span>
+                    <span><strong>PK</strong> - Primary Key (Clave Primaria)</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #4ecdc4;"></span>
+                    <span><strong>FK</strong> - Foreign Key (Clave Foránea)</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Flujos -->
+        <div id="flow" class="diagram-content">
+            <div class="info-box">
+                <h4>Flujos de Trabajo Principales</h4>
+                <p>Estos diagramas muestran los flujos completos desde la interacción del usuario hasta la persistencia en base de datos.</p>
+            </div>
+            
+            <div class="flow-diagram">
+                <h3 style="color: #667eea; margin-bottom: 20px;">🔐 Flujo de Autenticación y Registro</h3>
+                
+                <div class="flow-step" data-step="1">
+                    <h4>Usuario completa formulario de registro</h4>
+                    <p>Ingresa datos personales, empresariales y credenciales en el frontend Angular.</p>
+                </div>
+                
+                <div class="flow-step" data-step="2">
+                    <h4>POST /api/Usuarios/registro</h4>
+                    <p>Frontend envía request con datos validados al backend.</p>
+                </div>
+                
+                <div class="flow-step" data-step="3">
+                    <h4>UsuarioService procesa registro</h4>
+                    <p>Hash de password, validación de CIF único, creación de Usuario con estado "registrado".</p>
+                </div>
+                
+                <div class="flow-step" data-step="4">
+                    <h4>Persistencia en Azure SQL</h4>
+                    <p>UsuarioRepository guarda nuevo usuario en base de datos.</p>
+                </div>
+                
+                <div class="flow-step" data-step="5">
+                    <h4>Respuesta al frontend</h4>
+                    <p>API devuelve UsuarioResponse con datos del usuario creado.</p>
+                </div>
+                
+                <div class="flow-step" data-step="6">
+                    <h4>Usuario sube documento IAE</h4>
+                    <p>Componente SubirIaeComponent permite seleccionar PDF/imagen.</p>
+                </div>
+                
+                <div class="flow-step" data-step="7">
+                    <h4>POST /api/Documentos/upload</h4>
+                    <p>Archivo se envía como multipart/form-data.</p>
+                </div>
+                
+                <div class="flow-step" data-step="8">
+                    <h4>Azure Blob Storage</h4>
+                    <p>DocumentosController almacena archivo en Blob Storage y guarda ruta en BD.</p>
+                </div>
+            </div>
+            
+            <div class="flow-diagram" style="margin-top: 40px;">
+                <h3 style="color: #667eea; margin-bottom: 20px;">💰 Flujo de Realización de Puja</h3>
+                
+                <div class="flow-step" data-step="1">
+                    <h4>Usuario navega a detalle de vehículo</h4>
+                    <p>DetalleVehiculoComponent carga datos de vehículo, subasta activa y pujas existentes.</p>
+                </div>
+                
+                <div class="flow-step" data-step="2">
+                    <h4>Usuario ingresa cantidad a pujar</h4>
+                    <p>Frontend valida que cantidad >= precioActual + incrementoMinimo.</p>
+                </div>
+                
+                <div class="flow-step" data-step="3">
+                    <h4>Validación de permisos</h4>
+                    <p>Sistema verifica: usuario validado, no es admin, subasta activa.</p>
+                </div>
+                
+                <div class="flow-step" data-step="4">
+                    <h4>POST /api/Pujas</h4>
+                    <p>Request: { idSubasta, idUsuario, cantidad, fechaPuja }.</p>
+                </div>
+                
+                <div class="flow-step" data-step="5">
+                    <h4>PujasController valida reglas de negocio</h4>
+                    <p>Verifica usuario validado, cantidad válida, subasta activa.</p>
+                </div>
+                
+                <div class="flow-step" data-step="6">
+                    <h4>Actualización de PrecioActual</h4>
+                    <p>SubastaRepository actualiza precioActual de la subasta.</p>
+                </div>
+                
+                <div class="flow-step" data-step="7">
+                    <h4>Creación de notificaciones</h4>
+                    <p>Sistema notifica a usuarios que fueron superados en la puja.</p>
+                </div>
+                
+                <div class="flow-step" data-step="8">
+                    <h4>Respuesta y actualización UI</h4>
+                    <p>Frontend muestra toast de confirmación y actualiza lista de pujas en tiempo real.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Casos de Uso -->
+        <div id="usecase" class="diagram-content">
+            <div class="info-box">
+                <h4>Diagrama de Casos de Uso por Actor</h4>
+                <p>Muestra las funcionalidades disponibles para cada tipo de usuario del sistema.</p>
+            </div>
+            
+            <div class="use-case-diagram">
+                <div class="actor-section">
+                    <h3>👤 Usuario Registrado (No Validado)</h3>
+                    <div class="use-case">Registrarse en el sistema</div>
+                    <div class="use-case">Subir documento IAE</div>
+                    <div class="use-case">Iniciar sesión</div>
+                    <div class="use-case">Ver subastas activas</div>
+                    <div class="use-case">Ver detalle de vehículos</div>
+                    <div class="use-case">Actualizar perfil</div>
+                </div>
+                
+                <div class="actor-section">
+                    <h3>✅ Usuario Validado</h3>
+                    <div class="use-case">Realizar pujas</div>
+                    <div class="use-case">Ver mis pujas</div>
+                    <div class="use-case">Recibir notificaciones</div>
+                    <div class="use-case">Ver historial de pujas</div>
+                    <div class="use-case">Actualizar foto de perfil</div>
+                    <div class="use-case">Cambiar contraseña</div>
+                </div>
+                
+                <div class="actor-section">
+                    <h3>🔐 Administrador</h3>
+                    <div class="use-case">Validar usuarios</div>
+                    <div class="use-case">Gestionar vehículos</div>
+                    <div class="use-case">Crear subastas</div>
+                    <div class="use-case">Gestionar empresas</div>
+                    <div class="use-case">Ver dashboard admin</div>
+                    <div class="use-case">Gestionar usuarios</div>
+                    <div class="use-case">Ver notificaciones sistema</div>
+                    <div class="use-case">Revisar documentos IAE</div>
+                    <div class="use-case">Ver estadísticas</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Despliegue -->
+        <div id="deployment" class="diagram-content">
+            <div class="info-box">
+                <h4>Arquitectura de Despliegue en Azure</h4>
+                <p>El sistema está completamente desplegado en Microsoft Azure utilizando servicios PaaS para máxima escalabilidad.</p>
+            </div>
+            
+            <div class="architecture-diagram">
+                <div class="layer" style="background: linear-gradient(135deg, #e3f2fd 0%, #fff 100%);">
+                    <h3>🌐 Frontend</h3>
+                    <ul>
+                        <li><strong>Servicio:</strong> Azure Static Web Apps</li>
+                        <li><strong>Framework:</strong> Angular 18</li>
+                        <li><strong>Build:</strong> Modo Producción</li>
+                        <li><strong>CDN:</strong> Global distribuido</li>
+                        <li><strong>SSL:</strong> Automático (HTTPS)</li>
+                        <li><strong>Deploy:</strong> GitHub Actions / SWA CLI</li>
+                    </ul>
+                </div>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #f3e5f5 0%, #fff 100%);">
+                    <h3>⚙️ Backend API</h3>
+                    <ul>
+                        <li><strong>Servicio:</strong> Azure App Service</li>
+                        <li><strong>Runtime:</strong> .NET 8</li>
+                        <li><strong>Tier:</strong> Basic B1 / Free F1</li>
+                        <li><strong>Auth:</strong> JWT Bearer</li>
+                        <li><strong>CORS:</strong> Configurado</li>
+                        <li><strong>Logs:</strong> Application Insights</li>
+                    </ul>
+                </div>
+                
+                <div class="layer" style="background: linear-gradient(135deg, #fff3e0 0%, #fff 100%);">
+                    <h3>🗄️ Base de Datos</h3>
+                    <ul>
+                        <li><strong>Servicio:</strong> Azure SQL Database</li>
+                        <li><strong>Server:</strong> subastasbidserver</li>
+                        <li><strong>DB:</strong> Subastas</li>
+                        <li><strong>Tier:</strong> Basic / Standard</li>
+                        <li><strong>Region:</strong> Canada Central</li>
+                        <li><strong>Backup:</strong> Automático</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flow-diagram" style="margin-top: 30px;">
+                <h3 style="color: #667eea; margin-bottom: 20px;">🔄 Flujo de Request en Producción</h3>
+                
+                <div class="flow-step" data-step="1">
+                    <h4>Usuario accede a https://blue-flower-00b3c6b03.1.azurestaticapps.net</h4>
+                    <p>Azure Static Web Apps sirve archivos estáticos (HTML, CSS, JS) vía CDN global.</p>
+                </div>
+                
+                <div class="flow-step" data-step="2">
+                    <h4>Angular App carga en navegador</h4>
+                    <p>Aplicación SPA se ejecuta en cliente, maneja routing y estado.</p>
+                </div>
+                
+                <div class="flow-step" data-step="3">
+                    <h4>Request a API: HTTPS GET/POST/PUT/DELETE</h4>
+                    <p>HttpClient de Angular envía requests a subastaswebapi20260202162157.azurewebsites.net/api/...</p>
+                </div>
+                
+                <div class="flow-step" data-step="4">
+                    <h4>Azure App Service recibe request</h4>
+                    <p>Request pasa por middleware: CORS → Authentication → Authorization → Controller.</p>
+                </div>
+                
+                <div class="flow-step" data-step="5">
+                    <h4>Controller delega a Service (Clean Architecture)</h4>
+                    <p>Lógica de negocio se ejecuta en capa Application, datos se persisten vía Infrastructure.</p>
+                </div>
+                
+                <div class="flow-step" data-step="6">
+                    <h4>Entity Framework Core consulta Azure SQL</h4>
+                    <p>Connection String apunta a subastasbidserver.database.windows.net:1433.</p>
+                </div>
+                
+                <div class="flow-step" data-step="7">
+                    <h4>Respuesta JSON al cliente</h4>
+                    <p>API devuelve ApiResponse<T> serializado, frontend actualiza UI reactivamente con signals.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showDiagram(diagramId) {
+            // Hide all diagrams
+            document.querySelectorAll('.diagram-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected diagram
+            document.getElementById(diagramId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

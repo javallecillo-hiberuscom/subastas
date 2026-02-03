@@ -31,6 +31,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
   showNotifications = false;
   expandedMenus = signal(new Set<string>());
 
+  constructor() {
+    console.error('🚀🚀🚀 LAYOUT COMPONENT CONSTRUCTOR');
+  }
+
   menuItems: MenuItem[] = [
     { label: 'Dashboard', icon: '🏠', route: '/dashboard', userOnly: true },
     { label: 'Dashboard Admin', icon: '📊', route: '/admin/dashboard', adminOnly: true },
@@ -68,8 +72,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
+    console.error('🚀🚀🚀 LAYOUT COMPONENT INIT');
     const user = this.currentUser();
-    console.log('LayoutComponent: Usuario actual:', user);
+    console.error('🚀 LayoutComponent: INICIO - Usuario actual:', JSON.stringify(user, null, 2));
     // Usar idUsuario que es la propiedad correcta, con fallback a id
     const userId = user?.idUsuario || (user?.id ? parseInt(user.id) : null);
     
@@ -77,14 +82,14 @@ export class LayoutComponent implements OnInit, OnDestroy {
     const rolLower = user?.rol?.toLowerCase() || '';
     const esAdmin = rolLower === 'administrador' || rolLower === 'admin';
     
-    console.log('LayoutComponent: userId:', userId, 'rolLower:', rolLower, 'esAdmin:', esAdmin);
+    console.error('🚀 LayoutComponent: userId:', userId, 'rol:', rolLower, 'esAdmin:', esAdmin);
     
     if (userId) {
-      console.log('LayoutComponent: Iniciando monitoreo de notificaciones para usuario:', userId, 'esAdmin:', esAdmin);
+      console.error('🚀 LayoutComponent: LLAMANDO iniciarMonitoreo con userId:', userId, 'esAdmin:', esAdmin);
       this.notificationService.iniciarMonitoreo(userId, esAdmin);
       this.notificationService.solicitarPermiso();
     } else {
-      console.warn('LayoutComponent: No se pudo obtener el ID del usuario para iniciar monitoreo de notificaciones', user);
+      console.error('❌ LayoutComponent: NO SE PUDO OBTENER userId. User completo:', user);
     }
   }
 
@@ -172,12 +177,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
   }
   
   getMensajeNotificacion(notif: any): string {
-    // Si tiene información del vehículo, construir mensaje descriptivo
     if (notif.vehiculoInfo && notif.vehiculoInfo !== '') {
-      // Reemplazar referencias a "subasta #N" con información del vehículo
       let mensaje = notif.mensaje;
       
-      // Si vehiculoInfo no es solo "Subasta #N", usarlo para reemplazar
       if (!notif.vehiculoInfo.startsWith('Subasta #')) {
         mensaje = mensaje.replace(/subasta #\d+/i, `${notif.vehiculoInfo}`);
         mensaje = mensaje.replace(/de la subasta/i, `del ${notif.vehiculoInfo}`);
@@ -185,7 +187,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
       
       return mensaje;
     }
-    return notif.mensaje;
+    
+    return notif.mensaje || '';
   }
 
   logout(): void {

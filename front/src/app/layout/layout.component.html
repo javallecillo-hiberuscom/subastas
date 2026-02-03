@@ -101,7 +101,7 @@
         <div class="header-actions">
           <!-- Notificaciones -->
           <div class="notifications-container" (click)="$event.stopPropagation()">
-            <button class="notification-bell" (click)="toggleNotifications()">
+            <button class="notification-bell" (click)="toggleNotifications()" title="Notificaciones">
               <span class="bell-icon">🔔</span>
               @if (notificationService.noLeidas() > 0) {
                 <span class="badge">{{ notificationService.noLeidas() }}</span>

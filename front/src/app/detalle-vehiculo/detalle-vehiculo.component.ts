@@ -90,9 +90,9 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
   // Computed: puede pujar
   puedePujar = computed(() => {
     const user = this.currentUser();
-    // Usuario debe estar validado O ser administrador
+    // Solo usuarios validados pueden pujar (administradores NO pueden pujar)
     const esAdministrador = user?.rol?.toLowerCase() === 'administrador' || user?.rol?.toLowerCase() === 'admin';
-    return this.subastaActiva() && (user?.validado === true || esAdministrador);
+    return this.subastaActiva() && user?.validado === true && !esAdministrador;
   });
 
   // Computed: es admin
@@ -230,7 +230,14 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
     }
 
     // Validar que el usuario esté validado
-    if (!user.validado && user.rol?.toLowerCase() !== 'administrador') {
+    const esAdmin = user.rol?.toLowerCase() === 'administrador' || user.rol?.toLowerCase() === 'admin';
+    
+    if (esAdmin) {
+      this.toast.error('Los administradores no pueden realizar pujas');
+      return;
+    }
+    
+    if (!user.validado) {
       if (!user.documentoIAE) {
         this.toast.error('Debes subir tu documento IAE antes de poder pujar');
         this.router.navigate(['/subir-iae']);
@@ -268,7 +275,8 @@ export class DetalleVehiculoComponent implements OnInit, OnDestroy {
     const nuevaPuja = {
       idSubasta: sub.idSubasta,
       idUsuario: idUsuario,
-      cantidad: this.cantidadPuja()
+      cantidad: this.cantidadPuja(),
+      fechaPuja: new Date().toISOString()
     };
 
     console.log('Datos de puja a enviar:', nuevaPuja);
