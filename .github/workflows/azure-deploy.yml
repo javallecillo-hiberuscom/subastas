@@ -32,8 +32,11 @@ jobs:
     - name: Publish
       run: dotnet publish src/Subastas.WebApi/Subastas.WebApi.csproj -c Release -o ./publish
     
+    - name: Zip publish
+      run: |
+        cd publish
+        zip -r ../webapp.zip .
+        cd ..
+    
     - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: 'subastas-api-borox'
-        package: ./publish
+      run: az webapp deploy --resource-group rg-subastas --name subastas-api-borox --src-path ./webapp.zip --type zip
