@@ -10,7 +10,7 @@ export class VehiculoService {
   private getApiUrl(): string {
     const baseUrl = window.location.hostname === 'localhost' 
       ? 'http://localhost:56801' 
-      : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+      : 'https://subastas-api-borox.azurewebsites.net';
     return `${baseUrl}/api/vehiculos`;
   }
   private http = inject(HttpClient);
@@ -24,7 +24,7 @@ export class VehiculoService {
   getVehiculosEnSubasta(): Observable<Vehiculo[]> {
     const baseUrl = window.location.hostname === 'localhost' 
       ? 'http://localhost:56801' 
-      : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+      : 'https://subastas-api-borox.azurewebsites.net';
     return this.http.get<Vehiculo[]>(`${baseUrl}/api/pujas`);
   }
 
@@ -64,7 +64,7 @@ export class PujaService {
   private getApiUrl(): string {
     const baseUrl = window.location.hostname === 'localhost' 
       ? 'http://localhost:56801' 
-      : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+      : 'https://subastas-api-borox.azurewebsites.net';
     return `${baseUrl}/api/pujas`;
   }
   private http = inject(HttpClient);

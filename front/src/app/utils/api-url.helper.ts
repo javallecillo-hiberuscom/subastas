@@ -3,10 +3,10 @@
  */
 export function getApiBaseUrl(): string {
   // En localhost usar el backend local
-  // En producción TEMPORALMENTE usar URL directa hasta que el proxy funcione
+  // En producción usar la URL correcta del API
   return window.location.hostname === 'localhost' 
     ? 'http://localhost:56801' 
-    : 'https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net';
+    : 'https://subastas-api-borox.azurewebsites.net';
 }
 
 export function getApiUrl(path: string): string {
