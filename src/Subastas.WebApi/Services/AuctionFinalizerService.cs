@@ -6,11 +6,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.SignalR;
 using Subastas.Infrastructure.Data;
 using Subastas.Domain.Entities;
 using Subastas.Application.Interfaces.Services;
-using Subastas.WebApi.Hubs;
 
 namespace Subastas.WebApi.Services
 {
@@ -58,7 +56,6 @@ namespace Subastas.WebApi.Services
  using var scope = _scopeFactory.CreateScope();
  var db = scope.ServiceProvider.GetRequiredService<SubastaContext>();
  var email = scope.ServiceProvider.GetService<IEmailService>();
- var hub = scope.ServiceProvider.GetService<IHubContext<NotificationHub>>();
 
  // Use DateTime.UtcNow to match UTC if FechaFin is stored in UTC
  var ahora = DateTime.UtcNow;
@@ -104,16 +101,18 @@ namespace Subastas.WebApi.Services
  subasta.Estado = "finalizada";
 
  // Notify winner
- var msg = $"¡Has ganado la subasta #{subasta.IdSubasta} con {winner.Cantidad:C}! En 30 días máximo, el administrador te contactará para ultimar los detalles de la venta.";
- var winnerNotif = new Notificacion
+ var winnerUser = await db.Usuarios.FindAsync(new object[] { winner.IdUsuario }, ct);
+ if (winnerUser != null)
  {
- IdUsuario = winner.IdUsuario,
+ var msg = $"¡Has ganado la subasta #{subasta.IdSubasta} con {winner.Cantidad:C}! En 30 días máximo, el administrador te contactará para ultimar los detalles de la venta.";
+ db.Notificaciones.Add(new Notificacion
+ {
+ IdUsuario = winnerUser.IdUsuario,
  IdSubasta = subasta.IdSubasta,
  Mensaje = msg,
  FechaEnvio = DateTime.UtcNow,
  Leida =0
- };
- db.Notificaciones.Add(winnerNotif);
+ });
 
  try { if (email != null) await email.EnviarEmailUsuarioAsync(winnerUser.Email, winnerUser.Nombre, "Has ganado la subasta", msg); } catch (Exception ex) { _logger.LogWarning(ex, "Failed sending winner email for subasta {Id}", subasta.IdSubasta); }
  }
@@ -123,22 +122,21 @@ namespace Subastas.WebApi.Services
  {
  var loser = await db.Usuarios.FindAsync(new object[] { loserId }, ct);
  if (loser == null) continue;
- var msgLoser = $"No has ganado la subasta #{subasta.IdSubasta}. Puja ganadora: {winner.Cantidad:C}.";
- var loserNotif = new Notificacion
+ var msg = $"No has ganado la subasta #{subasta.IdSubasta}. Puja ganadora: {winner.Cantidad:C}.";
+ db.Notificaciones.Add(new Notificacion
  {
  IdUsuario = loser.IdUsuario,
  IdSubasta = subasta.IdSubasta,
- Mensaje = msgLoser,
+ Mensaje = msg,
  FechaEnvio = DateTime.UtcNow,
  Leida =0
- };
- db.Notificaciones.Add(loserNotif);
+ });
 
- try { if (email != null) await email.EnviarEmailUsuarioAsync(loser.Email, loser.Nombre, "Subasta finalizada - resultado", msgLoser); } catch (Exception ex) { _logger.LogWarning(ex, "Failed sending loser email for subasta {Id} to {Email}", subasta.IdSubasta, loser.Email); }
+ try { if (email != null) await email.EnviarEmailUsuarioAsync(loser.Email, loser.Nombre, "Subasta finalizada - resultado", msg); } catch (Exception ex) { _logger.LogWarning(ex, "Failed sending loser email for subasta {Id} to {Email}", subasta.IdSubasta, loser.Email); }
  }
 
  // Admin notification
- var adminNot = new NotificacionAdmin
+ db.NotificacionesAdmin.Add(new NotificacionAdmin
  {
  Titulo = "Subasta finalizada",
  Mensaje = $"Subasta #{subasta.IdSubasta} finalizada. Ganador: {(winnerUser?.Email ?? winner.IdUsuario.ToString())} - {winner.Cantidad:C}",
@@ -146,57 +144,10 @@ namespace Subastas.WebApi.Services
  IdUsuario = null, // Set to null so it's visible to all admins
  Leida =0,
  FechaCreacion = DateTime.UtcNow
- };
- db.NotificacionesAdmin.Add(adminNot);
+ });
 
  await db.SaveChangesAsync(ct);
  _logger.LogInformation("Subasta {Id} finalized; winner {WinnerId}; notifications created.", subasta.IdSubasta, winner.IdUsuario);
-
- // Send real-time notifications
- // Winner
- await hub.Clients.Group($"user_{winner.IdUsuario}").SendAsync("ReceiveNotification", new
- {
- Id = winnerNotif.IdNotificacion,
- Tipo = "usuario",
- Titulo = (string?)null,
- Mensaje = winnerNotif.Mensaje,
- Fecha = winnerNotif.FechaEnvio,
- Leida = winnerNotif.Leida == 1,
- UsuarioId = winnerNotif.IdUsuario,
- SubastaId = winnerNotif.IdSubasta
- });
-
- // Losers
- foreach (var loserId in losers)
- {
- var loserNotif = db.Notificaciones.Local.FirstOrDefault(n => n.IdUsuario == loserId && n.IdSubasta == subasta.IdSubasta && n.Mensaje.Contains("No has ganado"));
- if (loserNotif != null)
- {
- await hub.Clients.Group($"user_{loserId}").SendAsync("ReceiveNotification", new
- {
- Id = loserNotif.IdNotificacion,
- Tipo = "usuario",
- Titulo = (string?)null,
- Mensaje = loserNotif.Mensaje,
- Fecha = loserNotif.FechaEnvio,
- Leida = loserNotif.Leida == 1,
- UsuarioId = loserNotif.IdUsuario,
- SubastaId = loserNotif.IdSubasta
- });
- }
- }
-
- // Admin
- await hub.Clients.Group("admins").SendAsync("ReceiveNotification", new
- {
- Id = adminNot.IdNotificacion,
- Titulo = adminNot.Titulo,
- Mensaje = adminNot.Mensaje,
- Tipo = adminNot.Tipo,
- IdUsuario = adminNot.IdUsuario,
- Leida = adminNot.Leida,
- FechaCreacion = adminNot.FechaCreacion
- });
  }
  catch (Exception ex)
  {

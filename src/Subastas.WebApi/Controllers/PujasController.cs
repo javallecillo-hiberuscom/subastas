@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Subastas.Infrastructure.Data;
 using Subastas.Domain.Entities;
 using Subastas.Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
-using Subastas.WebApi.Hubs;
 
 namespace Subastas.WebApi.Controllers;
 
@@ -19,14 +17,12 @@ public class PujasController : ControllerBase
     private readonly SubastaContext _context;
     private readonly IEmailService _emailService;
     private readonly ILogger<PujasController> _logger;
-    private readonly IHubContext<NotificationHub> _hubContext;
 
-    public PujasController(SubastaContext context, IEmailService emailService, ILogger<PujasController> logger, IHubContext<NotificationHub> hubContext)
+    public PujasController(SubastaContext context, IEmailService emailService, ILogger<PujasController> logger)
     {
         _context = context;
         _emailService = emailService;
         _logger = logger;
-        _hubContext = hubContext;
     }
 
     /// <summary>
@@ -389,6 +385,16 @@ public class PujasController : ControllerBase
                 _context.Notificaciones.Add(outbidNotif);
                 outbidNotifs.Add(outbidNotif);
                 _logger.LogInformation("Added outbid notification for previous user {PrevUserId} on subasta {SubastaId}", prev.IdUsuario, subasta.IdSubasta);
+
+                try
+                {
+                    await _emailService.EnviarEmailUsuarioAsync(prev.Email, prev.Nombre, "Has sido superado en una puja", outbidNotif.Mensaje);
+                    _logger.LogInformation("Email attempt to previous bidder {Email} completed", prev.Email);
+                }
+                catch (Exception mailEx)
+                {
+                    _logger.LogWarning(mailEx, "Fallo al enviar email a previous bidder {Email}", prev.Email);
+                }
             }
 
             // Admin notification for audit
@@ -408,62 +414,6 @@ public class PujasController : ControllerBase
             _logger.LogInformation("Saving notifications to database (count pending: {Count})", _context.ChangeTracker.Entries().Count(e => e.Entity is Notificacion || e.Entity is NotificacionAdmin));
             await _context.SaveChangesAsync();
             _logger.LogInformation("Notifications saved to DB for puja {PujaId}", puja.IdPuja);
-
-            // Send real-time notifications after save
-            // Confirmation to bidder
-            await _hubContext.Clients.Group($"user_{usuario.IdUsuario}").SendAsync("ReceiveNotification", new
-            {
-                confirmNotif.IdNotificacion,
-                Tipo = "usuario",
-                Titulo = (string?)null,
-                Mensaje = confirmNotif.Mensaje,
-                Fecha = confirmNotif.FechaEnvio,
-                Leida = confirmNotif.Leida == 1,
-                UsuarioId = confirmNotif.IdUsuario,
-                SubastaId = confirmNotif.IdSubasta
-            });
-
-            // Outbid to previous bidders
-            foreach (var outbidNotif in outbidNotifs)
-            {
-                await _hubContext.Clients.Group($"user_{outbidNotif.IdUsuario}").SendAsync("ReceiveNotification", new
-                {
-                    outbidNotif.IdNotificacion,
-                    Tipo = "usuario",
-                    Titulo = (string?)null,
-                    Mensaje = outbidNotif.Mensaje,
-                    Fecha = outbidNotif.FechaEnvio,
-                    Leida = outbidNotif.Leida == 1,
-                    UsuarioId = outbidNotif.IdUsuario,
-                    SubastaId = outbidNotif.IdSubasta
-                });
-
-                var prev = await _context.Usuarios.FindAsync(outbidNotif.IdUsuario);
-                if (prev != null)
-                {
-                    try
-                    {
-                        await _emailService.EnviarEmailUsuarioAsync(prev.Email, prev.Nombre, "Has sido superado en una puja", outbidNotif.Mensaje);
-                        _logger.LogInformation("Email attempt to previous bidder {Email} completed", prev.Email);
-                    }
-                    catch (Exception mailEx)
-                    {
-                        _logger.LogWarning(mailEx, "Fallo al enviar email a previous bidder {Email}", prev.Email);
-                    }
-                }
-            }
-
-            // Admin notification
-            await _hubContext.Clients.Group("admins").SendAsync("ReceiveNotification", new
-            {
-                adminNot.IdNotificacion,
-                adminNot.Titulo,
-                adminNot.Mensaje,
-                adminNot.Tipo,
-                adminNot.IdUsuario,
-                adminNot.Leida,
-                adminNot.FechaCreacion
-            });
 
             // confirmation email to bidder
             try

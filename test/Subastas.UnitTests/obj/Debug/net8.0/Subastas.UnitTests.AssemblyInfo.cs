@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Subastas.UnitTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b50291d7468c7b38d737ab6428bf88081e2f929")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+734fd5a057a02fbf25e2a9b6e404f59c617d5690")]
 [assembly: System.Reflection.AssemblyProductAttribute("Subastas.UnitTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Subastas.UnitTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

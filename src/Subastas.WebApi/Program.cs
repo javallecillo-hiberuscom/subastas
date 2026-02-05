@@ -191,7 +191,7 @@ try
     });
 
     // Agregar servicios de SignalR
-    builder.Services.AddSignalR();
+    
 
     var app = builder.Build();
 
@@ -257,7 +257,6 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
-    app.MapHub<Subastas.WebApi.Hubs.NotificationHub>("/notificationHub");
 
     // Endpoint de manejo de errores global
     app.MapGet("/error", () => Results.Problem("Ha ocurrido un error en el servidor."))
