@@ -31,7 +31,8 @@
             ],
             "styles": [
               "src/styles.css"
-            ]
+            ],
+            "outputPath": "dist/proxy-website-frontend"
           },
           "configurations": {
             "production": {
