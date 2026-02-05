@@ -1,0 +1,63 @@
+<!-- En register.component.html con accesibilidad -->
+<div class="register-container" role="main" aria-labelledby="register-title">
+  <h1 id="register-title">Registro de Usuario</h1>
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" role="form" aria-describedby="form-description">
+    <p id="form-description">Complete el formulario para registrarse. Todos los campos marcados con * son obligatorios.</p>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre *</mat-label>
+      <input matInput formControlName="nombre" required aria-describedby="nombre-error">
+      <mat-error id="nombre-error" *ngIf="registerForm.get('nombre')?.invalid && registerForm.get('nombre')?.touched">
+        El nombre es requerido y no puede exceder 100 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Apellidos</mat-label>
+      <input matInput formControlName="apellidos" aria-describedby="apellidos-help">
+      <mat-hint id="apellidos-help">Opcional, máximo 100 caracteres.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Email *</mat-label>
+      <input matInput type="email" formControlName="email" required aria-describedby="email-error">
+      <mat-error id="email-error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        Email requerido y formato válido.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Contraseña *</mat-label>
+      <input matInput type="password" formControlName="password" required aria-describedby="password-error">
+      <mat-error id="password-error" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        Contraseña requerida, mínimo 6 caracteres.
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>DNI *</mat-label>
+      <input matInput formControlName="dni" required placeholder="12345678Z" aria-describedby="dni-error dni-help">
+      <mat-hint id="dni-help">Formato: 8 dígitos + letra mayúscula.</mat-hint>
+      <mat-error id="dni-error" *ngIf="registerForm.get('dni')?.invalid && registerForm.get('dni')?.touched">
+        DNI requerido, formato válido (ej: 12345678Z).
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Teléfono</mat-label>
+      <input matInput type="tel" formControlName="telefono" aria-describedby="telefono-help">
+      <mat-hint id="telefono-help">Opcional, máximo 20 caracteres.</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Dirección</mat-label>
+      <textarea matInput formControlName="direccion" rows="3" aria-describedby="direccion-help"></textarea>
+      <mat-hint id="direccion-help">Opcional, máximo 255 caracteres.</mat-hint>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!registerForm.valid" aria-describedby="submit-help">
+      Registrar
+    </button>
+    <p id="submit-help">Haga clic para completar el registro.</p>
+  </form>
+</div>

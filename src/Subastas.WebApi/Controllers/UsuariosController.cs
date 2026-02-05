@@ -34,8 +34,8 @@ public class UsuariosController : ControllerBase
     {
         try
         {
-            var usuarios = await _usuarioService.ObtenerTodosAsync();
-            _logger.LogInformation("GetUsuarios: {Count} usuarios obtenidos", usuarios?.Count() ??0);
+            var usuarios = await _usuarioService.ObtenerTodosAsync() ?? Enumerable.Empty<UsuarioResponse>();
+            _logger.LogInformation("GetUsuarios: {Count} usuarios obtenidos", usuarios.Count());
             return Ok(ApiResponse<IEnumerable<UsuarioResponse>>.SuccessResult(
                 usuarios, "Usuarios obtenidos correctamente"));
         }

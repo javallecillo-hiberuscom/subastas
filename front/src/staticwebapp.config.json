@@ -6,7 +6,7 @@
   "routes": [
     {
       "route": "/api/*",
-      "rewrite": "https://subastaswebapi20260202162157-f3frc5dfgdata6cx.canadacentral-01.azurewebsites.net/api/{*path}"
+      "rewrite": "https://subastas-api-borox.azurewebsites.net/api/{*path}"
     }
   ],
   "responseOverrides": {
