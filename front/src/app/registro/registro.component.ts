@@ -28,7 +28,7 @@ export class RegistroComponent {
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellidos: [''],
       email: ['', [Validators.required, Validators.email]],
-      dni: [''],
+      dni: ['', [this.dniValidator]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required],
       cif: [''],
@@ -41,6 +41,27 @@ export class RegistroComponent {
   passwordMatchValidator(g: FormGroup) {
     return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null : { mismatch: true };
+  }
+
+  static validarDniNif(valor: string): boolean {
+    if (!valor) return false;
+    valor = valor.toUpperCase().replace(/\s|-/g, '');
+    // DNI: 8 números y una letra
+    if (/^\d{8}[A-Z]$/.test(valor)) {
+      const letras = 'TRWAGMYFPDXBNJZSQVHLCKE';
+      const numero = parseInt(valor.substring(0, 8), 10);
+      const letra = valor.charAt(8);
+      return letra === letras[numero % 23];
+    }
+    // NIF/CIF: otras validaciones posibles (simplificado)
+    // Aquí puedes añadir lógica para NIE, CIF, etc.
+    return false;
+  }
+
+  dniValidator(control: any) {
+    const valor = control.value;
+    if (!valor) return null;
+    return RegistroComponent.validarDniNif(valor) ? null : { dniInvalido: true };
   }
 
   onFileSelected(event: Event) {

@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AdminService, DashboardAdmin } from '../services/admin.service';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 
@@ -9,24 +10,107 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-dashboard-admin',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './dashboard-admin.component.html',
   styleUrls: ['./dashboard-admin.component.css']
 })
 export class DashboardAdminComponent implements OnInit, AfterViewInit {
+    exportarExcel(tipo: 'activas' | 'terminadas') {
+      const data = this.dashboard();
+      let rows: any[] = [];
+      let headers: string[] = [];
+      if (tipo === 'activas' && data?.subastasActivas) {
+        headers = ['ID', 'Marca', 'Modelo', 'Año', 'Matricula', 'Precio Inicial', 'Precio Actual', 'Ganador', 'Email', 'Teléfono', 'Total Pujas', 'Tiempo Restante'];
+        rows = data.subastasActivas.map(s => [
+          s.idSubasta,
+          s.vehiculo.marca,
+          s.vehiculo.modelo,
+          s.vehiculo.anio,
+          s.vehiculo.matricula,
+          s.precioInicial,
+          s.precioActual,
+          s.pujaGanadora ? `${s.pujaGanadora.usuario.nombre} ${s.pujaGanadora.usuario.apellidos}` : '',
+          s.pujaGanadora ? s.pujaGanadora.usuario.email : '',
+          s.pujaGanadora ? s.pujaGanadora.usuario.telefono : '',
+          s.totalPujas,
+          s.tiempoRestante
+        ]);
+      }
+      if (tipo === 'terminadas' && data?.subastasTerminadas) {
+        headers = ['ID', 'Marca', 'Modelo', 'Año', 'Matricula', 'Precio Inicial', 'Precio Final', 'Ganador', 'Email', 'Teléfono', 'Empresa', 'CIF', 'Total Pujas', 'Finalizada'];
+        rows = data.subastasTerminadas.map(s => [
+          s.idSubasta,
+          s.vehiculo.marca,
+          s.vehiculo.modelo,
+          s.vehiculo.anio,
+          s.vehiculo.matricula,
+          s.precioInicial,
+          s.precioActual,
+          s.ganador ? `${s.ganador.usuario.nombre} ${s.ganador.usuario.apellidos}` : '',
+          s.ganador ? s.ganador.usuario.email : '',
+          s.ganador ? s.ganador.usuario.telefono : '',
+          s.ganador && s.ganador.usuario.empresa ? s.ganador.usuario.empresa.nombre : '',
+          s.ganador && s.ganador.usuario.empresa ? s.ganador.usuario.empresa.cif : '',
+          s.totalPujas,
+          s.tiempoFinalizada
+        ]);
+      }
+      // Generar CSV
+      let csv = headers.join(',') + '\n';
+      csv += rows.map(r => r.map((x: any) => `"${x ?? ''}"`).join(',')).join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `subastas-${tipo}-${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    }
   @ViewChild('subastasChart') subastasChartRef?: ElementRef<HTMLCanvasElement>;
   @ViewChild('pujasChart') pujasChartRef?: ElementRef<HTMLCanvasElement>;
   
   dashboard = signal<DashboardAdmin | null>(null);
   isLoading = signal(false);
   error = signal<string | null>(null);
-  
+
+  fechaInicio: string = '';
+  fechaFin: string = '';
+
   private subastasChart?: Chart;
   private pujasChart?: Chart;
 
   constructor(private adminService: AdminService) {}
+  exportarPDF() {
+    if (!this.fechaInicio || !this.fechaFin) {
+      alert('Por favor selecciona ambas fechas para exportar el PDF.');
+      return;
+    }
+    this.adminService.exportarPdfSubastas(this.fechaInicio, this.fechaFin).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `informe-subastas-${this.fechaInicio}-${this.fechaFin}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        alert('Error al generar el PDF: ' + (err?.error?.Message || 'Error desconocido'));
+      }
+    });
+  }
 
   ngOnInit() {
+    // Por defecto: desde un mes atrás hasta hoy
+    const hoy = new Date();
+    const mesAtras = new Date();
+    mesAtras.setMonth(hoy.getMonth() - 1);
+    this.fechaFin = hoy.toISOString().slice(0, 10);
+    this.fechaInicio = mesAtras.toISOString().slice(0, 10);
     this.cargarDashboard();
   }
 

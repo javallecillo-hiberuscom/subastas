@@ -19,55 +19,13 @@
     <!-- Estadísticas Generales -->
     <section class="estadisticas-generales">
       <h2>Estadísticas del Sistema</h2>
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <div class="stat-info">
-            <h3>{{ dashboard()!.estadisticasGenerales.totalUsuarios }}</h3>
-            <p>Usuarios Totales</p>
-            <small>{{ dashboard()!.estadisticasGenerales.usuariosPendientes }} pendientes</small>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">🏢</div>
-          <div class="stat-info">
-            <h3>{{ dashboard()!.estadisticasGenerales.totalEmpresas }}</h3>
-            <p>Empresas</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">🚗</div>
-          <div class="stat-info">
-            <h3>{{ dashboard()!.estadisticasGenerales.totalVehiculos }}</h3>
-            <p>Vehículos</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">⏰</div>
-          <div class="stat-info">
-            <h3>{{ dashboard()!.estadisticasGenerales.subastasActivas }}</h3>
-            <p>Subastas Activas</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <div class="stat-info">
-            <h3>{{ dashboard()!.estadisticasGenerales.subastasTerminadas }}</h3>
-            <p>Subastas Finalizadas</p>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">📊</div>
-          <div class="stat-info">
-            <h3>{{ dashboard()!.estadisticasGenerales.totalSubastas }}</h3>
-            <p>Total Subastas</p>
-          </div>
-        </div>
+      <div class="stats-grid stats-grid-centrada">
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-info"><h3>{{ dashboard()!.estadisticasGenerales.totalUsuarios }}</h3><p>Usuarios Totales</p><small>{{ dashboard()!.estadisticasGenerales.usuariosPendientes }} pendientes</small></div></div>
+        <div class="stat-card"><div class="stat-icon">🏢</div><div class="stat-info"><h3>{{ dashboard()!.estadisticasGenerales.totalEmpresas }}</h3><p>Empresas</p></div></div>
+        <div class="stat-card"><div class="stat-icon">🚗</div><div class="stat-info"><h3>{{ dashboard()!.estadisticasGenerales.totalVehiculos }}</h3><p>Vehículos</p></div></div>
+        <div class="stat-card"><div class="stat-icon">⏰</div><div class="stat-info"><h3>{{ dashboard()!.estadisticasGenerales.subastasActivas }}</h3><p>Subastas Activas</p></div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-info"><h3>{{ dashboard()!.estadisticasGenerales.subastasTerminadas }}</h3><p>Subastas Finalizadas</p></div></div>
+        <div class="stat-card"><div class="stat-icon">📊</div><div class="stat-info"><h3>{{ dashboard()!.estadisticasGenerales.totalSubastas }}</h3><p>Total Subastas</p></div></div>
       </div>
     </section>
 
@@ -86,6 +44,9 @@
     <!-- Subastas Activas -->
     <section class="subastas-activas">
       <h2>Subastas Activas ({{ dashboard()!.subastasActivas.length }})</h2>
+      <button (click)="exportarExcel('activas')" class="btn-exportar-excel">
+        <span class="excel-icon"></span> Exportar Excel
+      </button>
       
       @if (dashboard()!.subastasActivas.length === 0) {
         <p class="no-data">No hay subastas activas en este momento</p>
@@ -152,6 +113,9 @@
     <section class="subastas-terminadas">
       <h2>🏁 Subastas Finalizadas - Contactar Ganadores</h2>
       <p class="section-description">Aquí puedes ver los ganadores de cada subasta y sus datos de contacto para completar la venta</p>
+      <button (click)="exportarExcel('terminadas')" class="btn-exportar-excel">
+        <span class="excel-icon"></span> Exportar Excel
+      </button>
       
       @if (dashboard()!.subastasTerminadas.length === 0) {
         <p class="no-data">No hay subastas finalizadas</p>
@@ -258,6 +222,26 @@
           <span class="accion-icon">🔔</span>
           <span>Notificaciones</span>
         </a>
+        <!-- Exportar PDF de subastas filtradas -->
+        <div class="accion-card exportar-pdf-card">
+          <span class="accion-icon pdf-icon"></span>
+          <span>Exportar PDF de Subastas</span>
+          <div class="exportar-pdf-form">
+            <label for="fechaInicio">Desde:</label>
+            <input type="date" id="fechaInicio" [value]="fechaInicio" (input)="fechaInicio = $event.target.value" class="date-input" />
+            <label for="fechaFin">Hasta:</label>
+            <input type="date" id="fechaFin" [value]="fechaFin" (input)="fechaFin = $event.target.value" class="date-input" />
+            <button (click)="exportarPDF()" class="btn-exportar-pdf">
+              <span class="pdf-icon"></span> Generar PDF
+            </button>
+          </div>
+        </div>
+        <button (click)="exportarExcel('activas')" class="btn-exportar-excel">
+          <span class="excel-icon"></span> Exportar Excel Activas
+        </button>
+        <button (click)="exportarExcel('terminadas')" class="btn-exportar-excel">
+          <span class="excel-icon"></span> Exportar Excel Terminadas
+        </button>
       </div>
     </section>
   }

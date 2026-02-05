@@ -143,5 +143,11 @@ public class SubastaContext : DbContext
             entity.HasKey(e => e.IdVehiculo).HasName("PK__Vehiculo__4868297046AD87EF");
             entity.Property(e => e.Estado).HasDefaultValue("registrado");
         });
+        modelBuilder.Entity<Vehiculo>()
+            .Property(v => v.FechaMatriculacion)
+            .HasColumnType("date");
+        modelBuilder.Entity<Vehiculo>()
+            .Property(v => v.FechaCreacion)
+            .HasColumnType("date");
     }
 }

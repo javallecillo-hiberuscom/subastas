@@ -115,4 +115,9 @@ export class AdminService {
   getUsuariosPendientes(): Observable<UsuarioPendiente[]> {
     return this.http.get<UsuarioPendiente[]>(getApiUrl('/api/Admin/usuarios-pendientes'));
   }
+
+  exportarPdfSubastas(fechaInicio: string, fechaFin: string): Observable<Blob> {
+    const url = getApiUrl(`/api/Admin/exportar-pdf-subastas?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
+    return this.http.get(url, { responseType: 'blob' });
+  }
 }

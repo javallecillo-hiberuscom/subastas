@@ -153,7 +153,7 @@
                         </div>
                         <div class="notif-content">
                           <p class="notif-message">{{ getMensajeNotificacion(notif) }}</p>
-                          <span class="notif-time">{{ getTiempoTranscurrido(notif.fecha) }}</span>
+                          <span class="notif-time">{{ getTiempoTranscurrido(notif.fecha || '') }}</span>
                         </div>
                       </div>
                     }

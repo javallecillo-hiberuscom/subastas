@@ -1,14 +1,23 @@
+using QuestPDF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Security.Claims;
 using Subastas.Infrastructure.Data;
 using Subastas.Infrastructure.Configuration;
-using Subastas.WebApi.Middleware;
+using Subastas.Application.Interfaces.Services;
+using Subastas.Infrastructure.Services;
+using Subastas.Application.Interfaces.Repositories;
+using Subastas.Infrastructure.Repositories;
+using QuestPDF.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure QuestPDF license for runtime
+QuestPDF.Settings.License = LicenseType.Community;
 
 // Habilitar logging detallado para Azure
 builder.Logging.ClearProviders();
@@ -114,6 +123,22 @@ try
                 errorNumbersToAdd: null);
         }));
 
+    // Registrar servicios de Infrastructure
+    // Register real PDF service
+    builder.Services.AddScoped<IPdfService, PdfService>();
+    builder.Services.AddScoped<ISubastaRepository, SubastaRepository>();
+
+    // Register user/auth services and repositories
+    builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+    builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+    builder.Services.AddScoped<IPasswordService, PasswordService>();
+    builder.Services.AddScoped<IAuthService, AuthService>();
+    builder.Services.AddScoped<INotificacionAdminService, NotificacionAdminService>();
+    builder.Services.AddScoped<IEmailService, EmailService>();
+
+    // Register background service to finalize auctions automatically
+    builder.Services.AddHostedService<Subastas.WebApi.Services.AuctionFinalizerService>();
+
     // Configuración de JWT Authentication
     var jwtSettings = builder.Configuration.GetSection("JwtSettings");
     var secretKey = jwtSettings["SecretKey"];
@@ -140,24 +165,15 @@ try
             ValidAudience = jwtSettings["Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
             ClockSkew = TimeSpan.Zero,
-            // Configurar validación de roles case-insensitive
-            RoleClaimType = System.Security.Claims.ClaimTypes.Role,
-            NameClaimType = System.Security.Claims.ClaimTypes.NameIdentifier
+            RoleClaimType = ClaimTypes.Role
         };
     });
 
+    // Register authorization policy for Admin
     builder.Services.AddAuthorization(options =>
     {
-        // Política para administradores (case-insensitive)
-        options.AddPolicy("AdminPolicy", policy =>
-            policy.RequireAssertion(context =>
-                context.User.IsInRole("Admin") || context.User.IsInRole("admin") || context.User.IsInRole("ADMIN")
-            )
-        );
+        options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
     });
-
-    // Registrar servicios de Infrastructure (Repositorios y Servicios)
-    builder.Services.AddInfrastructure();
 
     // Configuración de CORS
     builder.Services.AddCors(options =>
@@ -174,14 +190,14 @@ try
         });
     });
 
+    // Agregar servicios de SignalR
+    builder.Services.AddSignalR();
+
     var app = builder.Build();
 
     // Log de inicio
     var logger = app.Services.GetRequiredService<ILogger<Program>>();
     logger.LogInformation("Iniciando aplicación Subastas API en entorno: {Environment}", app.Environment.EnvironmentName);
-
-    // Middleware de manejo de excepciones global
-    app.UseMiddleware<ExceptionHandlingMiddleware>();
 
     // Configuración del pipeline HTTP
     if (app.Environment.IsDevelopment())
@@ -241,6 +257,7 @@ try
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapControllers();
+    app.MapHub<Subastas.WebApi.Hubs.NotificationHub>("/notificationHub");
 
     // Endpoint de manejo de errores global
     app.MapGet("/error", () => Results.Problem("Ha ocurrido un error en el servidor."))

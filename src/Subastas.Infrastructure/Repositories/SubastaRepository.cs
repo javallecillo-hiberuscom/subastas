@@ -54,4 +54,12 @@ public class SubastaRepository : Repository<Subasta>, ISubastaRepository
             .Include(s => s.Vehiculo)
             .FirstOrDefaultAsync(s => s.IdSubasta == id);
     }
+
+    public async Task<IEnumerable<Subasta>> GetBetweenDatesAsync(DateTime from, DateTime to)
+    {
+        return await _dbSet
+            .Where(s => s.FechaInicio >= from && s.FechaFin <= to)
+            .Include(s => s.Vehiculo)
+            .ToListAsync();
+    }
 }

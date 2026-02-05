@@ -73,14 +73,17 @@
           </div>
 
           <div class="form-group">
-            <label for="dni">DNI</label>
+            <label for="dni">DNI/NIF</label>
             <input 
               id="dni" 
+              formControlName="dni" 
               type="text" 
-              formControlName="dni"
-              placeholder="12345678A (opcional)"
-              maxlength="9"
-            >
+              maxlength="9" 
+              autocomplete="off"
+              [class.invalid]="registroForm.get('dni')?.invalid && registroForm.get('dni')?.touched">
+            <div class="error" *ngIf="registroForm.get('dni')?.errors?.['dniInvalido'] && registroForm.get('dni')?.touched">
+              El DNI/NIF no es válido. Revisa el formato y la letra de control.
+            </div>
           </div>
         </div>
 

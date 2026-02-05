@@ -43,8 +43,9 @@ public class ActualizarPerfilRequest
 
     /// <summary>
     /// Estado activo del usuario.
+    /// Use boolean to match frontend (true = activo).
     /// </summary>
-    public byte Activo { get; set; }
+    public bool Activo { get; set; }
 
     /// <summary>
     /// Teléfono de contacto.
@@ -66,7 +67,7 @@ public class ActualizarPerfilRequest
     /// <summary>
     /// Nueva contraseña (opcional, solo si se cambia).
     /// </summary>
-    [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres.")]
+    [MinLength(6, ErrorMessage = "La contraseña debe tener al menos6 caracteres.")]
     [StringLength(255)]
     public string? Password { get; set; }
 }

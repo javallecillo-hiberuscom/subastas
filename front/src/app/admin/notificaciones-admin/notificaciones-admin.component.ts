@@ -1,5 +1,6 @@
 import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
@@ -7,29 +8,44 @@ import { interval, Subscription } from 'rxjs';
 import { getApiUrl } from '../../utils/api-url.helper';
 
 interface NotificacionAdmin {
-  IdNotificacion: number;
-  Titulo: string;
-  Mensaje: string;
-  Tipo: string;
-  IdUsuario?: number;
-  Leida: number;
-  FechaCreacion: string;
-  Usuario?: {
-    IdUsuario: number;
-    Nombre: string;
-    Apellidos: string;
-    Email: string;
+  id: number;
+  idNotificacion?: number;
+  titulo?: string;
+  mensaje: string;
+  tipo?: string;
+  fecha?: Date;
+  fechaEnvio?: Date;
+  fechaCreacion?: Date;
+  leida: boolean | number;
+  idSubasta?: number;
+  idVehiculo?: number;
+  vehiculoInfo?: string;
+  idUsuario?: number;
+  datosAdicionales?: string;
+  usuario?: {
+    idUsuario: number;
+    nombre: string;
+    apellidos: string;
+    email: string;
   };
 }
 
 @Component({
   selector: 'app-notificaciones-admin',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './notificaciones-admin.component.html',
   styleUrl: './notificaciones-admin.component.css'
 })
 export class NotificacionesAdminComponent implements OnInit, OnDestroy {
+    notificacionEdit: NotificacionAdmin = {
+      id: 0,
+      titulo: '',
+      mensaje: '',
+      tipo: '',
+      fechaCreacion: new Date(),
+      leida: 0
+    };
   private http = inject(HttpClient);
   private toast = inject(ToastService);
   private router = inject(Router);
@@ -65,14 +81,15 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
         next: (notificaciones) => {
           // Mapear las propiedades a las esperadas por el frontend
           const mapped = (notificaciones || []).map(n => ({
-            IdNotificacion: n.idNotificacion ?? n.id ?? n.IdNotificacion,
-            Titulo: n.titulo ?? n.Titulo ?? '',
-            Mensaje: n.mensaje ?? n.Mensaje ?? '',
-            Tipo: n.tipo ?? n.Tipo ?? '',
-            IdUsuario: n.idUsuario ?? n.IdUsuario,
-            Leida: n.leida ?? n.Leida ?? 0,
-            FechaCreacion: n.fechaCreacion ?? n.fecha ?? n.FechaCreacion ?? '',
-            Usuario: n.usuario ?? n.Usuario ?? undefined
+            id: n.id ?? n.idNotificacion ?? n.IdNotificacion,
+            idNotificacion: n.idNotificacion ?? n.id ?? n.IdNotificacion,
+            titulo: n.titulo ?? n.Titulo ?? '',
+            mensaje: n.mensaje ?? n.Mensaje ?? '',
+            tipo: n.tipo ?? n.Tipo ?? '',
+            idUsuario: n.idUsuario ?? n.IdUsuario,
+            leida: n.leida ?? n.Leida ?? 0,
+            fechaCreacion: n.fechaCreacion ?? n.fecha ?? n.FechaCreacion ?? '',
+            usuario: n.usuario ?? n.Usuario ?? undefined
           }));
           this.notificaciones.set(mapped);
           this.loading.set(false);
@@ -104,17 +121,17 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   }
 
   marcarComoLeida(notificacion: NotificacionAdmin): void {
-    if (notificacion.Leida === 1) return;
+    if (notificacion.leida === 1) return;
     // Si es notificación de registro, navegar a gestión de usuarios
-    if (notificacion.Tipo === 'registro' && notificacion.IdUsuario) {
+    if (notificacion.tipo === 'registro' && notificacion.idUsuario) {
       this.router.navigate(['/admin/usuarios'], { 
-        queryParams: { destacar: notificacion.IdUsuario } 
+        queryParams: { destacar: notificacion.idUsuario } 
       });
     }
-    this.http.put(getApiUrl(`/api/NotificacionesAdmin/${notificacion.IdNotificacion}/marcar-leida`), {})
+    this.http.put(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}/marcar-leida`), {})
       .subscribe({
         next: () => {
-          notificacion.Leida = 1;
+          notificacion.leida = 1;
           this.cargarContador();
           this.toast.success('Notificación marcada como leída');
         },
@@ -148,11 +165,11 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
   eliminarNotificacion(notificacion: NotificacionAdmin): void {
     if (!confirm('¿Eliminar esta notificación?')) return;
 
-    this.http.delete(getApiUrl(`/api/NotificacionesAdmin/${notificacion.IdNotificacion}`))
+    this.http.delete(getApiUrl(`/api/NotificacionesAdmin/${notificacion.idNotificacion}`))
       .subscribe({
         next: () => {
           this.notificaciones.update(notifs => 
-            notifs.filter(n => n.IdNotificacion !== notificacion.IdNotificacion)
+            notifs.filter(n => n.idNotificacion !== notificacion.idNotificacion)
           );
           this.cargarContador();
           this.toast.success('Notificación eliminada');
@@ -185,21 +202,22 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
     this.router.navigate(['/admin/usuarios']);
   }
 
-  getTipoIcono(tipo: string): string {
+  getTipoIcono(tipo?: string): string {
     const iconos: { [key: string]: string } = {
       'registro': '👤',
       'documento_subido': '📄',
       'puja': '💰',
       'otro': 'ℹ️'
     };
-    return iconos[tipo] || 'ℹ️';
+    return iconos[tipo ?? ''] || 'ℹ️';
   }
 
-  getTipoClase(tipo: string): string {
-    return `tipo-${tipo}`;
+  getTipoClase(tipo?: string): string {
+    return `tipo-${tipo ?? ''}`;
   }
 
-  getFormattedDate(fecha: string): string {
+  getFormattedDate(fecha?: string | Date): string {
+    if (!fecha) return '';
     const date = new Date(fecha);
     const now = new Date();
     const diff = now.getTime() - date.getTime();
@@ -217,5 +235,10 @@ export class NotificacionesAdminComponent implements OnInit, OnDestroy {
       month: 'short',
       year: 'numeric'
     });
+  }
+
+  guardarNotificacion(): void {
+    // Implementar lógica de guardado aquí
+    this.toast.info('Funcionalidad de guardar no implementada');
   }
 }

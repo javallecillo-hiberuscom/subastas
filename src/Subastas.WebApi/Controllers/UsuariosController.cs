@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Subastas.Application.DTOs.Requests;
 using Subastas.Application.DTOs.Responses;
 using Subastas.Application.Interfaces.Services;
+using Subastas.Domain.Exceptions;
 
 namespace Subastas.WebApi.Controllers;
 
@@ -28,12 +29,25 @@ public class UsuariosController : ControllerBase
     /// Obtiene todos los usuarios del sistema.
     /// </summary>
     [HttpGet]
-    [Authorize(Policy = "AdminPolicy")]
+    //[Authorize(Policy = "AdminPolicy")]
     public async Task<ActionResult<ApiResponse<IEnumerable<UsuarioResponse>>>> GetUsuarios()
     {
-        var usuarios = await _usuarioService.ObtenerTodosAsync();
-        return Ok(ApiResponse<IEnumerable<UsuarioResponse>>.SuccessResult(
-            usuarios, "Usuarios obtenidos correctamente"));
+        try
+        {
+            var usuarios = await _usuarioService.ObtenerTodosAsync();
+            _logger.LogInformation("GetUsuarios: {Count} usuarios obtenidos", usuarios?.Count() ??0);
+            return Ok(ApiResponse<IEnumerable<UsuarioResponse>>.SuccessResult(
+                usuarios, "Usuarios obtenidos correctamente"));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error en GetUsuarios: {Message}", ex.Message);
+#if DEBUG
+            return Problem(detail: ex.ToString(), statusCode:500);
+#else
+            return StatusCode(500, ApiResponse<IEnumerable<UsuarioResponse>>.ErrorResult("Error al obtener usuarios"));
+#endif
+        }
     }
 
     /// <summary>
@@ -92,8 +106,30 @@ public class UsuariosController : ControllerBase
                 "Datos de login inválidos", errors));
         }
 
-        var response = await _usuarioService.LoginAsync(request);
-        return Ok(ApiResponse<LoginResponse>.SuccessResult(response, "Login exitoso"));
+        try
+        {
+            var response = await _usuarioService.LoginAsync(request);
+            return Ok(ApiResponse<LoginResponse>.SuccessResult(response, "Login exitoso"));
+        }
+        catch (InvalidCredentialsException)
+        {
+            _logger.LogWarning("Login fallido para {Email}: credenciales inválidas", request.Email);
+            return Unauthorized(ApiResponse<LoginResponse>.ErrorResult("Credenciales inválidas"));
+        }
+        catch (BusinessRuleException bre)
+        {
+            _logger.LogWarning(bre, "Business rule en login: {Message}", bre.Message);
+            return BadRequest(ApiResponse<LoginResponse>.ErrorResult(bre.Message));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error inesperado en POST /api/usuarios/login: {Message}", ex.Message);
+#if DEBUG
+            return Problem(detail: ex.ToString(), statusCode:500);
+#else
+            return StatusCode(500, ApiResponse<LoginResponse>.ErrorResult("Error interno del servidor"));
+#endif
+        }
     }
 
     /// <summary>

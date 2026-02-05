@@ -115,13 +115,37 @@ public class UsuarioService : IUsuarioService
         var usuario = await _usuarioRepository.GetByEmailAsync(request.Email);
         if (usuario == null)
         {
+            _logger.LogWarning("Login fallido: usuario no encontrado para {Email}", request.Email);
             throw new InvalidCredentialsException();
         }
 
-        // Verificar contraseña
-        if (!_passwordService.VerifyPassword(request.Password, usuario.Password))
+        // Log password presence for diagnostics
+        _logger.LogInformation("Login: usuario encontrado Id={Id} Email={Email} PasswordNull={PwdNull}", usuario.IdUsuario, usuario.Email, string.IsNullOrEmpty(usuario.Password));
+
+        // Verificar que la contraseña no sea nula antes de verificar
+        if (string.IsNullOrEmpty(usuario.Password))
         {
+            _logger.LogWarning("Login fallido: usuario con password nulo/ vacío Id={Id}", usuario.IdUsuario);
             throw new InvalidCredentialsException();
+        }
+
+        // Verificar contraseña con manejo de excepciones
+        try
+        {
+            if (!_passwordService.VerifyPassword(request.Password, usuario.Password))
+            {
+                _logger.LogWarning("Login fallido: contraseña incorrecta para {Email}", request.Email);
+                throw new InvalidCredentialsException();
+            }
+        }
+        catch (InvalidCredentialsException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verificando la contraseña para usuario Id={Id}", usuario.IdUsuario);
+            throw new BusinessRuleException("Error al verificar la contraseña");
         }
 
         // Verificar que el usuario esté activo
@@ -130,11 +154,20 @@ public class UsuarioService : IUsuarioService
             throw new BusinessRuleException("Usuario inactivo o eliminado");
         }
 
-        // Generar token JWT
-        var token = _authService.GenerateJwtToken(
-            usuario.IdUsuario,
-            usuario.Email,
-            usuario.Rol);
+        // Generar token JWT con manejo de errores
+        string token;
+        try
+        {
+            token = _authService.GenerateJwtToken(
+                usuario.IdUsuario,
+                usuario.Email,
+                usuario.Rol);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error generando token JWT para usuario Id={Id}", usuario.IdUsuario);
+            throw new BusinessRuleException("Error generando token de autenticación");
+        }
 
         return new LoginResponse
         {
@@ -165,7 +198,8 @@ public class UsuarioService : IUsuarioService
         usuario.Apellidos = request.Apellidos;
         usuario.Email = request.Email;
         usuario.Rol = request.Rol;
-        usuario.Activo = request.Activo;
+        // DTO Activo now bool -> convert to byte
+        usuario.Activo = request.Activo ? (byte)1 : (byte)0;
         usuario.Telefono = request.Telefono;
         usuario.Direccion = request.Direccion;
 

@@ -14,20 +14,7 @@
     </div>
   </div>
 
-  <div class="filtros">
-    <button 
-      class="filtro-btn"
-      [class.active]="filtro() === 'no-leidas'"
-      (click)="cambiarFiltro('no-leidas')">
-      Sin leer ({{ contadorNoLeidas() }})
-    </button>
-    <button 
-      class="filtro-btn"
-      [class.active]="filtro() === 'todas'"
-      (click)="cambiarFiltro('todas')">
-      Todas
-    </button>
-  </div>
+  <!-- Filtro eliminado -->
 
   @if (loading()) {
     <div class="loading">
@@ -41,32 +28,32 @@
     </div>
   } @else {
     <div class="notificaciones-lista">
-      @for (notif of notificaciones(); track notif.IdNotificacion) {
-        <div class="notificacion-card" [class.no-leida]="notif.Leida === 0" [class]="getTipoClase(notif.Tipo)">
+      @for (notif of notificaciones(); track notif.idNotificacion) {
+        <div class="notificacion-card" [class.no-leida]="notif.leida === 0" [class]="getTipoClase(notif.tipo)">
           <div class="notif-icono">
-            <span>{{ getTipoIcono(notif.Tipo) }}</span>
+            <span>{{ getTipoIcono(notif.tipo) }}</span>
           </div>
           
           <div class="notif-contenido">
             <div class="notif-header">
-              <h3>{{ notif.Titulo }}</h3>
-              <span class="notif-fecha">{{ getFormattedDate(notif.FechaCreacion) }}</span>
+              <h3>{{ notif.titulo }}</h3>
+              <span class="notif-fecha">{{ getFormattedDate(notif.fechaCreacion) }}</span>
             </div>
             
-            <p class="notif-mensaje">{{ notif.Mensaje }}</p>
+            <p class="notif-mensaje">{{ notif.mensaje }}</p>
             
-            @if (notif.Usuario) {
+            @if (notif.usuario) {
               <div class="notif-usuario">
-                <span class="usuario-tag" (click)="navegarAUsuario(notif.IdUsuario)">
-                  👤 {{ notif.Usuario.Nombre }} {{ notif.Usuario.Apellidos }}
-                  <small>({{ notif.Usuario.Email }})</small>
+                <span class="usuario-tag" (click)="navegarAUsuario(notif.idUsuario)">
+                  👤 {{ notif.usuario.nombre }} {{ notif.usuario.apellidos }}
+                  <small>({{ notif.usuario.email }})</small>
                 </span>
               </div>
             }
           </div>
           
           <div class="notif-acciones">
-            @if (notif.Leida === 0) {
+            @if (notif.leida === 0) {
               <button 
                 class="btn-mini" 
                 (click)="marcarComoLeida(notif)"
@@ -85,4 +72,6 @@
       }
     </div>
   }
+
+  <!-- Formulario crear/editar notificación eliminado -->
 </div>

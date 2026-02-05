@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Subastas.Application.Interfaces.Services;
 using Subastas.Domain.Entities;
 using Subastas.Infrastructure.Data;
+using Subastas.WebApi.Hubs;
 
 namespace Subastas.Infrastructure.Services;
 
@@ -14,15 +16,18 @@ public class NotificacionAdminService : INotificacionAdminService
     private readonly SubastaContext _context;
     private readonly IEmailService _emailService;
     private readonly ILogger<NotificacionAdminService> _logger;
+    private readonly IHubContext<NotificationHub> _hubContext;
 
     public NotificacionAdminService(
         SubastaContext context,
         IEmailService emailService,
-        ILogger<NotificacionAdminService> logger)
+        ILogger<NotificacionAdminService> logger,
+        IHubContext<NotificationHub> hubContext)
     {
         _context = context;
         _emailService = emailService;
         _logger = logger;
+        _hubContext = hubContext;
         var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
         _logger.LogWarning(">>> [{Timestamp}] NotificacionAdminService CONSTRUCTOR <<<", timestamp);
     }
@@ -54,6 +59,18 @@ public class NotificacionAdminService : INotificacionAdminService
             var rowsAffected = await _context.SaveChangesAsync();
             _logger.LogWarning(">>> [{Timestamp}] PUNTO D: Filas={Rows}, IdNotif={IdNotificacion}", DateTime.Now.ToString("HH:mm:ss.fff"), rowsAffected, notificacion.IdNotificacion);
             
+            // Send real-time notification to admins
+            await _hubContext.Clients.Group("admins").SendAsync("ReceiveNotification", new
+            {
+                notificacion.IdNotificacion,
+                notificacion.Titulo,
+                notificacion.Mensaje,
+                notificacion.Tipo,
+                notificacion.IdUsuario,
+                notificacion.Leida,
+                notificacion.FechaCreacion
+            });
+            
             // Enviar email al administrador
             try
             {
@@ -68,7 +85,19 @@ public class NotificacionAdminService : INotificacionAdminService
                 _logger.LogWarning(emailEx, ">>> [{Timestamp}] Email falló pero notificación guardada", DateTime.Now.ToString("HH:mm:ss.fff"));
             }
             
-            _logger.LogWarning(">>> [{Timestamp}] PUNTO G: FIN - ÉXITO TOTAL", DateTime.Now.ToString("HH:mm:ss.fff"));
+            // Enviar notificación en tiempo real
+            try
+            {
+                _logger.LogWarning(">>> [{Timestamp}] PUNTO G: Enviando notificación en tiempo real...", DateTime.Now.ToString("HH:mm:ss.fff"));
+                await _hubContext.Clients.All.SendAsync("RecibirNotificacion", notificacion);
+                _logger.LogWarning(">>> [{Timestamp}] PUNTO H: Notificación en tiempo real enviada", DateTime.Now.ToString("HH:mm:ss.fff"));
+            }
+            catch (Exception hubEx)
+            {
+                _logger.LogWarning(hubEx, ">>> [{Timestamp}] Error al enviar notificación en tiempo real", DateTime.Now.ToString("HH:mm:ss.fff"));
+            }
+            
+            _logger.LogWarning(">>> [{Timestamp}] PUNTO I: FIN - ÉXITO TOTAL", DateTime.Now.ToString("HH:mm:ss.fff"));
         }
         catch (Exception ex)
         {
@@ -99,6 +128,18 @@ public class NotificacionAdminService : INotificacionAdminService
 
         await _context.NotificacionesAdmin.AddAsync(notificacion);
         await _context.SaveChangesAsync();
+        
+        // Send real-time notification to admins
+        await _hubContext.Clients.Group("admins").SendAsync("ReceiveNotification", new
+        {
+            notificacion.IdNotificacion,
+            notificacion.Titulo,
+            notificacion.Mensaje,
+            notificacion.Tipo,
+            notificacion.IdUsuario,
+            notificacion.Leida,
+            notificacion.FechaCreacion
+        });
     }
 
     /// <summary>
@@ -131,6 +172,18 @@ public class NotificacionAdminService : INotificacionAdminService
 
         await _context.NotificacionesAdmin.AddAsync(notificacion);
         await _context.SaveChangesAsync();
+        
+        // Send real-time notification to admins
+        await _hubContext.Clients.Group("admins").SendAsync("ReceiveNotification", new
+        {
+            notificacion.IdNotificacion,
+            notificacion.Titulo,
+            notificacion.Mensaje,
+            notificacion.Tipo,
+            notificacion.IdUsuario,
+            notificacion.Leida,
+            notificacion.FechaCreacion
+        });
     }
 
     /// <summary>

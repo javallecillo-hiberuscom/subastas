@@ -1,4 +1,7 @@
 using Subastas.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Subastas.Application.Interfaces.Repositories;
 
@@ -26,4 +29,9 @@ public interface ISubastaRepository : IRepository<Subasta>
     /// Obtiene subastas de un vehículo específico.
     /// </summary>
     Task<IEnumerable<Subasta>> GetByVehiculoAsync(int idVehiculo);
+
+    /// <summary>
+    /// Obtiene subastas entre dos fechas (inclusive).
+    /// </summary>
+    Task<IEnumerable<Subasta>> GetBetweenDatesAsync(DateTime from, DateTime to);
 }

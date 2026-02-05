@@ -3,17 +3,29 @@ import { HttpClient } from '@angular/common/http';
 import { interval, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { getApiUrl } from '../utils/api-url.helper';
+import { AuthService } from './auth.service';
 
 export interface Notificacion {
   id: number;
-  tipo: 'puja_ganada' | 'puja_superada' | 'subasta_finalizada' | 'nueva_subasta' | 'registro';
+  idNotificacion?: number;
+  titulo?: string;
   mensaje: string;
-  fecha: Date;
-  leida: boolean;
+  tipo?: string;
+  fecha?: Date;
+  fechaEnvio?: Date;
+  fechaCreacion?: Date;
+  leida: boolean | number;
   idSubasta?: number;
   idVehiculo?: number;
-  vehiculoInfo?: string; // Info adicional del vehículo para mostrar
-  idUsuario?: number; // Para notificaciones admin
+  vehiculoInfo?: string;
+  idUsuario?: number;
+  datosAdicionales?: string;
+  usuario?: {
+    idUsuario: number;
+    nombre: string;
+    apellidos: string;
+    email: string;
+  };
 }
 
 @Injectable({
@@ -21,6 +33,7 @@ export interface Notificacion {
 })
 export class NotificationService {
   private http = inject(HttpClient);
+  private auth = inject(AuthService);
   
   notificaciones = signal<Notificacion[]>([]);
   noLeidas = signal(0);
@@ -85,6 +98,40 @@ export class NotificationService {
 
           this.notificaciones.set(mapped);
           this.noLeidas.set(mapped.filter(n => !n.leida).length);
+
+          // Refrescar usuario autenticado si su estado pudo cambiar (validado/rol)
+          try {
+            const currentUser = this.auth.currentUser();
+            if (!currentUser) return;
+            const userId = currentUser.idUsuario || (currentUser.id ? parseInt(currentUser.id) : null);
+            if (userId) {
+              this.http.get<any>(getApiUrl(`/api/Usuarios/${userId}`))
+                .pipe(catchError(() => of(null)))
+                .subscribe(response => {
+                  const data = (response as any)?.data ?? (response as any)?.Data ?? response;
+                  if (!data) return;
+
+                  const updatedValidado = data.validado ?? data.Validado;
+                  const updatedRol = (data.rol ?? data.Rol)?.toString();
+
+                  const currentValidado = currentUser.validado;
+                  const currentRol = currentUser.rol;
+
+                  if ((updatedValidado !== undefined && updatedValidado !== currentValidado) || (updatedRol && updatedRol !== currentRol)) {
+                    const updatedUser = {
+                      ...currentUser,
+                      idUsuario: data.idUsuario ?? data.IdUsuario ?? currentUser.idUsuario,
+                      rol: updatedRol ?? currentUser.rol,
+                      validado: updatedValidado ?? currentUser.validado
+                    };
+                    this.auth.setCurrentUser(updatedUser);
+                    console.log('AuthService: usuario actualizado automáticamente tras validación', updatedUser);
+                  }
+                });
+            }
+          } catch (e) {
+            console.error('Error refrescando usuario autenticado:', e);
+          }
         }
       });
   }

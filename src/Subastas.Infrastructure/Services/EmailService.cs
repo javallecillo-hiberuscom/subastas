@@ -42,7 +42,9 @@ public class EmailService : IEmailService
             using var client = new SmtpClient(smtpHost, smtpPort)
             {
                 Credentials = new NetworkCredential(smtpUser, smtpPass),
-                EnableSsl = true
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false
             };
 
             var mailMessage = new MailMessage
@@ -55,14 +57,21 @@ public class EmailService : IEmailService
 
             mailMessage.To.Add(destinatario);
 
-            await Task.Run(() => client.Send(mailMessage));
-            
-            _logger.LogInformation($"Email enviado correctamente a {destinatario}");
+            // Use SendMailAsync to avoid capturing threadpool exceptions in Task.Run
+            await client.SendMailAsync(mailMessage);
+
+            _logger.LogInformation("Email enviado correctamente a {Destinatario}", destinatario);
             return true;
+        }
+        catch (SmtpException smtpEx)
+        {
+            _logger.LogError(smtpEx, "SMTP error al enviar email a {Destinatario}: {Message}", destinatario, smtpEx.Message);
+            // Do not throw - return false so application flow continues
+            return false;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Error al enviar email a {destinatario}");
+            _logger.LogError(ex, "Error inesperado al enviar email a {Destinatario}: {Message}", destinatario, ex.Message);
             return false;
         }
     }
@@ -84,11 +93,11 @@ public class EmailService : IEmailService
             <head>
                 <style>
                     body {{ font-family: Arial, sans-serif; }}
-                    .container {{ padding: 20px; background-color: #f5f5f5; }}
-                    .content {{ background-color: white; padding: 20px; border-radius: 8px; }}
-                    .header {{ background-color: #2563eb; color: white; padding: 15px; border-radius: 8px 8px 0 0; }}
-                    .message {{ padding: 20px; line-height: 1.6; }}
-                    .footer {{ text-align: center; padding: 15px; color: #666; font-size: 12px; }}
+                    .container {{ padding:20px; background-color: #f5f5f5; }}
+                    .content {{ background-color: white; padding:20px; border-radius:8px; }}
+                    .header {{ background-color: #2563eb; color: white; padding:15px; border-radius:8px8px00; }}
+                    .message {{ padding:20px; line-height:1.6; }}
+                    .footer {{ text-align: center; padding:15px; color: #666; font-size:12px; }}
                 </style>
             </head>
             <body>
@@ -99,7 +108,7 @@ public class EmailService : IEmailService
                         </div>
                         <div class='message'>
                             <p>{mensaje}</p>
-                            <p><a href='#' style='background-color: #2563eb; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;'>Ver Panel de Administración</a></p>
+                            <p><a href='#' style='background-color: #2563eb; color: white; padding:10px20px; text-decoration: none; border-radius:5px; display: inline-block; margin-top:10px;'>Ver Panel de Administración</a></p>
                         </div>
                         <div class='footer'>
                             <p>Sistema de Subastas - Desguaces Borox</p>
@@ -110,7 +119,11 @@ public class EmailService : IEmailService
             </body>
             </html>";
 
-        await EnviarEmailAsync(emailAdmin, titulo, cuerpo);
+        var sent = await EnviarEmailAsync(emailAdmin, titulo, cuerpo);
+        if (!sent)
+        {
+            _logger.LogWarning("Fallo el envío de email admin para {Titulo}", titulo);
+        }
     }
 
     /// <summary>
@@ -123,11 +136,11 @@ public class EmailService : IEmailService
             <head>
                 <style>
                     body {{ font-family: Arial, sans-serif; }}
-                    .container {{ padding: 20px; background-color: #f5f5f5; }}
-                    .content {{ background-color: white; padding: 20px; border-radius: 8px; }}
-                    .header {{ background-color: #10b981; color: white; padding: 15px; border-radius: 8px 8px 0 0; }}
-                    .message {{ padding: 20px; line-height: 1.6; }}
-                    .footer {{ text-align: center; padding: 15px; color: #666; font-size: 12px; }}
+                    .container {{ padding:20px; background-color: #f5f5f5; }}
+                    .content {{ background-color: white; padding:20px; border-radius:8px; }}
+                    .header {{ background-color: #10b981; color: white; padding:15px; border-radius:8px8px00; }}
+                    .message {{ padding:20px; line-height:1.6; }}
+                    .footer {{ text-align: center; padding:15px; color: #666; font-size:12px; }}
                 </style>
             </head>
             <body>
@@ -139,7 +152,7 @@ public class EmailService : IEmailService
                         <div class='message'>
                             <p>Hola <strong>{nombreUsuario}</strong>,</p>
                             <p>{mensaje}</p>
-                            <p><a href='#' style='background-color: #10b981; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;'>Ver Mis Notificaciones</a></p>
+                            <p><a href='#' style='background-color: #10b981; color: white; padding:10px20px; text-decoration: none; border-radius:5px; display: inline-block; margin-top:10px;'>Ver Mis Notificaciones</a></p>
                         </div>
                         <div class='footer'>
                             <p>Sistema de Subastas - Desguaces Borox</p>
@@ -150,6 +163,10 @@ public class EmailService : IEmailService
             </body>
             </html>";
 
-        await EnviarEmailAsync(emailUsuario, asunto, cuerpo);
+        var sent = await EnviarEmailAsync(emailUsuario, asunto, cuerpo);
+        if (!sent)
+        {
+            _logger.LogWarning("Fallo el envío de email a usuario {Email}", emailUsuario);
+        }
     }
 }
