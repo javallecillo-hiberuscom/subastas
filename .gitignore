@@ -121,3 +121,7 @@ Thumbs.db
 ## IDE
 *.code-workspace
 .idea/
+/test/Subastas.UnitTests/obj/Debug/net8.0/Subastas.UnitTests.AssemblyInfoInputs.cache
+/test/Subastas.UnitTests/obj/Debug/net8.0/Subastas.UnitTests.csproj.AssemblyReference.cache
+/test/Subastas.UnitTests/obj/Debug/net8.0/Subastas.UnitTests.sourcelink.json
+/test/Subastas.UnitTests/obj/Debug/net8.0/Subastas.UnitTests.AssemblyInfo.cs
