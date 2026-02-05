@@ -9,6 +9,7 @@ import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

@@ -7,6 +7,7 @@ import { getApiUrl } from '../../utils/api-url.helper';
 
 @Component({
   selector: 'app-empresas-admin',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './empresas-admin.component.html',
   styleUrl: './empresas-admin.component.css'

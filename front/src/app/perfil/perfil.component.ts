@@ -9,6 +9,7 @@ import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-perfil',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.css'

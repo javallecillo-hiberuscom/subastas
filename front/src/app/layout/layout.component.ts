@@ -17,6 +17,7 @@ interface MenuItem {
 
 @Component({
   selector: 'app-layout',
+  standalone: true,
   imports: [CommonModule, RouterModule, ToastComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'

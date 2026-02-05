@@ -22,6 +22,7 @@ interface UsuarioAdmin {
 
 @Component({
   selector: 'app-usuarios-admin',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './usuarios-admin.component.html',
   styleUrl: './usuarios-admin.component.css'

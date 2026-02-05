@@ -9,6 +9,7 @@ import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-mis-pujas',
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './mis-pujas.component.html',
   styleUrl: './mis-pujas.component.css'

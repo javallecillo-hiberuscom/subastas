@@ -19,6 +19,7 @@ interface Subasta {
 
 @Component({
   selector: 'app-lista-pujas',
+  standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './lista-pujas.component.html',
   styleUrl: './lista-pujas.component.css'

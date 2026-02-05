@@ -21,6 +21,7 @@ interface Subasta {
 
 @Component({
   selector: 'app-detalle-vehiculo',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './detalle-vehiculo.component.html',
   styleUrl: './detalle-vehiculo.component.css'

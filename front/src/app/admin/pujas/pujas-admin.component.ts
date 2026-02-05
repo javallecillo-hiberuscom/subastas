@@ -8,6 +8,7 @@ import { getApiUrl } from '../../utils/api-url.helper';
 
 @Component({
   selector: 'app-pujas-admin',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './pujas-admin.component.html',
   styleUrl: './pujas-admin.component.css'

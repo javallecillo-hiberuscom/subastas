@@ -7,6 +7,7 @@ import { getApiUrl } from '../../utils/api-url.helper';
 
 @Component({
   selector: 'app-vehiculos-admin',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './vehiculos-admin.component.html',
   styleUrl: './vehiculos-admin.component.css'

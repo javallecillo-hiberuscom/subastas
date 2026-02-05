@@ -7,6 +7,7 @@ import { getApiUrl } from '../utils/api-url.helper';
 
 @Component({
   selector: 'app-registro',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'

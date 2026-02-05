@@ -228,9 +228,9 @@
           <span>Exportar PDF de Subastas</span>
           <div class="exportar-pdf-form">
             <label for="fechaInicio">Desde:</label>
-            <input type="date" id="fechaInicio" [value]="fechaInicio" (input)="fechaInicio = $event.target.value" class="date-input" />
+            <input type="date" id="fechaInicio" [value]="fechaInicio" (input)="fechaInicio = $any($event.target).value" class="date-input" />
             <label for="fechaFin">Hasta:</label>
-            <input type="date" id="fechaFin" [value]="fechaFin" (input)="fechaFin = $event.target.value" class="date-input" />
+            <input type="date" id="fechaFin" [value]="fechaFin" (input)="fechaFin = $any($event.target).value" class="date-input" />
             <button (click)="exportarPDF()" class="btn-exportar-pdf">
               <span class="pdf-icon"></span> Generar PDF
             </button>
